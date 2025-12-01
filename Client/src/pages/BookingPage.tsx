@@ -475,6 +475,7 @@ export default function BookingPage() {
               <h2 className="text-gold font-display text-2xl">Revisar e confirmar</h2>
               <Card className="p-4 grid gap-2">
                 <div><span className="text-text/70">Profissional:</span> {state.professional?.name}</div>
+                <div><span className="text-text/70">Serviço:</span> {services.find(s => s.id === state.serviceId)?.name ?? '—'}</div>
                 <div><span className="text-text/70">Data:</span> {state.date}</div>
                 <div><span className="text-text/70">Horário:</span> {state.time}</div>
                 <div><span className="text-text/70">Nome:</span> {state.fullName}</div>
