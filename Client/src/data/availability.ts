@@ -7,12 +7,12 @@ export const professionals: Professional[] = [
 ]
 
 export const services = [
-  { id: 'svc_cut', name: 'Corte de cabelo', price: 35.0, duration: 45, image: null },
-  { id: 'svc_barbe', name: 'Barba/Acabamento', price: 25.0, duration: 30, image: null },
-  { id: 'svc_sobr', name: 'Sobrancelha', price: 15.0, duration: 30, image: null },
-  { id: 'svc_pig', name: 'Pigmentação', price: 60.0, duration: 60, image: null },
-  { id: 'svc_degrade', name: 'Degradê', price: 45.0, duration: 45, image: null },
-  { id: 'svc_kids', name: 'Infantil', price: 30.0, duration: 30, image: null }
+  { id: 'svc_cut', name: 'Corte de cabelo', price: 35.0, duration: 45, image: '/assets/images/services/servico-cabelo-preto.jpg' },
+  { id: 'svc_barbe', name: 'Barba/Acabamento', price: 25.0, duration: 30, image: '/assets/images/services/servico-barba-preto.jpg' },
+  { id: 'svc_sobr', name: 'Sobrancelha', price: 15.0, duration: 30, image: '/assets/images/services/servico-sobrancelha-preto.jpg' },
+  { id: 'svc_pig', name: 'Pigmentação', price: 60.0, duration: 60, image: '/assets/images/services/servico-maquina-preto.jpg' },
+  { id: 'svc_degrade', name: 'Degradê', price: 45.0, duration: 45, image: '/assets/images/services/servico-corte2-preto.jpg' },
+  { id: 'svc_kids', name: 'Infantil', price: 30.0, duration: 30, image: '/assets/images/services/servico-corte-infantil-preto.jpg' }
 ]
 
 /**

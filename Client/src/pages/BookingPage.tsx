@@ -250,7 +250,18 @@ export default function BookingPage() {
                       })
                     }}
                   >
-                    <div className="h-32 md:h-36 rounded-xl bg-surface border border-border mb-3 grid place-items-center text-muted">Imagem</div>
+                    <div className="h-36 md:h-40 rounded-xl bg-surface border border-border mb-3 overflow-hidden">
+                      {svc.image ? (
+                        <img
+                          src={svc.image}
+                          alt={svc.name}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="w-full h-full grid place-items-center text-muted">Imagem</div>
+                      )}
+                    </div>
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="font-semibold">{svc.name}</div>
