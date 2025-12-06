@@ -7,7 +7,7 @@
   "license": "PROPRIETARY",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/postbuild.js",
+    "build": "vite build",
     "build:client": "vite build --outDir dist/client",
     "build:barber": "vite build --outDir dist/barber",
     "preview": "vite preview"
