@@ -12,15 +12,15 @@ export default function About() {
 
       <main className="legal-page">
         <div className="legal-header">
-          <img src="/assets/images/logos/logo.png" alt="NA·RÉGUA" />
-          <h1 className="legal-title">Sobre o Na-Régua</h1>
+          <img src="/assets/images/logos/logo.png" alt="Régua Máxima" />
+          <h1 className="legal-title">Sobre o Régua Máxima</h1>
           <p className="legal-sub">Agendamentos simples, clientes fidelizados e barbearias organizadas.</p>
         </div>
 
         <article className="legal-card">
           <section className="about-section" id="o-que-e">
             <h3>O que é</h3>
-            <p>O Na-Régua é um aplicativo focado em barbearias que simplifica o agendamento de serviços, facilita a comunicação com clientes e ajuda a manter o fluxo de trabalho organizado.</p>
+            <p>O Régua Máxima é um aplicativo focado em barbearias que simplifica o agendamento de serviços, facilita a comunicação com clientes e ajuda a manter o fluxo de trabalho organizado.</p>
           </section>
           <section className="about-section" id="problema">
             <h3>Problema</h3>
@@ -47,8 +47,8 @@ export default function About() {
             <div className="creator" aria-label="Criador do aplicativo">
               <div className="creator-grid">
                 <div className="creator-text">
-                  <p><strong>Pablo Eduardo Silva</strong> é o criador do Na-Régua. Profissional de tecnologia focado em produtos digitais, une visão de negócio, design centrado no usuário e engenharia para resolver problemas reais do dia a dia das barbearias. Sua atuação é pautada por simplicidade, performance e transparência — entregando uma experiência moderna para clientes e uma gestão organizada para profissionais.</p>
-                  <p>Com experiência em desenvolvimento e liderança de produto, Pablo prioriza interfaces objetivas, fluxos intuitivos e decisões técnicas que suportam crescimento com qualidade. O Na-Régua reflete esses princípios: fácil de usar, confiável e pensado para aumentar a eficiência das barbearias sem burocracia.</p>
+                  <p><strong>Pablo Eduardo Silva</strong> é o criador do Régua Máxima. Profissional de tecnologia focado em produtos digitais, une visão de negócio, design centrado no usuário e engenharia para resolver problemas reais do dia a dia das barbearias. Sua atuação é pautada por simplicidade, performance e transparência — entregando uma experiência moderna para clientes e uma gestão organizada para profissionais.</p>
+                  <p>Com experiência em desenvolvimento e liderança de produto, Pablo prioriza interfaces objetivas, fluxos intuitivos e decisões técnicas que suportam crescimento com qualidade. O Régua Máxima reflete esses princípios: fácil de usar, confiável e pensado para aumentar a eficiência das barbearias sem burocracia.</p>
                 </div>
                 <figure className="creator-card">
                   <img src="/assets/images/professionals/Pablo.jpg" alt="Pablo Eduardo Silva" className="creator-photo" />

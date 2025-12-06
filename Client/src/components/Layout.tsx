@@ -10,11 +10,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <footer id="contato" className="site-footer mt-auto">
         <div className="footer-inner">
           <div className="footer-top">
-            <img src="/assets/images/logos/logo.png" alt="NA·RÉGUA" className="brand-logo" />
+            <img src="/assets/images/logos/logo.png" alt="Régua Máxima" className="brand-logo" />
           </div>
           <div className="footer-bottom">
             <div className="footer-legal">
-              <span className="copyright">&copy; Ná-Régua todos os direitos reservados 2026</span>
+              <span className="copyright">&copy; Régua Máxima todos os direitos reservados 2026</span>
               <nav className="footer-links" aria-label="Links legais">
                 <a href="/termos">Termos de uso</a>
                 <a href="/privacidade">Política de Privacidade</a>

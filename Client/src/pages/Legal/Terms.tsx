@@ -12,16 +12,16 @@ export default function Terms() {
 
       <main className="legal-page">
         <div className="legal-header">
-          <img src="/assets/images/logos/logo.png" alt="NA·RÉGUA" />
+          <img src="/assets/images/logos/logo.png" alt="Régua Máxima" />
           <h1 className="legal-title">Termos de Uso</h1>
-          <p className="legal-sub">Aplicativo Na-Régua — agendamentos para barbearias</p>
+          <p className="legal-sub">Aplicativo Régua Máxima — agendamentos para barbearias</p>
         </div>
 
         <article className="legal-card">
           <h2>1. Aceitação dos Termos</h2>
-          <p>Ao acessar ou utilizar o Na-Régua, você concorda com estes Termos de Uso. Se não concordar com alguma condição, recomendamos não utilizar o serviço.</p>
+          <p>Ao acessar ou utilizar o Régua Máxima, você concorda com estes Termos de Uso. Se não concordar com alguma condição, recomendamos não utilizar o serviço.</p>
           <h2>2. Descrição do Serviço</h2>
-          <p>O Na-Régua é uma plataforma que facilita agendamentos entre clientes e barbearias, oferecendo funcionalidades de gestão, comunicação e lembretes.</p>
+          <p>O Régua Máxima é uma plataforma que facilita agendamentos entre clientes e barbearias, oferecendo funcionalidades de gestão, comunicação e lembretes.</p>
           <h2>3. Cadastro e Conta</h2>
           <ul className="legal-list">
             <li>Você é responsável pela veracidade das informações cadastradas.</li>
@@ -36,18 +36,18 @@ export default function Terms() {
           </ul>
           <h2>5. Uso Adequado</h2>
           <ul className="legal-list">
-            <li>É proibido utilizar o Na-Régua para fins ilegais, spam ou assédio.</li>
+            <li>É proibido utilizar o Régua Máxima para fins ilegais, spam ou assédio.</li>
             <li>Não tente interferir na operação ou segurança do serviço.</li>
           </ul>
           <h2>6. Conteúdo e Propriedade</h2>
           <ul className="legal-list">
-            <li>Marca, design e conteúdo do Na-Régua são protegidos por direitos autorais e propriedade intelectual.</li>
+            <li>Marca, design e conteúdo do Régua Máxima são protegidos por direitos autorais e propriedade intelectual.</li>
             <li>Você mantém direitos sobre seu conteúdo, mas nos concede licença para operá-lo no app conforme necessário.</li>
           </ul>
           <h2>7. Disponibilidade e Modificações</h2>
           <p>Podemos atualizar, modificar ou interromper funcionalidades sem aviso prévio, buscando melhorar a experiência e estabilidade.</p>
           <h2>8. Limitação de Responsabilidade</h2>
-          <p>O Na-Régua não se responsabiliza por prejuízos indiretos, perda de dados ou falhas externas ao nosso controle (como operadoras e provedores de serviços).</p>
+          <p>O Régua Máxima não se responsabiliza por prejuízos indiretos, perda de dados ou falhas externas ao nosso controle (como operadoras e provedores de serviços).</p>
           <h2>9. Contato</h2>
           <p>Para dúvidas sobre estes termos, entre em contato via WhatsApp disponível no site ou pelo e-mail de suporte.</p>
           <div className="legal-footer">Última atualização: 28/11/2025</div>
