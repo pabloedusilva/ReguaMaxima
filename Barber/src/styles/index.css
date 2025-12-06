@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Brand base styles aligned with landing page */
+:root {
+  --gold: #c9953b;
+  --gold-600: #b3812f;
+  --bg: #0f0f10;
+  --bg-soft: #121212;
+  --text: #f7f7f5;
+  --text-dim: #cfcfcb;
+  --muted: #8b8b86;
+  --surface: #1c1c1c;
+  --border: #2a2a2a;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+  --wa: #25D366;
+  --wa-700: #1ebe57;
+}
+
+@layer base {
+  html, body { height: 100%; }
+  body { @apply bg-gradient-to-b from-bg to-bg-soft text-text font-sans antialiased; }
+  a { @apply text-text no-underline; }
+}
+
+@layer components {
+  .btn { @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full font-semibold border border-border transition; position: relative; }
+  .btn:hover { @apply -translate-y-px; }
+  .btn-primary { @apply bg-gold text-[#1b1408] border-gold; }
+  .btn-outline { @apply bg-transparent text-text border-border; }
+  .btn-text { @apply inline-flex items-center justify-center gap-2; }
+  .btn-spinner { @apply absolute inset-0 flex items-center justify-center; }
+  .card { @apply bg-[#141414] border border-border rounded-2xl shadow-[var(--shadow)] p-5; }
+}
+
+/* Brand logo sizing */
+.brand-logo { width: 110px; height: auto; object-fit: contain; }
+@media (min-width: 1100px) { .brand-logo { width: 125px; } }
+@media (max-width: 480px) { .brand-logo { width: 85px; } }
+
+/* Import animations */
+@import './animations.css';

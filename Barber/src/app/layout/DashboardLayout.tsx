@@ -1,0 +1,1 @@
+// Layout para área autenticada

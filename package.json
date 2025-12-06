@@ -1,5 +1,32 @@
 {
+  "name": "regua-maxima-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "author": "Pablo Eduardo Silva",
+  "license": "PROPRIETARY",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run build:client && npm run build:barber",
+    "build:client": "vite build --config Client/vite.config.ts --outDir dist/client",
+    "build:barber": "vite build --config Barber/vite.config.ts --outDir dist/barber",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "clsx": "^2.1.1"
+  },
   "devDependencies": {
-    "@types/node": "^24.10.1"
+    "@vitejs/plugin-react": "^4.3.3",
+    "@types/node": "^22.0.0",
+    "@types/react": "^18.3.8",
+    "@types/react-dom": "^18.3.2",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.8"
   }
 }

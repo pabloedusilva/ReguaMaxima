@@ -1,1 +1,3 @@
-Sistema de agendamento online para barbearias
+# Sistema de agendamentos para barbearias.
+
+Frontend do cliente.
