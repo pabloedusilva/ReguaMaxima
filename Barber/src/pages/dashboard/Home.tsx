@@ -1,9 +1,10 @@
 import { useEffect, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import NextBookingHighlight from '@barber/components/bookings/NextBookingHighlight'
 
 // TODO: Backend Integration - Replace localStorage with API calls
 // GET /api/stats/overview - Dashboard statistics
-// GET /api/bookings?status=scheduled&limit=5 - Upcoming bookings
+// GET /api/bookings?status=scheduled&limit=3 - Upcoming bookings
 
 interface DashboardStats {
   totalBarbers: number
@@ -83,7 +84,7 @@ export default function DashboardHome() {
         bookingsToday
       })
 
-      // Get next 5 upcoming bookings
+      // Get next 3 upcoming bookings
       const upcoming = scheduledBookings
         .map(b => ({
           ...b,
@@ -91,7 +92,7 @@ export default function DashboardHome() {
         }))
         .filter(b => b.dateTime >= now)
         .sort((a, b) => a.dateTime.getTime() - b.dateTime.getTime())
-        .slice(0, 5)
+        .slice(0, 3)
 
       setUpcomingBookings(upcoming)
     } catch (error) {
@@ -244,12 +245,16 @@ export default function DashboardHome() {
           </div>
         ) : (
           <div className="grid gap-4">
-            {upcomingBookings.map((booking, index) => (
+            {/* Próximo Agendamento em Destaque */}
+            <NextBookingHighlight booking={upcomingBookings[0]} />
+
+            {/* Próximos Agendamentos (2º e 3º) */}
+            {upcomingBookings.slice(1).map((booking, index) => (
               <div
                 key={booking.id}
                 className="card card-hover flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer"
                 onClick={() => navigate(`/agendamentos/${booking.id}`)}
-                style={{ animationDelay: `${index * 0.1}s` }}
+                style={{ animationDelay: `${(index + 1) * 0.1}s` }}
               >
                 <div className="flex items-start gap-4 flex-1">
                   <div className="w-12 h-12 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center flex-shrink-0">

@@ -34,6 +34,17 @@ const SERVICE_IMAGES = [
   '/assets/images/services/servico-corte-azul.jpg',
   '/assets/images/services/servico-corte-rosa.jpg',
   '/assets/images/services/servico-corte-vermelho.jpg',
+  '/assets/images/services/servico-bigode-branco.jpg',
+  '/assets/images/services/servico-bigode-preto.jpg',
+  '/assets/images/services/servico-corte-2-branco.jpg',
+  '/assets/images/services/servico-corte-branco.jpg',
+  '/assets/images/services/servico-corte-infantil-branco.jpg',
+  '/assets/images/services/servico-corte1-branco.jpg',
+  '/assets/images/services/servico-corte3-branco.jpg',
+  '/assets/images/services/servico-corte4-branco.jpg',
+  '/assets/images/services/servico-maquina-branco.jpg',
+  '/assets/images/services/servico-tesoura-branco.jpg',
+  '/assets/images/services/servico-tesoura-preto.jpg',
 ]
 
 export default function ListServices() {

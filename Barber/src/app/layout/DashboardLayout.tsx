@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 export default function DashboardLayout() {
   const navigate = useNavigate()
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [showLogoutMenu, setShowLogoutMenu] = useState(false)
 
   const handleLogout = () => {
     // TODO: Backend integration - Call logout API
@@ -73,21 +73,9 @@ export default function DashboardLayout() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-bg to-bg-soft">
-      {/* Mobile Sidebar Overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-[#0a0a0a] border-r border-border z-50 transition-transform duration-300 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0`}
-      >
-        <div className="flex flex-col h-full">
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex fixed top-0 left-0 h-full w-64 bg-[#0a0a0a] border-r border-border z-50">
+        <div className="flex flex-col h-full w-full">
           {/* Logo */}
           <div className="p-6 border-b border-border">
             <div className="flex items-center gap-3">
@@ -113,11 +101,10 @@ export default function DashboardLayout() {
                     className={({ isActive }) =>
                       `flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                         isActive
-                          ? 'bg-gold text-[#1b1408] font-semibold shadow-lg'
+                          ? 'bg-gold text-[#1b1408] font-semibold shadow-lg shadow-gold/20'
                           : 'text-text-dim hover:text-text hover:bg-surface'
                       }`
                     }
-                    onClick={() => setSidebarOpen(false)}
                   >
                     {item.icon}
                     <span>{item.label}</span>
@@ -142,34 +129,104 @@ export default function DashboardLayout() {
         </div>
       </aside>
 
+      {/* Mobile Bottom Navigation */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50">
+        <div className="relative bg-black/95 backdrop-blur-xl">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent"></div>
+          
+          <div className="overflow-x-auto scrollbar-hide">
+            <div className="flex items-center gap-1 px-4 py-3 pb-safe min-w-max">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className="flex-1 min-w-[70px]"
+                >
+                  {({ isActive }) => (
+                    <div className="relative">
+                      {isActive && (
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-10 h-0.5 bg-gold rounded-full"></div>
+                      )}
+                      <div className="flex flex-col items-center gap-1.5 py-2">
+                        <div className={`transition-all duration-300 ${
+                          isActive ? 'text-gold scale-110' : 'text-text-dim'
+                        }`}>
+                          {item.icon}
+                        </div>
+                        <span className={`text-[8.5px] font-semibold tracking-tight transition-colors duration-300 ${
+                          isActive ? 'text-gold' : 'text-text-dim/70'
+                        }`}>
+                          {item.label}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </NavLink>
+              ))}
+            </div>
+          </div>
+        </div>
+      </nav>
+
       {/* Main Content */}
       <div className="lg:ml-64">
         {/* Top Bar */}
         <header className="sticky top-0 z-30 bg-[#0a0a0a]/80 backdrop-blur-lg border-b border-border">
           <div className="flex items-center justify-between px-4 md:px-6 py-4">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="lg:hidden p-2 rounded-xl hover:bg-surface text-text"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
+            {/* Logo for Mobile */}
+            <div className="flex items-center gap-3 lg:hidden">
+              <img
+                src="/assets/images/logos/logo.png"
+                alt="Régua Máxima"
+                className="w-8 h-8 object-contain"
+              />
+              <div>
+                <h2 className="font-display text-gold text-sm">Régua Máxima</h2>
+              </div>
+            </div>
 
             <div className="flex items-center gap-4 ml-auto">
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-semibold text-text">Administrador</p>
                 <p className="text-xs text-text-dim">Régua Máxima</p>
               </div>
-              <div className="w-10 h-10 rounded-full bg-gold flex items-center justify-center font-bold text-[#1b1408]">
+              <button
+                onClick={() => setShowLogoutMenu(!showLogoutMenu)}
+                className="relative w-10 h-10 rounded-full bg-gradient-to-br from-gold to-gold/70 flex items-center justify-center font-bold text-[#1b1408] shadow-lg shadow-gold/20 hover:scale-105 transition-transform"
+              >
                 A
-              </div>
+              </button>
+              
+              {/* Logout Menu Dropdown */}
+              {showLogoutMenu && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowLogoutMenu(false)}
+                  />
+                  <div className="absolute top-full right-4 mt-2 w-48 bg-[#0a0a0a] border border-gold/20 rounded-xl shadow-2xl shadow-gold/10 overflow-hidden z-50 animate-fade-in">
+                    <div className="p-3 border-b border-border">
+                      <p className="text-sm font-semibold text-text">Administrador</p>
+                      <p className="text-xs text-text-dim">admin@reguamaxima.com</p>
+                    </div>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 transition-all"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
+                      <span>Sair</span>
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </header>
 
         {/* Page Content */}
-        <main className="p-4 md:p-6 lg:p-8">
+        <main className="p-4 md:p-6 lg:p-8 pb-24 lg:pb-8">
           <Outlet />
         </main>
       </div>

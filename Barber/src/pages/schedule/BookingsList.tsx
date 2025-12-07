@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import NextBookingHighlight from '@barber/components/bookings/NextBookingHighlight'
 
 // TODO: Backend Integration
 // GET /api/bookings - List all bookings with filters
@@ -23,8 +24,12 @@ export default function BookingsList() {
   const navigate = useNavigate()
   const [bookings, setBookings] = useState<Booking[]>([])
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([])
-  const [filter, setFilter] = useState<'all' | 'scheduled' | 'completed' | 'cancelled'>('all')
-  const [dateFilter, setDateFilter] = useState('')
+  const [filter, setFilter] = useState<'all' | 'scheduled' | 'completed' | 'cancelled'>('scheduled')
+  const [dateFilter, setDateFilter] = useState(() => {
+    // Define data de hoje como padrão
+    const today = new Date()
+    return today.toISOString().split('T')[0]
+  })
   const [searchTerm, setSearchTerm] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [bookingToCancel, setBookingToCancel] = useState<string | null>(null)
@@ -74,15 +79,29 @@ export default function BookingsList() {
       )
     }
 
-    // Sort by date and time (newest first)
+    // Sort by date and time (oldest first for upcoming)
     filtered.sort((a, b) => {
       const dateA = new Date(`${a.date}T${a.time}`)
       const dateB = new Date(`${b.date}T${b.time}`)
-      return dateB.getTime() - dateA.getTime()
+      return dateA.getTime() - dateB.getTime()
     })
 
     setFilteredBookings(filtered)
   }
+
+  // Próximo agendamento para destaque
+  const nextBooking = useMemo(() => {
+    const now = new Date()
+    const scheduled = bookings
+      .filter(b => b.status === 'scheduled')
+      .filter(b => new Date(`${b.date}T${b.time}`) >= now)
+      .sort((a, b) => {
+        const dateA = new Date(`${a.date}T${a.time}`)
+        const dateB = new Date(`${b.date}T${b.time}`)
+        return dateA.getTime() - dateB.getTime()
+      })
+    return scheduled.length > 0 ? scheduled[0] : null
+  }, [bookings])
 
   const handleCancelBooking = (bookingId: string) => {
     setBookingToCancel(bookingId)
@@ -161,6 +180,14 @@ export default function BookingsList() {
         </p>
       </div>
 
+      {/* Próximo Agendamento em Destaque */}
+      {nextBooking && (
+        <div className="animate-fade-in">
+          <h2 className="text-text font-semibold text-lg mb-3">Em destaque</h2>
+          <NextBookingHighlight booking={nextBooking} />
+        </div>
+      )}
+
       {/* Filters */}
       <div className="card animate-fade-in-delayed">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -218,8 +245,9 @@ export default function BookingsList() {
           {(filter !== 'all' || dateFilter || searchTerm) && (
             <button
               onClick={() => {
-                setFilter('all')
-                setDateFilter('')
+                setFilter('scheduled')
+                const today = new Date()
+                setDateFilter(today.toISOString().split('T')[0])
                 setSearchTerm('')
               }}
               className="text-sm text-gold hover:text-gold-600 transition-colors"
