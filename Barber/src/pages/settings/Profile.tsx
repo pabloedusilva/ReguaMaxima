@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 // image fallback handled via ImageWithFallback
 import { formatPhone } from '../../utils/format'
-import ImageWithFallback from '../../components/ui/ImageWithFallback'
 
 // TODO: Backend Integration
 // GET /api/settings/profile - Get barbershop profile
@@ -156,12 +155,17 @@ export default function Profile() {
         <div className="card">
           <h3 className="text-lg font-semibold text-text mb-4 text-center">Logo</h3>
           <div className="flex flex-col items-center">
-            <ImageWithFallback
-              src={profile.logo}
-              alt={profile.name}
-              rounded
-              containerClassName="w-32 h-32 mb-4 bg-surface border-4 border-gold/20"
-            />
+            <div className="w-32 h-32 mb-4 rounded-full overflow-hidden bg-surface border-4 border-gold/20">
+              <img
+                src={profile.logo}
+                alt={profile.name}
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement
+                  target.src = '/assets/images/ui/default.jpg'
+                }}
+              />
+            </div>
             <div className="text-center">
               <p className="text-sm text-text-dim">Logo atual</p>
               <p className="text-xs text-muted mt-1">Recomendado: PNG ou SVG</p>
@@ -230,12 +234,13 @@ export default function Profile() {
               <div className="card">
                 {/* Logo Upload Section */}
                 <div className="flex flex-col items-center mb-6">
-                  <ImageWithFallback
-                    src={logoPreview || tempProfile.logo}
-                    alt="Logo"
-                    rounded
-                    containerClassName="w-40 h-40 mb-4 bg-surface border-4 border-gold/20"
-                  />
+                  <div className="w-40 h-40 mb-4 rounded-full overflow-hidden bg-surface border-4 border-gold/20">
+                    <img
+                      src={logoPreview || tempProfile.logo}
+                      alt="Logo"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                   
                   {/* Upload/Avatar Selection Buttons */}
                   <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
@@ -283,10 +288,10 @@ export default function Profile() {
                               : 'border-border hover:border-gold/50'
                           }`}
                         >
-                          <ImageWithFallback
+                          <img
                             src={avatar}
                             alt={`Avatar ${index + 1}`}
-                            containerClassName="aspect-square"
+                            className="w-full h-full object-cover aspect-square"
                           />
                           {(logoPreview || tempProfile.logo) === avatar && (
                             <div className="absolute inset-0 bg-gold/20 flex items-center justify-center">

@@ -22,6 +22,12 @@ export default function ImageWithFallback({
 
   const effectiveSrc = failed ? DEFAULT_IMAGE : src || DEFAULT_IMAGE
 
+  // Reset state when source changes to allow new load attempt
+  React.useEffect(() => {
+    setFailed(false)
+    setLoaded(false)
+  }, [src])
+
   return (
     <div className={`relative overflow-hidden ${rounded ? 'rounded-full' : 'rounded-xl'} ${containerClassName}`}>
       {!loaded && (

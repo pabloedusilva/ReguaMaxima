@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import ImageWithFallback from '../../components/ui/ImageWithFallback'
 
 // TODO: Backend Integration
 // GET /api/professionals - List all professionals
@@ -74,23 +73,62 @@ export default function Staff() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      const blobUrl = URL.createObjectURL(file)
       setFormData({
         ...formData,
         imageFile: file,
-        imagePreview: URL.createObjectURL(file)
+        imagePreview: blobUrl
       })
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Cleanup blob URL to avoid stale previews and errors
+  useEffect(() => {
+    return () => {
+      try {
+        if (formData.imagePreview && formData.imagePreview.startsWith('blob:')) {
+          URL.revokeObjectURL(formData.imagePreview)
+        }
+      } catch {}
+    }
+  }, [formData.imagePreview])
+
+  useEffect(() => {
+    if (!modalOpen) {
+      try {
+        if (formData.imagePreview && formData.imagePreview.startsWith('blob:')) {
+          URL.revokeObjectURL(formData.imagePreview)
+        }
+      } catch {}
+      // do not persist blob URL when modal closes
+      setFormData((prev) => ({ ...prev, imageFile: null }))
+    }
+  }, [modalOpen])
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
+    // Convert blob URL to base64 for localStorage persistence
+    let finalImageUrl = formData.imagePreview
+    if (formData.imageFile) {
+      try {
+        const reader = new FileReader()
+        const base64Promise = new Promise<string>((resolve) => {
+          reader.onloadend = () => resolve(reader.result as string)
+          reader.readAsDataURL(formData.imageFile!)
+        })
+        finalImageUrl = await base64Promise
+      } catch (error) {
+        console.error('Error converting image:', error)
+      }
+    }
+
     // TODO: In real implementation, upload image to server first
     const professionalData: Professional = {
       id: editingProfessional?.id || `prof_${Date.now()}`,
       name: formData.name,
       specialty: formData.specialty,
-      image: formData.imagePreview // In production, this would be the URL returned from image upload
+      image: finalImageUrl // base64 data URL or existing URL
     }
 
     let updated: Professional[]
@@ -153,12 +191,17 @@ export default function Staff() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-delayed">
           {professionals.map((professional) => (
             <div key={professional.id} className="card card-hover text-center">
-              <ImageWithFallback
-                src={professional.image}
-                alt={professional.name}
-                rounded
-                containerClassName="w-32 h-32 mx-auto mb-4 bg-surface border-4 border-gold/20"
-              />
+              <div className="w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden bg-surface border-4 border-gold/20">
+                <img
+                  src={professional.image}
+                  alt={professional.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement
+                    target.src = '/assets/images/ui/default.jpg'
+                  }}
+                />
+              </div>
               <h3 className="text-xl font-semibold text-text mb-1">{professional.name}</h3>
               <p className="text-text-dim mb-4">{professional.specialty}</p>
               <div className="flex gap-2 pt-4 border-t border-border">
@@ -212,12 +255,13 @@ export default function Staff() {
               <div className="card">
                 {/* Image Upload */}
                 <div className="flex flex-col items-center mb-6">
-                  <ImageWithFallback
-                    src={formData.imagePreview}
-                    alt="Preview"
-                    rounded
-                    containerClassName="w-40 h-40 mb-4 bg-surface border-4 border-gold/20"
-                  />
+                  <div className="w-40 h-40 mb-4 rounded-full overflow-hidden bg-surface border-4 border-gold/20">
+                    <img
+                      src={formData.imagePreview}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                   <label className="btn btn-outline cursor-pointer">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
