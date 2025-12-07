@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { handleImageError } from '../../utils/imageHelpers'
 
 // TODO: Backend Integration
 // GET /api/services - List all services
@@ -190,6 +191,7 @@ export default function ListServices() {
                   src={service.image}
                   alt={service.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  onError={handleImageError}
                 />
               </div>
               <h3 className="text-xl font-semibold text-text mb-2">{service.name}</h3>
@@ -322,7 +324,12 @@ export default function ListServices() {
                               : 'border-border hover:border-gold/50'
                           }`}
                         >
-                          <img src={img} alt="" className="w-full h-full object-cover" />
+                          <img 
+                            src={img} 
+                            alt="" 
+                            className="w-full h-full object-cover"
+                            onError={handleImageError}
+                          />
                         </button>
                       ))}
                     </div>

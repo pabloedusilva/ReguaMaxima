@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { handleImageError } from '../../utils/imageHelpers'
 
 // TODO: Backend Integration
 // GET /api/professionals - List all professionals
@@ -157,6 +158,7 @@ export default function Staff() {
                   src={professional.image}
                   alt={professional.name}
                   className="w-full h-full object-cover"
+                  onError={handleImageError}
                 />
               </div>
               <h3 className="text-xl font-semibold text-text mb-1">{professional.name}</h3>
@@ -217,6 +219,7 @@ export default function Staff() {
                       src={formData.imagePreview}
                       alt="Preview"
                       className="w-full h-full object-cover"
+                      onError={handleImageError}
                     />
                   </div>
                   <label className="btn btn-outline cursor-pointer">

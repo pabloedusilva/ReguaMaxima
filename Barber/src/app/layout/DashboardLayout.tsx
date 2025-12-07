@@ -176,25 +176,42 @@ export default function DashboardLayout() {
             {/* Logo for Mobile */}
             <div className="flex items-center gap-3 lg:hidden">
               <img
-                src="/assets/images/logos/logo.png"
-                alt="Régua Máxima"
-                className="w-8 h-8 object-contain"
+                src={(typeof window !== 'undefined' && JSON.parse(localStorage.getItem('barbershop_profile') || '{}')?.logo) || '/assets/images/logos/logo.png'}
+                alt={(typeof window !== 'undefined' && JSON.parse(localStorage.getItem('barbershop_profile') || '{}')?.name) || 'Régua Máxima'}
+                className="w-8 h-8 object-cover rounded-full"
               />
               <div>
-                <h2 className="font-display text-gold text-sm">Régua Máxima</h2>
+                <h2 className="font-display text-gold text-sm">{(typeof window !== 'undefined' && JSON.parse(localStorage.getItem('barbershop_profile') || '{}')?.name) || 'Régua Máxima'}</h2>
               </div>
             </div>
 
             <div className="flex items-center gap-4 ml-auto">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-semibold text-text">Administrador</p>
-                <p className="text-xs text-text-dim">Régua Máxima</p>
+                            <p className="text-sm font-semibold text-text">{(typeof window !== 'undefined' && JSON.parse(localStorage.getItem('barbershop_profile') || '{}')?.name) || 'Régua Máxima'}</p>
+                            <p className="text-xs text-text-dim">
+                              {(() => {
+                                try {
+                                  const p = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('barbershop_profile') || '{}') : {}
+                                  const digits = String(p?.whatsapp || '').replace(/\D/g, '')
+                                  if (digits.length >= 11) {
+                                    return `(${digits.slice(0,2)}) ${digits.slice(2,7)}-${digits.slice(7,11)}`
+                                  } else if (digits.length >= 10) {
+                                    return `(${digits.slice(0,2)}) ${digits.slice(2,6)}-${digits.slice(6,10)}`
+                                  }
+                                  return p?.whatsapp || '(00) 00000-0000'
+                                } catch { return '(00) 00000-0000' }
+                              })()}
+                            </p>
               </div>
               <button
                 onClick={() => setShowLogoutMenu(!showLogoutMenu)}
-                className="relative w-10 h-10 rounded-full bg-gradient-to-br from-gold to-gold/70 flex items-center justify-center font-bold text-[#1b1408] shadow-lg shadow-gold/20 hover:scale-105 transition-transform"
+                className="relative w-10 h-10 rounded-full overflow-hidden shadow-lg shadow-gold/20 hover:scale-105 transition-transform border-2 border-gold/30"
               >
-                A
+                <img
+                  src={(typeof window !== 'undefined' && JSON.parse(localStorage.getItem('barbershop_profile') || '{}')?.logo) || '/assets/images/logos/logo.png'}
+                  alt={(typeof window !== 'undefined' && JSON.parse(localStorage.getItem('barbershop_profile') || '{}')?.name) || 'Régua Máxima'}
+                  className="w-full h-full object-cover"
+                />
               </button>
               
               {/* Logout Menu Dropdown */}
@@ -206,8 +223,21 @@ export default function DashboardLayout() {
                   />
                   <div className="absolute top-full right-4 mt-2 w-48 bg-[#0a0a0a] border border-gold/20 rounded-xl shadow-2xl shadow-gold/10 overflow-hidden z-50 animate-fade-in">
                     <div className="p-3 border-b border-border">
-                      <p className="text-sm font-semibold text-text">Administrador</p>
-                      <p className="text-xs text-text-dim">admin@reguamaxima.com</p>
+                      <p className="text-sm font-semibold text-text">{(typeof window !== 'undefined' && JSON.parse(localStorage.getItem('barbershop_profile') || '{}')?.name) || 'Régua Máxima'}</p>
+                      <p className="text-xs text-text-dim">
+                        {(() => {
+                          try {
+                            const p = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('barbershop_profile') || '{}') : {}
+                            const digits = String(p?.whatsapp || '').replace(/\D/g, '')
+                            if (digits.length >= 11) {
+                              return `(${digits.slice(0,2)}) ${digits.slice(2,7)}-${digits.slice(7,11)}`
+                            } else if (digits.length >= 10) {
+                              return `(${digits.slice(0,2)}) ${digits.slice(2,6)}-${digits.slice(6,10)}`
+                            }
+                            return p?.whatsapp || '(00) 00000-0000'
+                          } catch { return '(00) 00000-0000' }
+                        })()}
+                      </p>
                     </div>
                     <button
                       onClick={handleLogout}
