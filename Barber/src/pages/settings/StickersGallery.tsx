@@ -116,14 +116,23 @@ export default function StickersGallery() {
     try {
       // Fetch the image as blob
       const response = await fetch(stickerPath)
+      if (!response.ok) {
+        throw new Error('Falha ao carregar imagem')
+      }
+      
       const blob = await response.blob()
       
-      // Copy to clipboard
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          [blob.type]: blob
-        })
-      ])
+      // Verify clipboard API is available
+      if (!navigator.clipboard || !navigator.clipboard.write) {
+        throw new Error('Clipboard API não disponível')
+      }
+      
+      // Copy to clipboard with proper MIME type
+      const clipboardItem = new ClipboardItem({
+        [blob.type]: blob
+      })
+      
+      await navigator.clipboard.write([clipboardItem])
       
       setCopiedSticker(stickerPath)
       setTimeout(() => {
@@ -132,16 +141,56 @@ export default function StickersGallery() {
       }, 2000)
     } catch (error) {
       console.error('Erro ao copiar figurinha:', error)
-      // Fallback: copy the URL instead
+      
+      // Fallback: try to copy as canvas/image data
       try {
-        await navigator.clipboard.writeText(stickerPath)
+        const response = await fetch(stickerPath)
+        const blob = await response.blob()
+        
+        // Create an image element
+        const img = new Image()
+        img.crossOrigin = 'anonymous'
+        
+        await new Promise((resolve, reject) => {
+          img.onload = resolve
+          img.onerror = reject
+          img.src = URL.createObjectURL(blob)
+        })
+        
+        // Create canvas and draw image
+        const canvas = document.createElement('canvas')
+        canvas.width = img.width
+        canvas.height = img.height
+        const ctx = canvas.getContext('2d')
+        
+        if (!ctx) {
+          throw new Error('Não foi possível criar contexto canvas')
+        }
+        
+        ctx.drawImage(img, 0, 0)
+        
+        // Convert canvas to blob
+        const canvasBlob = await new Promise<Blob>((resolve) => {
+          canvas.toBlob((blob) => {
+            if (blob) resolve(blob)
+          }, 'image/png')
+        })
+        
+        // Try to copy canvas blob
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            'image/png': canvasBlob
+          })
+        ])
+        
         setCopiedSticker(stickerPath)
         setTimeout(() => {
           setCopiedSticker(null)
           setSelectedSticker(null)
         }, 2000)
-      } catch (err) {
-        console.error('Erro ao copiar URL:', err)
+      } catch (fallbackError) {
+        console.error('Erro no fallback:', fallbackError)
+        alert('Não foi possível copiar a figurinha. Por favor, tente salvar a imagem manualmente.')
       }
     }
   }
