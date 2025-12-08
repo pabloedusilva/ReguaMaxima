@@ -34,7 +34,11 @@ const getStickerFiles = (folderName: string): string[] => {
     ],
     frases: [],
     favela: [],
-    animadas: []
+    animadas: [
+      '1.GIF', '2.GIF', '3.GIF', '4.GIF', '5.GIF', '6.GIF', '7.GIF', '8.GIF', '9.GIF', '10.GIF',
+      '11.GIF', '12.GIF', '13.GIF', '14.GIF', '15.GIF', '16.GIF', '17.GIF', '18.GIF', '19.GIF', '20.GIF',
+      '21.GIF', '22.GIF'
+    ]
   }
   
   const files = filesByCategory[folderName] || []
