@@ -144,25 +144,25 @@ export default function DashboardLayout() {
           <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent"></div>
           
           <div className="overflow-x-auto scrollbar-hide">
-            <div className="flex items-center gap-1 px-4 py-3 pb-safe min-w-max">
+            <div className="flex items-center gap-1 px-4 py-4 pb-safe min-w-max">
               {navItems.map((item) => (
                 <NavLink
                   key={item.path}
                   to={item.path}
-                  className="flex-1 min-w-[70px]"
+                  className="flex-1 min-w-[75px]"
                 >
                   {({ isActive }) => (
                     <div className="relative">
                       {isActive && (
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-10 h-0.5 bg-gold rounded-full"></div>
+                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-0.5 bg-gold rounded-full"></div>
                       )}
-                      <div className="flex flex-col items-center gap-1.5 py-2">
-                        <div className={`transition-all duration-300 ${
+                      <div className="flex flex-col items-center gap-2 py-2.5">
+                        <div className={`transition-all duration-300 text-xl ${
                           isActive ? 'text-gold scale-110' : 'text-text-dim'
                         }`}>
                           {item.icon}
                         </div>
-                        <span className={`text-[8.5px] font-semibold tracking-tight transition-colors duration-300 ${
+                        <span className={`text-[9px] font-semibold tracking-tight transition-colors duration-300 ${
                           isActive ? 'text-gold' : 'text-text-dim/70'
                         }`}>
                           {item.label}
