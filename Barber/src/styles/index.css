@@ -72,30 +72,15 @@
       -webkit-user-select: text;
     }
   }
-  
-  /* Melhorar performance de renderização em mobile */
-  * {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  /* Tamanhos mínimos de touch target para acessibilidade mobile */
-  button, a, input[type="checkbox"], input[type="radio"] {
-    min-height: 44px;
-    min-width: 44px;
-  }
 }
 
 @layer components {
   /* Button Styles */
   .btn { 
-    @apply inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full font-semibold border border-border transition-all duration-200; 
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full font-semibold border border-border transition-all duration-200; 
     position: relative;
-    /* Touch target mínimo de 44px para mobile */
-    min-height: 44px;
   }
   .btn:hover { @apply -translate-y-px shadow-lg; }
-  .btn:active { @apply translate-y-0 shadow-md; }
   .btn-primary { @apply bg-gold text-[#1b1408] border-gold hover:bg-gold-600; }
   .btn-outline { @apply bg-transparent text-text border-border hover:bg-surface; }
   .btn-danger { @apply bg-red-600 text-white border-red-600 hover:bg-red-700; }
@@ -103,96 +88,46 @@
   .btn-text { @apply inline-flex items-center justify-center gap-2; }
   .btn-spinner { @apply absolute inset-0 flex items-center justify-center; }
   
-  /* Button Small - para contextos compactos */
-  .btn-sm {
-    @apply px-4 py-2 text-sm;
-    min-height: 40px;
-  }
-  
   /* Card Styles */
   .card { 
-    @apply bg-[#141414] border border-border rounded-2xl shadow-[var(--shadow)] p-4 md:p-5 transition-all duration-200; 
+    @apply bg-[#141414] border border-border rounded-2xl shadow-[var(--shadow)] p-5 transition-all duration-200; 
   }
   .card-hover:hover { @apply border-gold/30 shadow-2xl; }
   
-  /* Stat Card - otimizado para mobile */
+  /* Stat Card */
   .stat-card {
-    @apply card p-4 md:p-6 flex flex-col gap-3;
+    @apply card p-6 flex flex-col gap-3;
   }
   
-  /* Input Styles - touch friendly */
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  input[type="tel"],
-  input[type="date"],
-  input[type="time"],
-  select,
-  textarea {
-    @apply w-full px-4 py-3 bg-surface border border-border rounded-xl text-text placeholder:text-muted;
-    @apply focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/20 transition-all;
-    min-height: 44px;
-    font-size: 16px; /* Previne zoom no iOS */
-  }
-  
-  textarea {
-    min-height: 100px;
-    resize: vertical;
-  }
-  
-  /* Modal Styles - otimizado para mobile */
+  /* Modal Styles */
   .modal-overlay {
-    @apply fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center;
-    padding: 0;
+    @apply fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4;
   }
-  
   .modal-content {
-    @apply bg-[#141414] border border-border shadow-2xl overflow-y-auto;
-    /* Mobile: full width na base, desktop: arredondado */
-    width: 100%;
-    max-height: 85vh;
-    border-radius: 1.5rem 1.5rem 0 0;
-    margin: 0;
+    @apply bg-[#141414] border border-border rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto;
   }
-  
-  @media (min-width: 640px) {
-    .modal-overlay {
-      padding: 1rem;
-    }
-    
-    .modal-content {
-      border-radius: 1.5rem;
-      max-height: 90vh;
-    }
-  }
-  
   .modal-fullscreen {
     @apply fixed inset-0 bg-bg z-50 overflow-y-auto;
   }
   
-  /* Table Styles - responsivo */
+  /* Table Styles */
   .table-container {
     @apply overflow-x-auto rounded-xl border border-border;
-    -webkit-overflow-scrolling: touch;
   }
   .table {
     @apply w-full text-left;
-    min-width: 600px; /* Garante scroll horizontal quando necessário */
   }
   .table thead {
     @apply bg-surface border-b border-border;
   }
   .table th {
-    @apply px-3 md:px-4 py-3 text-xs md:text-sm font-semibold text-text-dim;
+    @apply px-4 py-3 text-sm font-semibold text-text-dim;
   }
   .table td {
-    @apply px-3 md:px-4 py-3 text-xs md:text-sm border-b border-border/50;
+    @apply px-4 py-3 text-sm border-b border-border/50;
   }
   .table tbody tr:hover {
     @apply bg-surface/50;
-  }
-  .table tbody tr:active {
-    @apply bg-surface/70;
   }
   
   /* Badge Styles */
@@ -232,34 +167,6 @@
   
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
-  }
-  
-  /* Otimizações para cards em mobile */
-  .card {
-    @apply rounded-xl; /* Bordas menores em mobile */
-  }
-  
-  /* Grid responsivo para stats */
-  .stats-grid-mobile {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-  }
-  
-  @media (min-width: 480px) {
-    .stats-grid-mobile {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-    }
-  }
-  
-  /* Melhorar legibilidade em telas pequenas */
-  h1 {
-    @apply text-3xl;
-  }
-  
-  h2 {
-    @apply text-xl;
   }
 }
 /* PWA Install Modal - Drawer Styles (inspirado na Landing Page) */
@@ -468,48 +375,5 @@
   .animated,
   .transition {
     will-change: transform, opacity;
-  }
-  
-  /* Garante que o conteúdo não fique atrás da bottom nav */
-  main {
-    padding-bottom: calc(80px + env(safe-area-inset-bottom)) !important;
-  }
-  
-  /* Ajusta footer para não sobrepor bottom nav */
-  footer {
-    display: none;
-  }
-}
-
-/* Adiciona smooth scroll global */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Melhora visual de loading states */
-@keyframes shimmer {
-  0% {
-    background-position: -468px 0;
-  }
-  100% {
-    background-position: 468px 0;
-  }
-}
-
-.skeleton {
-  animation: shimmer 1.2s ease-in-out infinite;
-  background: linear-gradient(to right, #1c1c1c 4%, #2a2a2a 25%, #1c1c1c 36%);
-  background-size: 1000px 100%;
-}
-
-/* Ajustes para landscape em mobile */
-@media (max-width: 1023px) and (orientation: landscape) {
-  .modal-content {
-    max-height: 70vh;
-  }
-  
-  main {
-    padding-top: 0.75rem !important;
-    padding-bottom: 4rem !important;
   }
 }

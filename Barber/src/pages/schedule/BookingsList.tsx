@@ -158,13 +158,13 @@ export default function BookingsList() {
   }
 
   return (
-    <div className="grid gap-6 md:gap-8">
+    <div className="grid gap-8">
       {/* Header */}
       <div className="animate-fade-in">
-        <h1 className="font-display text-3xl sm:text-4xl md:text-5xl text-gold mb-2">
+        <h1 className="font-display text-4xl md:text-5xl text-gold mb-2">
           Agendamentos
         </h1>
-        <p className="text-sm md:text-base text-text-dim">
+        <p className="text-text-dim">
           Visualize e gerencie todos os agendamentos
         </p>
       </div>
@@ -172,17 +172,17 @@ export default function BookingsList() {
       {/* Próximo Agendamento em Destaque */}
       {nextBooking && (
         <div className="animate-fade-in">
-          <h2 className="text-text font-semibold text-base md:text-lg mb-3">Em destaque</h2>
+          <h2 className="text-text font-semibold text-lg mb-3">Em destaque</h2>
           <NextBookingHighlight booking={nextBooking} />
         </div>
       )}
 
       {/* Filters */}
       <div className="card animate-fade-in-delayed">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Search */}
-          <div className="sm:col-span-2 md:col-span-1">
-            <label className="block text-xs md:text-sm font-medium text-text-dim mb-2">
+          <div>
+            <label className="block text-sm font-medium text-text-dim mb-2">
               Buscar
             </label>
             <input
@@ -190,29 +190,32 @@ export default function BookingsList() {
               placeholder="Nome, telefone ou serviço..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-4 py-2 bg-surface border border-border rounded-xl text-text placeholder:text-muted focus:outline-none focus:border-gold transition-colors"
             />
           </div>
 
           {/* Date Filter */}
           <div>
-            <label className="block text-xs md:text-sm font-medium text-text-dim mb-2">
+            <label className="block text-sm font-medium text-text-dim mb-2">
               Data
             </label>
             <input
               type="date"
               value={dateFilter}
               onChange={(e) => setDateFilter(e.target.value)}
+              className="w-full px-4 py-2 bg-surface border border-border rounded-xl text-text focus:outline-none focus:border-gold transition-colors"
             />
           </div>
 
           {/* Status Filter */}
           <div>
-            <label className="block text-xs md:text-sm font-medium text-text-dim mb-2">
+            <label className="block text-sm font-medium text-text-dim mb-2">
               Status
             </label>
             <select
               value={filter}
               onChange={(e) => setFilter(e.target.value as typeof filter)}
+              className="w-full px-4 py-2 bg-surface border border-border rounded-xl text-text focus:outline-none focus:border-gold transition-colors"
             >
               <option value="all">Todos</option>
               <option value="scheduled">Agendados</option>
@@ -223,8 +226,8 @@ export default function BookingsList() {
         </div>
 
         {/* Filter Summary */}
-        <div className="mt-3 md:mt-4 pt-3 md:pt-4 border-t border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-          <p className="text-xs md:text-sm text-text-dim">
+        <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
+          <p className="text-sm text-text-dim">
             <span className="font-semibold text-text">{filteredBookings.length}</span>{' '}
             agendamento(s) encontrado(s)
           </p>
@@ -236,7 +239,7 @@ export default function BookingsList() {
                 setDateFilter(today.toISOString().split('T')[0])
                 setSearchTerm('')
               }}
-              className="text-xs md:text-sm text-gold hover:text-gold-600 active:text-gold-600 transition-colors touch-manipulation min-h-[44px] flex items-center"
+              className="text-sm text-gold hover:text-gold-600 transition-colors"
             >
               Limpar filtros
             </button>
@@ -247,7 +250,7 @@ export default function BookingsList() {
       {/* Data Filtrada em Destaque */}
       {dateFilter && (
         <div className="animate-fade-in-delayed">
-          <h2 className="font-display text-xl sm:text-2xl md:text-3xl text-gold capitalize">
+          <h2 className="font-display text-2xl md:text-3xl text-gold capitalize">
             {formatDisplayDate(dateFilter)}
           </h2>
         </div>
@@ -261,21 +264,21 @@ export default function BookingsList() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
           </div>
-          <p className="text-sm md:text-base text-text-dim">Nenhum agendamento encontrado</p>
+          <p className="text-text-dim">Nenhum agendamento encontrado</p>
         </div>
       ) : (
-        <div className="grid gap-6 md:gap-8 animate-fade-in-delayed">
+        <div className="grid gap-8 animate-fade-in-delayed">
           {Object.entries(groupedBookings).map(([date, bookingsForDate]) => (
-            <div key={date} className="grid gap-3 md:gap-4">
+            <div key={date} className="grid gap-4">
               {/* Cabeçalho da Data */}
               {!dateFilter && (
-                <h2 className="font-display text-xl sm:text-2xl md:text-3xl text-gold capitalize">
+                <h2 className="font-display text-2xl md:text-3xl text-gold capitalize">
                   {formatDisplayDate(date)}
                 </h2>
               )}
               
-              {/* Cards dos Agendamentos - Grid responsivo otimizado */}
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4">
+              {/* Cards dos Agendamentos */}
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {bookingsForDate.map((booking) => {
                   const dateObj = new Date(booking.date + 'T' + booking.time)
                   const formattedDate = dateObj.toLocaleDateString('pt-BR', { 
@@ -297,40 +300,40 @@ export default function BookingsList() {
                   return (
                     <div
                       key={booking.id}
-                      className={`bg-[#141414] border rounded-xl md:rounded-2xl shadow-[var(--shadow)] p-4 md:p-5 transition ${
-                        isNextBooking ? 'border-gold/50' : 'border-border hover:border-gold/30 active:border-gold/50'
+                      className={`bg-[#141414] border rounded-2xl shadow-[var(--shadow)] p-5 transition ${
+                        isNextBooking ? 'border-gold/50' : 'border-border hover:border-gold/30'
                       }`}
                     >
                       <div className="grid gap-3">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="min-w-0 flex-1">
-                            <div className="text-base md:text-lg font-semibold text-text">{booking.time}</div>
-                            <div className="text-xs md:text-sm text-text/70 capitalize truncate">{formattedDate}</div>
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <div className="text-lg font-semibold text-text">{booking.time}</div>
+                            <div className="text-sm text-text/70 capitalize">{formattedDate}</div>
                           </div>
-                          <span className={`px-2.5 py-1 rounded-lg text-xs font-medium border ${status.bg} ${status.color} flex-shrink-0`}>
+                          <span className={`px-2.5 py-1 rounded-lg text-xs font-medium border ${status.bg} ${status.color}`}>
                             {status.label}
                           </span>
                         </div>
 
-                        <div className="grid gap-1.5 text-xs md:text-sm">
-                          <div className="flex justify-between gap-2">
-                            <span className="text-text/70 flex-shrink-0">Cliente:</span>
-                            <span className="text-text font-medium text-right truncate">{booking.clientName}</span>
+                        <div className="grid gap-1.5 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-text/70">Cliente:</span>
+                            <span className="text-text font-medium">{booking.clientName}</span>
                           </div>
-                          <div className="flex justify-between gap-2">
-                            <span className="text-text/70 flex-shrink-0">Telefone:</span>
+                          <div className="flex justify-between">
+                            <span className="text-text/70">Telefone:</span>
                             <span className="text-text font-medium">{booking.clientPhone}</span>
                           </div>
-                          <div className="flex justify-between gap-2">
-                            <span className="text-text/70 flex-shrink-0">Profissional:</span>
-                            <span className="text-text font-medium text-right truncate">{booking.professionalName}</span>
+                          <div className="flex justify-between">
+                            <span className="text-text/70">Profissional:</span>
+                            <span className="text-text font-medium">{booking.professionalName}</span>
                           </div>
-                          <div className="flex justify-between gap-2">
-                            <span className="text-text/70 flex-shrink-0">Serviço:</span>
-                            <span className="text-text font-medium text-right truncate">{booking.serviceName}</span>
+                          <div className="flex justify-between">
+                            <span className="text-text/70">Serviço:</span>
+                            <span className="text-text font-medium">{booking.serviceName}</span>
                           </div>
-                          <div className="flex justify-between gap-2">
-                            <span className="text-text/70 flex-shrink-0">Valor:</span>
+                          <div className="flex justify-between">
+                            <span className="text-text/70">Valor:</span>
                             <span className="text-gold font-semibold">R$ {booking.price.toFixed(2)}</span>
                           </div>
                         </div>
@@ -338,16 +341,16 @@ export default function BookingsList() {
                         <div className="pt-2 border-t border-border grid gap-2">
                           <button
                             onClick={() => navigate(`/agendamentos/${booking.id}`)}
-                            className="btn btn-outline w-full text-sm"
+                            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full font-semibold border bg-transparent text-text border-border transition hover:-translate-y-px w-full"
                           >
                             Ver detalhes
                           </button>
                           {booking.status === 'scheduled' && (
                             <button
                               onClick={() => handleCancelBooking(booking.id)}
-                              className="btn bg-transparent border-red-400/30 text-red-400 hover:bg-red-400/10 hover:border-red-400 active:bg-red-400/20 w-full text-sm"
+                              className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full font-semibold border bg-transparent border-red-400/30 text-red-400 hover:bg-red-400/10 hover:border-red-400 transition hover:-translate-y-px w-full"
                             >
-                              Cancelar
+                              Cancelar agendamento
                             </button>
                           )}
                         </div>
@@ -364,12 +367,12 @@ export default function BookingsList() {
       {/* Cancel Confirmation Modal */}
       {bookingToCancel && (
         <div className="modal-overlay" onClick={() => setBookingToCancel(null)}>
-          <div className="modal-content p-4 sm:p-6 w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-lg sm:text-xl font-semibold text-text mb-3 md:mb-4">Cancelar Agendamento</h3>
-            <p className="text-sm md:text-base text-text-dim mb-4 md:mb-6">
+          <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-xl font-semibold text-text mb-4">Cancelar Agendamento</h3>
+            <p className="text-text-dim mb-6">
               Tem certeza que deseja cancelar este agendamento? Esta ação não pode ser desfeita.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex gap-3">
               <button
                 onClick={() => setBookingToCancel(null)}
                 className="btn btn-outline flex-1"
@@ -380,7 +383,7 @@ export default function BookingsList() {
                 onClick={confirmCancelBooking}
                 className="btn btn-danger flex-1"
               >
-                Cancelar
+                Cancelar Agendamento
               </button>
             </div>
           </div>

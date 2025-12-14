@@ -143,28 +143,28 @@ export default function DashboardHome() {
   }
 
   return (
-    <div className="grid gap-6 md:gap-8">
+    <div className="grid gap-8">
       {/* Header */}
       <div className="animate-fade-in">
-        <h1 className="font-display text-3xl sm:text-4xl md:text-5xl text-gold mb-2">
+        <h1 className="font-display text-4xl md:text-5xl text-gold mb-2">
           Dashboard
         </h1>
-        <p className="text-sm md:text-base text-text-dim">
+        <p className="text-text-dim">
           Visão geral da sua barbearia
         </p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 lg:gap-6 animate-fade-in-delayed">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 animate-fade-in-delayed">
         {/* Total Barbeiros */}
         <div className="stat-card card-hover group">
           <div className="flex items-center justify-between">
-            <div className="flex-1 min-w-0">
-              <p className="text-text-dim text-xs md:text-sm mb-1 truncate">Barbeiros</p>
-              <p className="text-2xl md:text-3xl font-bold text-text">{stats.totalBarbers}</p>
+            <div className="flex-1">
+              <p className="text-text-dim text-sm mb-1">Barbeiros</p>
+              <p className="text-3xl font-bold text-text">{stats.totalBarbers}</p>
             </div>
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform flex-shrink-0">
-              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </div>
@@ -174,12 +174,12 @@ export default function DashboardHome() {
         {/* Total Clientes */}
         <div className="stat-card card-hover group">
           <div className="flex items-center justify-between">
-            <div className="flex-1 min-w-0">
-              <p className="text-text-dim text-xs md:text-sm mb-1 truncate">Clientes</p>
-              <p className="text-2xl md:text-3xl font-bold text-text">{stats.totalClients}</p>
+            <div className="flex-1">
+              <p className="text-text-dim text-sm mb-1">Clientes</p>
+              <p className="text-3xl font-bold text-text">{stats.totalClients}</p>
             </div>
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 group-hover:scale-110 transition-transform flex-shrink-0">
-              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-400 group-hover:scale-110 transition-transform">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
             </div>
@@ -189,12 +189,12 @@ export default function DashboardHome() {
         {/* Agendamentos do Mês */}
         <div className="stat-card card-hover group">
           <div className="flex items-center justify-between">
-            <div className="flex-1 min-w-0">
-              <p className="text-text-dim text-xs md:text-sm mb-1 truncate">Mês</p>
-              <p className="text-2xl md:text-3xl font-bold text-text">{stats.bookingsMonth}</p>
+            <div className="flex-1">
+              <p className="text-text-dim text-sm mb-1">Mês</p>
+              <p className="text-3xl font-bold text-text">{stats.bookingsMonth}</p>
             </div>
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform flex-shrink-0">
-              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
@@ -204,12 +204,12 @@ export default function DashboardHome() {
         {/* Agendamentos da Semana */}
         <div className="stat-card card-hover group">
           <div className="flex items-center justify-between">
-            <div className="flex-1 min-w-0">
-              <p className="text-text-dim text-xs md:text-sm mb-1 truncate">Semana</p>
-              <p className="text-2xl md:text-3xl font-bold text-text">{stats.bookingsWeek}</p>
+            <div className="flex-1">
+              <p className="text-text-dim text-sm mb-1">Semana</p>
+              <p className="text-3xl font-bold text-text">{stats.bookingsWeek}</p>
             </div>
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-400 group-hover:scale-110 transition-transform flex-shrink-0">
-              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-400 group-hover:scale-110 transition-transform">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
             </div>
@@ -219,12 +219,12 @@ export default function DashboardHome() {
         {/* Agendamentos Hoje */}
         <div className="stat-card card-hover group">
           <div className="flex items-center justify-between">
-            <div className="flex-1 min-w-0">
-              <p className="text-text-dim text-xs md:text-sm mb-1 truncate">Hoje</p>
-              <p className="text-2xl md:text-3xl font-bold text-text">{stats.bookingsToday}</p>
+            <div className="flex-1">
+              <p className="text-text-dim text-sm mb-1">Hoje</p>
+              <p className="text-3xl font-bold text-text">{stats.bookingsToday}</p>
             </div>
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center text-gold group-hover:scale-110 transition-transform flex-shrink-0">
-              <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center text-gold group-hover:scale-110 transition-transform">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
@@ -234,11 +234,11 @@ export default function DashboardHome() {
 
       {/* Agendamentos de Hoje */}
       <div className="animate-fade-in-delayed">
-        <div className="flex items-center justify-between mb-4 md:mb-6">
-          <h2 className="text-xl md:text-2xl font-semibold text-text">Agendamentos de Hoje</h2>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-semibold text-text">Agendamentos de Hoje</h2>
           <button
             onClick={() => navigate('/agendamentos')}
-            className="text-gold hover:text-gold-600 active:text-gold-600 text-sm font-semibold flex items-center gap-1 transition-colors touch-manipulation min-h-[44px]"
+            className="text-gold hover:text-gold-600 text-sm font-semibold flex items-center gap-1 transition-colors"
           >
             Ver todos
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -254,10 +254,10 @@ export default function DashboardHome() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
-            <p className="text-text-dim text-sm md:text-base">Nenhum agendamento para hoje</p>
+            <p className="text-text-dim">Nenhum agendamento para hoje</p>
           </div>
         ) : (
-          <div className="grid gap-3 md:gap-4">
+          <div className="grid gap-4">
             {/* Próximo Agendamento em Destaque */}
             <NextBookingHighlight booking={upcomingBookings[0]} />
 
@@ -273,38 +273,38 @@ export default function DashboardHome() {
               return (
                 <div
                   key={booking.id}
-                  className="bg-[#141414] border border-border rounded-xl md:rounded-2xl shadow-[var(--shadow)] p-4 md:p-5 transition hover:border-gold/30 active:border-gold/50"
+                  className="bg-[#141414] border border-border rounded-2xl shadow-[var(--shadow)] p-5 transition hover:border-gold/30"
                   style={{ animationDelay: `${(index + 1) * 0.1}s` }}
                 >
                   <div className="grid gap-3">
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <div className="text-base md:text-lg font-semibold text-text">{booking.time}</div>
-                        <div className="text-xs md:text-sm text-text/70 capitalize">{formattedDate}</div>
+                        <div className="text-lg font-semibold text-text">{booking.time}</div>
+                        <div className="text-sm text-text/70 capitalize">{formattedDate}</div>
                       </div>
-                      <span className="px-2.5 py-1 rounded-lg text-xs font-medium border bg-blue-400/15 border-blue-400/30 text-blue-400 flex-shrink-0">
+                      <span className="px-2.5 py-1 rounded-lg text-xs font-medium border bg-blue-400/15 border-blue-400/30 text-blue-400">
                         Agendado
                       </span>
                     </div>
 
-                    <div className="grid gap-1.5 text-xs md:text-sm">
-                      <div className="flex justify-between gap-2">
+                    <div className="grid gap-1.5 text-sm">
+                      <div className="flex justify-between">
                         <span className="text-text/70">Cliente:</span>
-                        <span className="text-text font-medium text-right truncate">{booking.clientName}</span>
+                        <span className="text-text font-medium">{booking.clientName}</span>
                       </div>
-                      <div className="flex justify-between gap-2">
+                      <div className="flex justify-between">
                         <span className="text-text/70">Telefone:</span>
                         <span className="text-text font-medium">{booking.clientPhone}</span>
                       </div>
-                      <div className="flex justify-between gap-2">
+                      <div className="flex justify-between">
                         <span className="text-text/70">Profissional:</span>
-                        <span className="text-text font-medium text-right truncate">{booking.professionalName}</span>
+                        <span className="text-text font-medium">{booking.professionalName}</span>
                       </div>
-                      <div className="flex justify-between gap-2">
+                      <div className="flex justify-between">
                         <span className="text-text/70">Serviço:</span>
-                        <span className="text-text font-medium text-right truncate">{booking.serviceName}</span>
+                        <span className="text-text font-medium">{booking.serviceName}</span>
                       </div>
-                      <div className="flex justify-between gap-2">
+                      <div className="flex justify-between">
                         <span className="text-text/70">Valor:</span>
                         <span className="text-gold font-semibold">R$ {booking.price.toFixed(2)}</span>
                       </div>
@@ -313,13 +313,13 @@ export default function DashboardHome() {
                     <div className="pt-2 border-t border-border grid gap-2">
                       <button
                         onClick={() => navigate(`/agendamentos/${booking.id}`)}
-                        className="btn btn-outline w-full"
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full font-semibold border bg-transparent text-text border-border transition hover:-translate-y-px w-full"
                       >
                         Ver detalhes
                       </button>
                       <button
                         onClick={() => handleCancelBooking(booking.id)}
-                        className="btn bg-transparent border-red-400/30 text-red-400 hover:bg-red-400/10 hover:border-red-400 w-full"
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full font-semibold border bg-transparent border-red-400/30 text-red-400 hover:bg-red-400/10 hover:border-red-400 transition hover:-translate-y-px w-full"
                       >
                         Cancelar agendamento
                       </button>
@@ -335,12 +335,12 @@ export default function DashboardHome() {
       {/* Cancel Confirmation Modal */}
       {bookingToCancel && (
         <div className="modal-overlay" onClick={() => setBookingToCancel(null)}>
-          <div className="modal-content p-4 sm:p-6 w-full max-w-md mx-4" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-lg sm:text-xl font-semibold text-text mb-3 md:mb-4">Cancelar Agendamento</h3>
-            <p className="text-sm md:text-base text-text-dim mb-4 md:mb-6">
+          <div className="modal-content p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-xl font-semibold text-text mb-4">Cancelar Agendamento</h3>
+            <p className="text-text-dim mb-6">
               Tem certeza que deseja cancelar este agendamento? Esta ação não pode ser desfeita.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex gap-3">
               <button
                 onClick={() => setBookingToCancel(null)}
                 className="btn btn-outline flex-1"

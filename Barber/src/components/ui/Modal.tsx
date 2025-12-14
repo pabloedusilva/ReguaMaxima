@@ -50,14 +50,13 @@ export default function Modal({ open, onClose, children, size = 'md', title }: M
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className={`modal-content p-4 sm:p-6 w-full ${sizeClasses[size]}`} onClick={(e) => e.stopPropagation()}>
+      <div className={`modal-content p-6 w-full ${sizeClasses[size]}`} onClick={(e) => e.stopPropagation()}>
         {title && (
           <div className="flex items-center justify-between mb-4 pb-4 border-b border-border">
-            <h2 className="text-lg sm:text-xl font-semibold text-text">{title}</h2>
+            <h2 className="text-xl font-semibold text-text">{title}</h2>
             <button
               onClick={onClose}
-              className="text-text-dim hover:text-text active:text-text transition-colors p-2 -mr-2"
-              aria-label="Fechar"
+              className="text-text-dim hover:text-text transition-colors"
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

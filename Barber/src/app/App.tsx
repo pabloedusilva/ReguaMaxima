@@ -1,5 +1,4 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { useEffect } from 'react'
 import DashboardLayout from './layout/DashboardLayout'
 import AuthLayout from './layout/AuthLayout'
 
@@ -19,46 +18,6 @@ import StickersGallery from '@barber/pages/settings/StickersGallery'
 import PromotionsList from '@barber/pages/promotions/PromotionsList'
 
 export default function App() {
-  // Detecta e ajusta altura do viewport para PWA mobile
-  useEffect(() => {
-    const setVH = () => {
-      const vh = window.innerHeight * 0.01
-      document.documentElement.style.setProperty('--vh', `${vh}px`)
-    }
-    
-    setVH()
-    window.addEventListener('resize', setVH)
-    window.addEventListener('orientationchange', setVH)
-    
-    return () => {
-      window.removeEventListener('resize', setVH)
-      window.removeEventListener('orientationchange', setVH)
-    }
-  }, [])
-  
-  // Detecta modo standalone PWA
-  useEffect(() => {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
-                        (window.navigator as any).standalone ||
-                        document.referrer.includes('android-app://')
-    
-    if (isStandalone) {
-      document.body.classList.add('pwa-standalone')
-      
-      // Detecta iOS
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-      if (isIOS) {
-        document.body.classList.add('ios-standalone')
-      }
-      
-      // Detecta Android
-      const isAndroid = /Android/.test(navigator.userAgent)
-      if (isAndroid) {
-        document.body.classList.add('android-standalone')
-      }
-    }
-  }, [])
-  
   return (
     <Routes>
       {/* Auth Routes */}
