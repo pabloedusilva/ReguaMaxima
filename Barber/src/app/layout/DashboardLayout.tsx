@@ -291,7 +291,7 @@ export default function DashboardLayout() {
         </main>
 
         {/* Mobile Bottom Navigation (sem position:fixed; evita bugs de touch/scroll no iOS) */}
-        <nav className="lg:hidden flex-none z-50 bottom-nav">
+        <nav className="lg:hidden flex-none z-40 bottom-nav">
           <div className="relative bg-black/95 backdrop-blur-xl">
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent"></div>
             

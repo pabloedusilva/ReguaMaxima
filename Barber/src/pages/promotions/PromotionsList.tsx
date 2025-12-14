@@ -569,7 +569,7 @@ export default function PromotionsList() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="relative">
+                    <div>
                       <Input
                         label="Data de Início (opcional)"
                         type="date"
@@ -580,16 +580,13 @@ export default function PromotionsList() {
                         <button
                           type="button"
                           onClick={() => setFormData({ ...formData, startDate: '' })}
-                          className="absolute top-[38px] right-3 w-5 h-5 rounded-full bg-surface hover:bg-red-500/20 border border-border hover:border-red-500/40 flex items-center justify-center text-text-dim hover:text-red-400 transition-all"
-                          title="Limpar data"
+                          className="-mt-4 text-xs text-text-dim hover:text-gold transition-colors"
                         >
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
+                          Limpar
                         </button>
                       )}
                     </div>
-                    <div className="relative">
+                    <div>
                       <Input
                         label="Data de Término (opcional)"
                         type="date"
@@ -600,12 +597,9 @@ export default function PromotionsList() {
                         <button
                           type="button"
                           onClick={() => setFormData({ ...formData, endDate: '' })}
-                          className="absolute top-[38px] right-3 w-5 h-5 rounded-full bg-surface hover:bg-red-500/20 border border-border hover:border-red-500/40 flex items-center justify-center text-text-dim hover:text-red-400 transition-all"
-                          title="Limpar data"
+                          className="-mt-4 text-xs text-text-dim hover:text-gold transition-colors"
                         >
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
+                          Limpar
                         </button>
                       )}
                     </div>
