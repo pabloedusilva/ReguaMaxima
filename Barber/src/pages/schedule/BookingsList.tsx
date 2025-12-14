@@ -32,6 +32,7 @@ export default function BookingsList() {
   })
   const [searchTerm, setSearchTerm] = useState('')
   const [isLoading, setIsLoading] = useState(true)
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const [bookingToCancel, setBookingToCancel] = useState<string | null>(null)
 
   useEffect(() => {
@@ -54,6 +55,15 @@ export default function BookingsList() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleRefresh = () => {
+    setIsRefreshing(true)
+    // Simula delay de requisição (quando integrar com backend, remover o timeout)
+    setTimeout(() => {
+      loadBookings()
+      setIsRefreshing(false)
+    }, 600) // Duração alinhada com a animação CSS
   }
 
   const applyFilters = () => {
@@ -161,12 +171,40 @@ export default function BookingsList() {
     <div className="grid gap-8">
       {/* Header */}
       <div className="animate-fade-in">
-        <h1 className="font-display text-4xl md:text-5xl text-gold mb-2">
-          Agendamentos
-        </h1>
-        <p className="text-text-dim">
-          Visualize e gerencie todos os agendamentos
-        </p>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="font-display text-4xl md:text-5xl text-gold mb-2">
+              Agendamentos
+            </h1>
+            <p className="text-text-dim">
+              Visualize e gerencie todos os agendamentos
+            </p>
+          </div>
+          
+          {/* Botão de Refresh */}
+          <button
+            onClick={handleRefresh}
+            disabled={isRefreshing}
+            className="flex-shrink-0 p-3 rounded-xl bg-surface border border-border hover:border-gold/50 hover:bg-gold/5 transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+            title="Atualizar agendamentos"
+          >
+            <svg
+              className={`w-5 h-5 text-gold transition-transform ${
+                isRefreshing ? 'animate-rotate-refresh' : 'group-hover:rotate-180'
+              }`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Próximo Agendamento em Destaque */}
