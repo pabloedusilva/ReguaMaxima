@@ -2,24 +2,11 @@ import { useEffect, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import NextBookingHighlight from '@barber/components/bookings/NextBookingHighlight'
 import { createPortal } from 'react-dom'
+import { getMockBookings, type Booking } from '@barber/data/mockBookings'
 
 // TODO: Backend Integration
 // GET /api/bookings - List all bookings with filters
 // DELETE /api/bookings/:id - Cancel booking
-
-interface Booking {
-  id: string
-  clientName: string
-  clientPhone: string
-  professionalId: string
-  professionalName: string
-  serviceId: string
-  serviceName: string
-  date: string
-  time: string
-  price: number
-  status: 'scheduled' | 'completed' | 'cancelled'
-}
 
 export default function BookingsList() {
   const navigate = useNavigate()
@@ -49,7 +36,13 @@ export default function BookingsList() {
     setIsLoading(true)
     try {
       const bookingsRaw = localStorage.getItem('userBookings')
-      const allBookings: Booking[] = bookingsRaw ? JSON.parse(bookingsRaw) : []
+      let allBookings: Booking[] = bookingsRaw ? JSON.parse(bookingsRaw) : []
+      
+      // Se não houver bookings no localStorage, usa dados mockados
+      if (allBookings.length === 0) {
+        allBookings = getMockBookings()
+      }
+      
       setBookings(allBookings)
     } catch (error) {
       console.error('Error loading bookings:', error)

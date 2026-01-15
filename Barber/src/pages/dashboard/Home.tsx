@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import NextBookingHighlight from '@barber/components/bookings/NextBookingHighlight'
+import { getMockBookings, type Booking } from '@barber/data/mockBookings'
 
 // TODO: Backend Integration - Replace localStorage with API calls
 // GET /api/stats/overview - Dashboard statistics
@@ -13,20 +14,6 @@ interface DashboardStats {
   bookingsMonth: number
   bookingsWeek: number
   bookingsToday: number
-}
-
-interface Booking {
-  id: string
-  clientName: string
-  clientPhone: string
-  professionalId: string
-  professionalName: string
-  serviceId: string
-  serviceName: string
-  date: string
-  time: string
-  price: number
-  status: 'scheduled' | 'completed' | 'cancelled'
 }
 
 export default function DashboardHome() {
@@ -41,6 +28,7 @@ export default function DashboardHome() {
   const [upcomingBookings, setUpcomingBookings] = useState<Booking[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [bookingToCancel, setBookingToCancel] = useState<string | null>(null)
+  const [now, setNow] = useState(new Date())
 
   useEffect(() => {
     document.title = 'Régua Máxima | Dashboard Barbeiro'
@@ -50,12 +38,25 @@ export default function DashboardHome() {
     loadDashboardData()
   }, [])
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setNow(new Date())
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }, [])
+
   const loadDashboardData = () => {
     setIsLoading(true)
     try {
       // Load bookings from localStorage (temporary - will be replaced with API)
       const bookingsRaw = localStorage.getItem('userBookings')
-      const allBookings: Booking[] = bookingsRaw ? JSON.parse(bookingsRaw) : []
+      let allBookings: Booking[] = bookingsRaw ? JSON.parse(bookingsRaw) : []
+      
+      // Se não houver bookings no localStorage, usa dados mockados
+      if (allBookings.length === 0) {
+        allBookings = getMockBookings()
+      }
 
       // Calculate stats
       const now = new Date()
@@ -143,20 +144,63 @@ export default function DashboardHome() {
     )
   }
 
+  const formattedDate = now.toLocaleDateString('pt-BR', {
+    weekday: 'long',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  })
+
+  const formattedTime = now.toLocaleTimeString('pt-BR', {
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+
   return (
     <div className="grid gap-8">
       {/* Header */}
-      <div className="animate-fade-in">
-        <h1 className="font-display text-4xl md:text-5xl text-gold mb-2">
-          Dashboard
-        </h1>
-        <p className="text-text-dim">
-          Visão geral da sua barbearia
-        </p>
+      <div className="animate-fade-in flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <div>
+          <h1 className="font-display text-4xl md:text-5xl text-gold mb-2">
+            Dashboard
+          </h1>
+          <p className="text-text-dim">
+            Visão geral da sua barbearia
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 text-[11px] md:text-xs text-text-dim">
+          <svg className="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span className="font-mono text-gold">{formattedTime}</span>
+          <span className="opacity-40">•</span>
+          <span className="font-mono">{formattedDate}</span>
+        </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 animate-fade-in-delayed">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 animate-fade-in-delayed">
+        {/* Agendamentos Hoje - DESTACADO */}
+        <div className="stat-card card-hover group relative overflow-hidden bg-gradient-to-br from-gold/5 via-bg-soft to-bg-soft border-gold/30 shadow-lg shadow-gold/5 hover:shadow-gold/10 transition-all duration-300 hover:border-gold/50 col-span-2 md:col-span-2 lg:col-span-1">
+          {/* Subtle glow effect */}
+          <div className="absolute inset-0 bg-gradient-to-br from-gold/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+          <div className="flex items-center justify-between relative z-10">
+            <div className="flex-1">
+              <p className="text-gold text-sm mb-1 font-bold">
+                Hoje
+              </p>
+              <p className="text-3xl font-bold text-gold drop-shadow-[0_0_8px_rgba(212,175,55,0.3)]">{stats.bookingsToday}</p>
+            </div>
+            <div className="w-12 h-12 rounded-xl bg-gold/15 border border-gold/30 flex items-center justify-center text-gold group-hover:scale-110 transition-transform shadow-lg shadow-gold/20">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
         {/* Total Barbeiros */}
         <div className="stat-card card-hover group">
           <div className="flex items-center justify-between">
@@ -187,21 +231,6 @@ export default function DashboardHome() {
           </div>
         </div>
 
-        {/* Agendamentos do Mês */}
-        <div className="stat-card card-hover group">
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
-              <p className="text-text-dim text-sm mb-1">Mês</p>
-              <p className="text-3xl font-bold text-text">{stats.bookingsMonth}</p>
-            </div>
-            <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-          </div>
-        </div>
-
         {/* Agendamentos da Semana */}
         <div className="stat-card card-hover group">
           <div className="flex items-center justify-between">
@@ -217,16 +246,16 @@ export default function DashboardHome() {
           </div>
         </div>
 
-        {/* Agendamentos Hoje */}
+        {/* Agendamentos do Mês */}
         <div className="stat-card card-hover group">
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <p className="text-text-dim text-sm mb-1">Hoje</p>
-              <p className="text-3xl font-bold text-text">{stats.bookingsToday}</p>
+              <p className="text-text-dim text-sm mb-1">Mês</p>
+              <p className="text-3xl font-bold text-text">{stats.bookingsMonth}</p>
             </div>
-            <div className="w-12 h-12 rounded-xl bg-gold/10 border border-gold/20 flex items-center justify-center text-gold group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
           </div>

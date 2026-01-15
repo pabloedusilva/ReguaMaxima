@@ -210,7 +210,7 @@ export default function DashboardLayout() {
                 alt="Régua Máxima"
                 className="w-8 h-8 object-contain"
               />
-              <div>
+              <div className="hidden lg:block">
                 <h2 className="font-display text-gold text-sm">Régua Máxima</h2>
               </div>
             </div>

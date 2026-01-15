@@ -1,25 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createPortal } from 'react-dom'
+import { getMockBookings, getMockBookingById, type Booking } from '@barber/data/mockBookings'
 
 // TODO: Backend Integration
 // GET /api/bookings/:id - Get booking details
 // PATCH /api/bookings/:id - Update booking
 // DELETE /api/bookings/:id - Cancel booking
-
-interface Booking {
-  id: string
-  clientName: string
-  clientPhone: string
-  professionalId: string
-  professionalName: string
-  serviceId: string
-  serviceName: string
-  date: string
-  time: string
-  price: number
-  status: 'scheduled' | 'completed' | 'cancelled'
-}
 
 export default function BookingDetails() {
   const { id } = useParams<{ id: string }>()
@@ -37,7 +24,13 @@ export default function BookingDetails() {
     setIsLoading(true)
     try {
       const bookingsRaw = localStorage.getItem('userBookings')
-      const allBookings: Booking[] = bookingsRaw ? JSON.parse(bookingsRaw) : []
+      let allBookings: Booking[] = bookingsRaw ? JSON.parse(bookingsRaw) : []
+      
+      // Se não houver bookings no localStorage, usa dados mockados
+      if (allBookings.length === 0) {
+        allBookings = getMockBookings()
+      }
+      
       const found = allBookings.find(b => b.id === id)
       setBooking(found || null)
     } catch (error) {
@@ -52,7 +45,13 @@ export default function BookingDetails() {
 
     try {
       const bookingsRaw = localStorage.getItem('userBookings')
-      const allBookings: Booking[] = bookingsRaw ? JSON.parse(bookingsRaw) : []
+      let allBookings: Booking[] = bookingsRaw ? JSON.parse(bookingsRaw) : []
+      
+      // Se não houver bookings no localStorage, usa dados mockados
+      if (allBookings.length === 0) {
+        allBookings = getMockBookings()
+      }
+      
       const updated = allBookings.map(b =>
         b.id === booking.id ? { ...b, status: 'cancelled' as const } : b
       )

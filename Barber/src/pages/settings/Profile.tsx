@@ -43,7 +43,8 @@ export default function Profile() {
     logo: '/assets/images/logos/logo.png',
     instagram: '@reguamaxima',
     whatsapp: '(00) 00000-0000',
-    bookingLink: 'http://localhost:5173/barbearia/ce5b7602-0b8a-4728-b5f8-06336bdc5255'
+    // Link de agendamento de exemplo (futuro: será gerado pelo backend com ID único da barbearia)
+    bookingLink: 'https://app.reguamaxima.com.br/#/barbearia/ajdow976asd65sd4f37'
   })
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
