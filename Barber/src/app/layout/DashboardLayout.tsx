@@ -7,7 +7,6 @@ import { useOfflineDetection } from '@barber/hooks/useOfflineDetection'
 import NotificationsBell from '@barber/components/notifications/NotificationsBell'
 import NotificationsPanel from '@barber/components/notifications/NotificationsPanel'
 import { useNotifications } from '@barber/features/notifications/hooks/useNotifications'
-import ConnectionStatus from '@barber/components/layout/ConnectionStatus'
 
 export default function DashboardLayout() {
   const navigate = useNavigate()
@@ -299,9 +298,6 @@ export default function DashboardLayout() {
             </div>
           </div>
         </header>
-
-        {/* Connection Status Banner */}
-        <ConnectionStatus />
 
         {/* Page Content (única área rolável) */}
         <main data-app-scroll className="scroll-container flex-1 p-4 md:p-6 lg:p-8">
