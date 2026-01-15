@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createPortal } from 'react-dom'
-import { getMockBookings, getMockBookingById, type Booking } from '@barber/data/mockBookings'
+import { getMockBookings, type Booking } from '@barber/data/mockBookings'
 
 // TODO: Backend Integration
 // GET /api/bookings/:id - Get booking details
