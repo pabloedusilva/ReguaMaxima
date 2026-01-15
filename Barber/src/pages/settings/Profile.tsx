@@ -27,6 +27,11 @@ const AVATAR_OPTIONS = [
   '/assets/images/profile/profile5.jpg',
   '/assets/images/profile/profile6.jpg',
   '/assets/images/profile/profile7.jpg',
+  '/assets/images/profile/profile8.jpg',
+  '/assets/images/profile/profile9.jpg',
+  '/assets/images/profile/profile10.jpg',
+  '/assets/images/profile/profile11.jpg',
+  '/assets/images/profile/profile12.jpg',
 ]
 
 const APP_ICON_OPTIONS = [
