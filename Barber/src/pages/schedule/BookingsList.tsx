@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import NextBookingHighlight from '@barber/components/bookings/NextBookingHighlight'
 import { createPortal } from 'react-dom'
 import { getMockBookings, type Booking } from '@barber/data/mockBookings'
+import { useNotifications } from '@barber/features/notifications/hooks/useNotifications'
 
 // TODO: Backend Integration
 // GET /api/bookings - List all bookings with filters
@@ -10,6 +11,7 @@ import { getMockBookings, type Booking } from '@barber/data/mockBookings'
 
 export default function BookingsList() {
   const navigate = useNavigate()
+  const { addFromBooking } = useNotifications()
   const [bookings, setBookings] = useState<Booking[]>([])
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([])
   const [filter, setFilter] = useState<'all' | 'scheduled' | 'completed' | 'cancelled'>('scheduled')
@@ -128,11 +130,16 @@ export default function BookingsList() {
     if (!bookingToCancel) return
 
     try {
+      const toCancel = bookings.find((b) => b.id === bookingToCancel)
       const updated = bookings.map(b =>
         b.id === bookingToCancel ? { ...b, status: 'cancelled' as const } : b
       )
       localStorage.setItem('userBookings', JSON.stringify(updated))
       setBookings(updated)
+
+      if (toCancel) {
+        addFromBooking({ ...toCancel, status: 'cancelled' }, 'booking_cancelled')
+      }
       setBookingToCancel(null)
     } catch (error) {
       console.error('Error cancelling booking:', error)

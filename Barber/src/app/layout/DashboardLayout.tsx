@@ -4,11 +4,17 @@ import Footer from '@barber/components/layout/Footer'
 import InstallPWAModal from '@barber/components/dialogs/InstallPWAModal'
 import { usePWAInstall } from '@barber/hooks/usePWAInstall'
 import { useOfflineDetection } from '@barber/hooks/useOfflineDetection'
+import NotificationsBell from '@barber/components/notifications/NotificationsBell'
+import NotificationsPanel from '@barber/components/notifications/NotificationsPanel'
+import { useNotifications } from '@barber/features/notifications/hooks/useNotifications'
 
 export default function DashboardLayout() {
   const navigate = useNavigate()
   const [showLogoutMenu, setShowLogoutMenu] = useState(false)
   const [showPWAModal, setShowPWAModal] = useState(false)
+  const [showNotifications, setShowNotifications] = useState(false)
+
+  const { count: notificationsCount } = useNotifications()
   
   const { canInstall, isInstalled, promptInstall, isStandalone } = usePWAInstall()
   
@@ -233,6 +239,14 @@ export default function DashboardLayout() {
                               })()}
                             </p>
               </div>
+
+              <NotificationsBell
+                count={notificationsCount}
+                onClick={() => {
+                  setShowLogoutMenu(false)
+                  setShowNotifications(true)
+                }}
+              />
               <button
                 onClick={() => setShowLogoutMenu(!showLogoutMenu)}
                 className="relative w-10 h-10 rounded-full overflow-hidden shadow-lg shadow-gold/20 hover:scale-105 transition-transform border-2 border-gold/30"
@@ -341,6 +355,8 @@ export default function DashboardLayout() {
           onInstall={handleInstallPWA}
           canInstall={canInstall}
         />
+
+        <NotificationsPanel isOpen={showNotifications} onClose={() => setShowNotifications(false)} />
       </div>
     </div>
   )

@@ -6,3 +6,4 @@
  */
 
 export { getMockBookings, getMockBookingById, type Booking } from './mockBookings'
+export { getMockNotifications, getMockNotificationById } from './mockNotifications'

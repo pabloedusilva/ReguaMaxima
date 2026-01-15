@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import { getMockBookings, type Booking } from '@barber/data/mockBookings'
+import { useNotifications } from '@barber/features/notifications/hooks/useNotifications'
 
 // TODO: Backend Integration
 // GET /api/bookings/:id - Get booking details
@@ -11,6 +12,7 @@ import { getMockBookings, type Booking } from '@barber/data/mockBookings'
 export default function BookingDetails() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const { addFromBooking } = useNotifications()
   const [booking, setBooking] = useState<Booking | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [showCancelModal, setShowCancelModal] = useState(false)
@@ -56,6 +58,7 @@ export default function BookingDetails() {
         b.id === booking.id ? { ...b, status: 'cancelled' as const } : b
       )
       localStorage.setItem('userBookings', JSON.stringify(updated))
+      addFromBooking({ ...booking, status: 'cancelled' }, 'booking_cancelled')
       setBooking({ ...booking, status: 'cancelled' })
       setShowCancelModal(false)
     } catch (error) {
