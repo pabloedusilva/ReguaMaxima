@@ -20,7 +20,10 @@ export default function CancelConfirmModal({ onConfirm, onCancel, bookingTime, b
 
   return (
     createPortal(
-      <div className="fixed inset-0 z-[2147483647] grid place-items-center backdrop-blur-sm bg-bg/80 p-4">
+      <div
+        className="fixed inset-0 z-[2147483647] grid place-items-center backdrop-blur-sm bg-bg/80 p-4 overflow-y-auto"
+        style={{ WebkitOverflowScrolling: 'touch' }}
+      >
         <Card className="w-full max-w-md">
         <div className="grid gap-5">
           <div className="text-center">
