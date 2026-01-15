@@ -226,7 +226,7 @@ export default function ListServices() {
       {/* Add/Edit Modal - Fullscreen */}
       {modalOpen && (
         createPortal(
-          <div className="modal-fullscreen">
+          <div className="modal-fullscreen overflow-y-scroll">
             <div className="max-w-4xl mx-auto p-4 md:p-8">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
