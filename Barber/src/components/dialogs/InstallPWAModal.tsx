@@ -8,9 +8,10 @@ interface InstallPWAModalProps {
   onClose: () => void;
   onInstall: () => void;
   canInstall: boolean;
+  selectedAppIcon?: string;
 }
 
-export default function InstallPWAModal({ isOpen, onClose, onInstall, canInstall }: InstallPWAModalProps) {
+export default function InstallPWAModal({ isOpen, onClose, onInstall, canInstall, selectedAppIcon }: InstallPWAModalProps) {
   const drawerRef = useRef<HTMLDivElement>(null);
   const handleRef = useRef<HTMLDivElement>(null);
   const [startY, setStartY] = useState(0);
@@ -115,9 +116,9 @@ export default function InstallPWAModal({ isOpen, onClose, onInstall, canInstall
               <div className="relative">
                 <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-gold/20 to-gold/5 border-2 border-gold/30 flex items-center justify-center overflow-hidden">
                   <img 
-                    src="/assets/images/logos/logo.png" 
+                    src={selectedAppIcon || '/assets/images/logos/logo.png'} 
                     alt="Régua Máxima" 
-                    className="w-16 h-16 object-contain"
+                    className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="absolute -bottom-1 -right-1 w-10 h-10 bg-gold rounded-full flex items-center justify-center shadow-lg">
@@ -144,7 +145,7 @@ export default function InstallPWAModal({ isOpen, onClose, onInstall, canInstall
                   </svg>
                   Como instalar manualmente:
                 </h5>
-                <ol className="space-y-2 text-sm text-text-dim">
+                <ol className="space-y-3 text-sm text-text-dim">
                   <li className="flex gap-2">
                     <span className="text-gold font-semibold">1.</span>
                     <span>No <strong>Chrome/Edge</strong>: Toque no menu (⋮) → "Instalar app" ou "Adicionar à tela inicial"</span>
@@ -179,7 +180,6 @@ export default function InstallPWAModal({ isOpen, onClose, onInstall, canInstall
                   </>
                 ) : (
                   <>
-                    <X className="w-5 h-5" />
                     Fechar
                   </>
                 )}

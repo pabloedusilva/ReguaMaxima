@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Trash2 } from 'lucide-react'
+import { Trash2, Download, Bell, BellOff } from 'lucide-react'
 // image fallback handled via ImageWithFallback
 import { formatPhone } from '../../utils/format'
 import { applyAndPersistAppIcon, getSelectedAppIcon } from '@barber/lib/appIcon'
+import { usePWAInstall } from '../../hooks/usePWAInstall'
+import InstallPWAModal from '../../components/dialogs/InstallPWAModal'
 
 // TODO: Backend Integration
 // GET /api/settings/profile - Get barbershop profile
@@ -68,12 +70,87 @@ export default function Profile() {
     return stored || APP_ICON_OPTIONS[0]
   })
   const [isApplyingAppIcon, setIsApplyingAppIcon] = useState(false)
+  const [showInstallModal, setShowInstallModal] = useState(false)
+  const { canInstall, promptInstall } = usePWAInstall()
+  const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
+    // Verifica tanto localStorage quanto permissão do navegador
+    const stored = localStorage.getItem('notifications_enabled') === 'true'
+    const browserPermission = 'Notification' in window ? Notification.permission === 'granted' : false
+    return stored && browserPermission
+  })
+  const [isTogglingNotifications, setIsTogglingNotifications] = useState(false)
 
   useEffect(() => {
     document.title = 'Régua Máxima | Dashboard Barbeiro';
     loadProfile()
     calculateCacheSize()
+    checkNotificationPermission()
+
+    // Monitora mudanças de permissão quando usuário retorna à aba
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        checkNotificationPermission()
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    // Monitora mudanças de permissão em tempo real (se disponível)
+    if ('permissions' in navigator && 'Notification' in window) {
+      navigator.permissions.query({ name: 'notifications' as PermissionName }).then((permissionStatus) => {
+        // Sincroniza estado inicial
+        syncNotificationState(permissionStatus.state)
+        
+        // Adiciona listener para mudanças
+        permissionStatus.addEventListener('change', () => {
+          syncNotificationState(permissionStatus.state)
+        })
+      }).catch((err) => {
+        console.warn('[Notifications] Permissions API não disponível:', err)
+      })
+    }
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
   }, [])
+
+  // Sincroniza estado com permissão real do navegador
+  const syncNotificationState = (permissionState: PermissionState | string) => {
+    const storedPreference = localStorage.getItem('notifications_enabled') === 'true'
+    
+    if (permissionState === 'granted' && storedPreference) {
+      // Permissão concedida e usuário quer receber
+      setNotificationsEnabled(true)
+    } else if (permissionState === 'denied' || permissionState === 'prompt') {
+      // Permissão negada ou ainda não solicitada
+      setNotificationsEnabled(false)
+      if (storedPreference) {
+        // Atualiza localStorage se estava ativado mas permissão foi removida
+        localStorage.setItem('notifications_enabled', 'false')
+      }
+    }
+  }
+
+  // Verifica permissão de notificação ao carregar
+  const checkNotificationPermission = () => {
+    if ('Notification' in window) {
+      const permission = Notification.permission
+      const storedPreference = localStorage.getItem('notifications_enabled') === 'true'
+      
+      if (permission === 'granted' && storedPreference) {
+        // Permissão concedida e preferência salva
+        setNotificationsEnabled(true)
+      } else if (permission === 'denied' || permission === 'default') {
+        // Permissão negada ou não solicitada
+        setNotificationsEnabled(false)
+        // Limpa localStorage se permissão foi revogada
+        if (storedPreference && permission === 'denied') {
+          localStorage.setItem('notifications_enabled', 'false')
+        }
+      }
+    }
+  }
 
   const loadProfile = () => {
     setIsLoading(true)
@@ -121,6 +198,69 @@ export default function Profile() {
       console.error('Erro ao calcular tamanho do cache:', error)
     } finally {
       setIsCalculatingCache(false)
+    }
+  }
+
+  const toggleNotifications = async () => {
+    if (isTogglingNotifications) return
+    
+    // Verifica se o navegador suporta notificações
+    if (!('Notification' in window)) {
+      alert('Seu navegador não suporta notificações push.')
+      return
+    }
+    
+    setIsTogglingNotifications(true)
+    
+    try {
+      const newState = !notificationsEnabled
+      
+      if (newState) {
+        // ATIVANDO notificações - solicita permissão
+        const permission = await Notification.requestPermission()
+        
+        if (permission === 'granted') {
+          // Permissão concedida
+          setNotificationsEnabled(true)
+          localStorage.setItem('notifications_enabled', 'true')
+          
+          // TODO: Backend Integration
+          // POST /api/settings/notifications/enable
+          // Registrar token de push notification no backend
+          
+          // Mostra notificação de teste
+          new Notification('Notificações Ativadas! 🔔', {
+            body: 'Você receberá alertas sobre agendamentos e atualizações importantes.',
+            icon: '/assets/images/logos/logo.png',
+            badge: '/assets/images/logos/logo.png',
+            tag: 'notifications-enabled',
+            requireInteraction: false
+          })
+        } else if (permission === 'denied') {
+          // Permissão negada permanentemente
+          setNotificationsEnabled(false)
+          localStorage.setItem('notifications_enabled', 'false')
+          alert('Você bloqueou as notificações. Para ativar, vá nas configurações do navegador e permita notificações para este site.')
+        } else {
+          // Permissão não foi decidida (dismissed)
+          setNotificationsEnabled(false)
+          localStorage.setItem('notifications_enabled', 'false')
+        }
+      } else {
+        // DESATIVANDO notificações
+        setNotificationsEnabled(false)
+        localStorage.setItem('notifications_enabled', 'false')
+        
+        // TODO: Backend Integration
+        // POST /api/settings/notifications/disable
+        // Remover token de push notification do backend
+      }
+    } catch (error) {
+      setNotificationsEnabled(false)
+      localStorage.setItem('notifications_enabled', 'false')
+      alert('Erro ao configurar notificações. Tente novamente.')
+    } finally {
+      setIsTogglingNotifications(false)
     }
   }
 
@@ -320,30 +460,32 @@ export default function Profile() {
               <span>Abrir Link</span>
             </button>
           </div>
+        </div>
 
-          {/* App Icon (PWA) */}
-          <div className="mt-6 pt-6 border-t border-border">
-            <div className="flex items-start justify-between gap-4 mb-4">
-              <div className="min-w-0">
-                <h4 className="text-base font-semibold text-text">Ícone do App (PWA)</h4>
-                <p className="text-sm text-text-dim mt-1">
-                  Escolha qual logo será usada como ícone do app. A seleção fica salva neste dispositivo.
-                </p>
-              </div>
-
-              <div className="shrink-0">
-                <div className="w-11 h-11 sm:w-12 sm:h-12 lg:w-16 lg:h-16 xl:w-20 xl:h-20 rounded-2xl border border-border bg-surface p-1.5 lg:p-2.5 shadow-lg shadow-black/30">
-                  <img
-                    src={selectedAppIcon}
-                    alt="Ícone selecionado"
-                    className="w-full h-full object-cover rounded-xl"
-                  />
-                </div>
-              </div>
+        {/* App Icon (PWA) */}
+        <div className="card md:col-span-2">
+          <div className="flex items-start justify-between gap-4 mb-4">
+            <div className="min-w-0 flex-1">
+              <h4 className="text-base font-semibold text-text">Ícone do App (PWA)</h4>
+              <p className="text-sm text-text-dim mt-1">
+                Escolha qual logo será usada como ícone do app. A seleção fica salva neste dispositivo.
+              </p>
             </div>
 
-            <div className="max-w-[280px] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[560px] xl:max-w-[640px]">
-              <div className="grid grid-cols-5 gap-2 sm:gap-3 md:gap-3.5 lg:gap-4">
+            <button
+              onClick={() => setShowInstallModal(true)}
+              className="shrink-0 group"
+              title="Instalar App"
+              aria-label="Instalar App"
+            >
+              <div className="relative w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 xl:w-14 xl:h-14 rounded-2xl border border-gold/30 bg-gradient-to-br from-gold/20 to-gold/5 hover:from-gold/30 hover:to-gold/10 transition-all overflow-hidden flex items-center justify-center shadow-lg shadow-black/30 group-hover:shadow-gold/20">
+                <Download className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 xl:w-7 xl:h-7 text-gold group-hover:brightness-125 transition-all" />
+              </div>
+            </button>
+          </div>
+
+          <div className="max-w-[280px] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[560px] xl:max-w-[640px]">
+            <div className="grid grid-cols-5 gap-2 sm:gap-3 md:gap-3.5 lg:gap-4">
               {APP_ICON_OPTIONS.map((icon) => {
                 const isSelected = icon === selectedAppIcon
                 return (
@@ -391,6 +533,56 @@ export default function Profile() {
             <p className="text-xs text-text-dim mt-3">
               Dica: para refletir no ícone do app instalado, pode ser necessário reinstalar o PWA após escolher.
             </p>
+        </div>
+      </div>
+
+      {/* Push Notifications Section */}
+      <div className="animate-fade-in-delayed">
+        <h2 className="text-2xl font-bold text-text mb-4">Notificações</h2>
+        <div className="card">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center shrink-0">
+                {notificationsEnabled ? (
+                  <Bell className="w-5 h-5 text-gold" />
+                ) : (
+                  <BellOff className="w-5 h-5 text-text-dim" />
+                )}
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-base font-semibold text-text">Notificações Push</h3>
+                <p className="text-xs text-text-dim mt-0.5">
+                  Receba alertas sobre agendamentos e atualizações
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={toggleNotifications}
+              disabled={isTogglingNotifications}
+              className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border transition-all duration-200 ease-in-out ${
+                notificationsEnabled 
+                  ? 'bg-gold border-gold' 
+                  : 'bg-surface border-border'
+              } ${isTogglingNotifications ? 'opacity-50 cursor-not-allowed' : ''}`}
+              role="switch"
+              aria-checked={notificationsEnabled}
+              aria-label="Alternar notificações"
+              title={notificationsEnabled ? 'Desativar notificações' : 'Ativar notificações'}
+            >
+              <span
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-bg shadow-lg transition duration-200 ease-in-out ${
+                  notificationsEnabled ? 'translate-x-6' : 'translate-x-1'
+                } ${isTogglingNotifications ? '' : ''}`}
+                style={{ marginTop: '3px' }}
+              >
+                {isTogglingNotifications && (
+                  <svg className="absolute inset-0 m-auto h-3 w-3 text-gold animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                )}
+              </span>
+            </button>
           </div>
         </div>
       </div>
@@ -658,6 +850,20 @@ export default function Profile() {
           document.body
         )
       )}
+
+      {/* Install PWA Modal */}
+      <InstallPWAModal
+        isOpen={showInstallModal}
+        onClose={() => setShowInstallModal(false)}
+        onInstall={async () => {
+          const installed = await promptInstall()
+          if (installed) {
+            setShowInstallModal(false)
+          }
+        }}
+        canInstall={canInstall}
+        selectedAppIcon={selectedAppIcon}
+      />
     </div>
   )
 }
