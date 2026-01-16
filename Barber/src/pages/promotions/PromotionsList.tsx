@@ -424,13 +424,20 @@ export default function PromotionsList() {
               <div className="card">
                 <h3 className="text-xl font-semibold text-text mb-4">Informações da Promoção</h3>
                 <div className="grid gap-6">
-                  <Input
-                    label="Título"
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    placeholder="Ex: Super Desconto de Verão"
-                    required
-                  />
+                  <div className="flex flex-col gap-1 w-full">
+                    <label className="text-sm text-text/90">
+                      Título
+                      <span className="text-red-500 ml-1">*</span>
+                    </label>
+                    <input
+                      required
+                      type="text"
+                      value={formData.title}
+                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      placeholder="Ex: Super Desconto de Verão"
+                      className="w-full bg-[#131313] border border-border rounded-xl px-4 py-3 text-text placeholder:text-text-dim focus:outline-none focus:ring-2 focus:ring-gold/50 transition-all"
+                    />
+                  </div>
                   
                   <div className="flex flex-col gap-1 w-full">
                     <label className="text-sm text-text/90">
@@ -448,7 +455,9 @@ export default function PromotionsList() {
                   </div>
 
                   <div className="flex flex-col gap-1 w-full">
-                    <label className="text-sm text-text/90 mb-2">Imagem da Promoção</label>
+                    <label className="text-sm text-text/90 mb-2">
+                      Imagem da Promoção <span className="text-xs text-text-dim/60 font-normal">(opcional)</span>
+                    </label>
 
                     {/* Preview da imagem selecionada (se houver) */}
                     {formData.image && (
@@ -460,9 +469,11 @@ export default function PromotionsList() {
                             className="w-full h-full object-cover"
                           />
                         </div>
-                        <div className="mt-2 flex items-center justify-end text-xs text-text-dim">
-                          <span>{Math.round((formData.image.length * 3) / 4 / 1024)}KB</span>
-                        </div>
+                        {formData.image && !PROMOTION_IMAGES.includes(formData.image) && (
+                          <div className="mt-2 flex items-center justify-end text-xs text-text-dim">
+                            <span>{Math.round((formData.image.length * 3) / 4 / 1024)}KB</span>
+                          </div>
+                        )}
                         <button
                           type="button"
                           onClick={() => setFormData({ ...formData, image: '' })}
@@ -477,12 +488,7 @@ export default function PromotionsList() {
                     )}
 
                     {/* Galeria dinâmica com rolagem lateral */}
-                    <div className="p-5 bg-background rounded-xl border border-border">
-                      <h4 className="text-sm font-medium text-text mb-4 flex items-center gap-2">
-                        <ImageIcon className="w-4 h-4 text-gold" />
-                        Escolha uma imagem
-                      </h4>
-
+                    <div className="p-4 bg-surface/50 rounded-lg border border-border/50">
                       {/* Input de upload oculto controlado pelo tile de Upload */}
                       <input
                         type="file"
@@ -499,70 +505,77 @@ export default function PromotionsList() {
                         disabled={uploadingImage}
                       />
 
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                          {/* Tile: Sem imagem */}
-                          <button
-                            type="button"
-                            onClick={() => handleImageSelect('')}
-                            className={`relative aspect-square rounded-xl border-2 transition-all bg-surface flex items-center justify-center group overflow-hidden ${isSelected('') ? 'border-gold ring-2 ring-gold/40' : 'border-border hover:border-gold'}`}
-                            title="Sem imagem"
-                          >
-                            <div className="flex flex-col items-center">
-                              <ImageIcon className="w-7 h-7 text-text-dim group-hover:text-gold" />
-                              <span className="mt-1.5 text-xs text-text-dim group-hover:text-text">Sem imagem</span>
+                      {/* Opções rápidas */}
+                      <div className="grid grid-cols-2 gap-2 mb-3">
+                        {/* Tile: Sem imagem */}
+                        <button
+                          type="button"
+                          onClick={() => handleImageSelect('')}
+                          className={`relative h-16 rounded-lg border transition-all flex items-center justify-center gap-2 group ${isSelected('') ? 'border-gold bg-gold/5' : 'border-border bg-background hover:border-gold/50 hover:bg-gold/5'}`}
+                          title="Sem imagem"
+                        >
+                          <ImageIcon className={`w-5 h-5 ${isSelected('') ? 'text-gold' : 'text-text-dim group-hover:text-gold'}`} />
+                          <span className={`text-xs font-medium ${isSelected('') ? 'text-gold' : 'text-text-dim group-hover:text-text'}`}>Sem imagem</span>
+                          {isSelected('') && (
+                            <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-gold text-black flex items-center justify-center shadow-md">
+                              <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M20 6L9 17l-5-5" />
+                              </svg>
                             </div>
-                            {isSelected('') && (
-                              <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-gold/90 text-black flex items-center justify-center shadow">
-                                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                  <path d="M20 6L9 17l-5-5" />
-                                </svg>
-                              </div>
-                            )}
-                          </button>
+                          )}
+                        </button>
 
-                          {/* Tile: Upload */}
-                          <button
-                            type="button"
-                            onClick={() => document.getElementById('image-upload-inline')?.click()}
-                            className={`relative aspect-square rounded-xl border-2 transition-all bg-surface flex items-center justify-center group overflow-hidden ${isSelected(formData.image) && formData.image && !PROMOTION_IMAGES.includes(formData.image) ? 'border-gold ring-2 ring-gold/40' : 'border-border hover:border-gold'}`}
-                            disabled={uploadingImage}
-                            title="Enviar imagem"
-                          >
-                            <div className="flex flex-col items-center">
-                              {uploadingImage ? (
-                                <div className="w-7 h-7 border-2 border-gold border-t-transparent rounded-full animate-spin" />
-                              ) : (
-                                <Upload className="w-7 h-7 text-gold" />
-                              )}
-                              <span className="mt-1.5 text-xs text-text-dim group-hover:text-text">
-                                {uploadingImage ? 'Carregando...' : 'Enviar imagem'}
-                              </span>
-                              <span className="text-[10px] text-text-dim mt-1">PNG, JPG, GIF, WEBP (máx. 5MB)</span>
+                        {/* Tile: Upload */}
+                        <button
+                          type="button"
+                          onClick={() => document.getElementById('image-upload-inline')?.click()}
+                          className={`relative h-16 rounded-lg border transition-all flex items-center justify-center gap-2 group ${isSelected(formData.image) && formData.image && !PROMOTION_IMAGES.includes(formData.image) ? 'border-gold bg-gold/5' : 'border-border bg-background hover:border-gold/50 hover:bg-gold/5'}`}
+                          disabled={uploadingImage}
+                          title="Enviar imagem"
+                        >
+                          {uploadingImage ? (
+                            <>
+                              <div className="w-5 h-5 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+                              <span className="text-xs font-medium text-text-dim">Carregando...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Upload className={`w-5 h-5 ${isSelected(formData.image) && formData.image && !PROMOTION_IMAGES.includes(formData.image) ? 'text-gold' : 'text-gold/70 group-hover:text-gold'}`} />
+                              <div className="flex flex-col items-start">
+                                <span className={`text-xs font-medium ${isSelected(formData.image) && formData.image && !PROMOTION_IMAGES.includes(formData.image) ? 'text-gold' : 'text-text-dim group-hover:text-text'}`}>
+                                  Enviar imagem
+                                </span>
+                                <span className="text-[10px] text-text-dim">PNG, JPG (máx. 5MB)</span>
+                              </div>
+                            </>
+                          )}
+                          {isSelected(formData.image) && formData.image && !PROMOTION_IMAGES.includes(formData.image) && (
+                            <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-gold text-black flex items-center justify-center shadow-md">
+                              <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M20 6L9 17l-5-5" />
+                              </svg>
                             </div>
-                            {isSelected(formData.image) && formData.image && !PROMOTION_IMAGES.includes(formData.image) && (
-                              <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-gold/90 text-black flex items-center justify-center shadow">
-                                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                  <path d="M20 6L9 17l-5-5" />
-                                </svg>
-                              </div>
-                            )}
-                          </button>
+                          )}
+                        </button>
+                      </div>
 
-                          {/* Tiles: Imagens prontas */}
+                      {/* Galeria de imagens prontas */}
+                      <div className="space-y-2">
+                        <div className="h-px bg-border/50"></div>
+                        <p className="text-xs text-text-dim px-1">Ou escolha uma imagem pronta</p>
+                        <div className="grid grid-cols-3 gap-2 max-h-[240px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
                           {PROMOTION_IMAGES.map((imageUrl, index) => (
                             <button
                               key={index}
                               type="button"
                               onClick={() => handleImageSelect(imageUrl)}
-                              className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all group ${isSelected(imageUrl) ? 'border-gold ring-2 ring-gold/40' : 'border-border hover:border-gold'}`}
+                              className={`relative aspect-square rounded-lg overflow-hidden border transition-all group ${isSelected(imageUrl) ? 'border-gold ring-2 ring-gold/30' : 'border-border hover:border-gold/50'}`}
                               title={`Selecionar imagem ${index + 1}`}
                             >
-                              <img src={imageUrl} alt={`Promoção ${index + 1}`} className="w-full h-full object-cover" />
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-2">
-                                <span className="text-white text-xs font-medium">Selecionar</span>
-                              </div>
+                              <img src={imageUrl} alt={`Promoção ${index + 1}`} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                              <div className={`absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent transition-opacity duration-300 ${isSelected(imageUrl) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}></div>
                               {isSelected(imageUrl) && (
-                                <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-gold/90 text-black flex items-center justify-center shadow">
+                                <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-gold text-black flex items-center justify-center shadow-lg">
                                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M20 6L9 17l-5-5" />
                                   </svg>
@@ -570,23 +583,42 @@ export default function PromotionsList() {
                               )}
                             </button>
                           ))}
+                        </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Input
-                      label="Data de Início (opcional)"
-                      type="date"
-                      value={formData.startDate}
-                      onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                    />
-                    <Input
-                      label="Data de Término (opcional)"
-                      type="date"
-                      value={formData.endDate}
-                      onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                    />
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-sm text-text/90">Período <span className="text-xs text-text-dim/60 font-normal">(opcional)</span></label>
+                      {(formData.startDate || formData.endDate) && (
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, startDate: '', endDate: '' })}
+                          className="text-xs text-text-dim hover:text-red-400 transition-colors flex items-center gap-1"
+                          title="Limpar datas"
+                        >
+                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                          Limpar
+                        </button>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Input
+                        label="Data de Início"
+                        type="date"
+                        value={formData.startDate}
+                        onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                      />
+                      <Input
+                        label="Data de Término"
+                        type="date"
+                        value={formData.endDate}
+                        onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                      />
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 gap-6">
@@ -635,7 +667,7 @@ export default function PromotionsList() {
                   </div>
 
                   <Input
-                    label="Link (opcional)"
+                    label={<>Link <span className="text-xs text-text-dim/60 font-normal">(opcional)</span></>}
                     type="url"
                     value={formData.link}
                     onChange={(e) => setFormData({ ...formData, link: e.target.value })}

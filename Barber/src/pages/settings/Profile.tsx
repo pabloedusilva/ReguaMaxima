@@ -34,6 +34,9 @@ const AVATAR_OPTIONS = [
   '/assets/images/profile/profile10.jpg',
   '/assets/images/profile/profile11.jpg',
   '/assets/images/profile/profile12.jpg',
+  '/assets/images/profile/profile13.jpg',
+  '/assets/images/profile/profile14.jpg',
+  '/assets/images/profile/profile15.jpg',
 ]
 
 const APP_ICON_OPTIONS = [
