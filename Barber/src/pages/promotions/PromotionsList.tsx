@@ -342,8 +342,8 @@ export default function PromotionsList() {
                   />
                 </div>
               ) : (
-                <div className="w-full h-40 rounded-xl bg-gold/10 border-2 border-gold/20 flex items-center justify-center mb-4">
-                  <ImageIcon className="w-16 h-16 text-gold/50" />
+                <div className="w-full h-40 rounded-xl bg-surface border border-border mb-4 flex items-center justify-center">
+                  <span className="text-sm text-text-dim">Sem imagem</span>
                 </div>
               )}
               
