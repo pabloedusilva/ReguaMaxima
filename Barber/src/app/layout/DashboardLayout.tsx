@@ -1,5 +1,5 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Footer from '@barber/components/layout/Footer'
 import InstallPWAModal from '@barber/components/dialogs/InstallPWAModal'
 import { usePWAInstall } from '@barber/hooks/usePWAInstall'
@@ -20,35 +20,6 @@ export default function DashboardLayout() {
   
   // Detecta quando o usuário fica offline
   useOfflineDetection()
-
-  // Mostra o modal automaticamente após 3 segundos se o PWA não estiver instalado
-  useEffect(() => {
-    // Não mostra se já estiver instalado ou em modo standalone
-    if (isInstalled || isStandalone) {
-      return;
-    }
-
-    // Verifica se o usuário já viu o modal (não mostrar sempre)
-    const hasSeenModal = localStorage.getItem('pwa_modal_seen');
-    const lastShown = localStorage.getItem('pwa_modal_last_shown');
-    const now = Date.now();
-    
-    // Mostra o modal se:
-    // 1. Nunca viu o modal OU
-    // 2. Já se passaram mais de 7 dias desde a última vez
-    const shouldShow = !hasSeenModal || 
-      (lastShown && (now - parseInt(lastShown)) > 7 * 24 * 60 * 60 * 1000);
-
-    if (shouldShow) {
-      const timer = setTimeout(() => {
-        setShowPWAModal(true);
-        localStorage.setItem('pwa_modal_seen', 'true');
-        localStorage.setItem('pwa_modal_last_shown', now.toString());
-      }, 3000); // 3 segundos após o login
-
-      return () => clearTimeout(timer);
-    }
-  }, [isInstalled, isStandalone]);
 
   const handleInstallPWA = async () => {
     const installed = await promptInstall();

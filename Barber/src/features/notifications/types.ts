@@ -1,6 +1,7 @@
 export type NotificationKind =
 	| 'booking_created'
 	| 'booking_cancelled'
+	| 'booking_completed'
 	| 'booking_upcoming'
 
 export interface BookingNotificationData {
