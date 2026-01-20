@@ -14,12 +14,12 @@ const filters: { label: string; value: BookingsFilter['status'] }[] = [
 
 export default function FilterTabs({ currentFilter, onFilterChange }: FilterTabsProps) {
   return (
-    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+    <div className="flex gap-2 overflow-x-auto no-scrollbar pb-2 -mr-4 pr-4">
       {filters.map((filter) => (
         <button
           key={filter.value}
           onClick={() => onFilterChange({ status: filter.value })}
-          className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition border ${
+          className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition border flex-shrink-0 ${
             currentFilter.status === filter.value
               ? 'bg-gold/15 text-gold border-gold'
               : 'bg-surface text-text/70 border-border hover:border-gold/30'
