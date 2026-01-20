@@ -181,32 +181,32 @@ export default function HomePage() {
             </svg>
           </button>
           {showSchedule && (
-            <div className="px-4 pb-4 pt-2 grid gap-2 text-sm border-t border-border animate-fade-in">
-              <div className="flex items-center justify-between py-2">
+            <div className="px-4 pb-4 pt-2 grid gap-2 text-sm border-t border-border">
+              <div className="flex items-center justify-between py-2 opacity-0 animate-fade-in-up" style={{ animationDelay: '0ms', animationFillMode: 'forwards' }}>
                 <span className="text-text/70">Domingo</span>
                 <span className="text-red-500 font-medium">Fechado</span>
               </div>
-              <div className="flex items-center justify-between py-2">
+              <div className="flex items-center justify-between py-2 opacity-0 animate-fade-in-up" style={{ animationDelay: '50ms', animationFillMode: 'forwards' }}>
                 <span className="text-text/70">Segunda-feira</span>
                 <span className="text-text font-medium">8h às 19h</span>
               </div>
-              <div className="flex items-center justify-between py-2">
+              <div className="flex items-center justify-between py-2 opacity-0 animate-fade-in-up" style={{ animationDelay: '100ms', animationFillMode: 'forwards' }}>
                 <span className="text-text/70">Terça-feira</span>
                 <span className="text-text font-medium">8h às 19h</span>
               </div>
-              <div className="flex items-center justify-between py-2">
+              <div className="flex items-center justify-between py-2 opacity-0 animate-fade-in-up" style={{ animationDelay: '150ms', animationFillMode: 'forwards' }}>
                 <span className="text-text/70">Quarta-feira</span>
                 <span className="text-text font-medium">8h às 19h</span>
               </div>
-              <div className="flex items-center justify-between py-2">
+              <div className="flex items-center justify-between py-2 opacity-0 animate-fade-in-up" style={{ animationDelay: '200ms', animationFillMode: 'forwards' }}>
                 <span className="text-text/70">Quinta-feira</span>
                 <span className="text-text font-medium">8h às 19h</span>
               </div>
-              <div className="flex items-center justify-between py-2">
+              <div className="flex items-center justify-between py-2 opacity-0 animate-fade-in-up" style={{ animationDelay: '250ms', animationFillMode: 'forwards' }}>
                 <span className="text-text/70">Sexta-feira</span>
                 <span className="text-text font-medium">8h às 19h</span>
               </div>
-              <div className="flex items-center justify-between py-2">
+              <div className="flex items-center justify-between py-2 opacity-0 animate-fade-in-up" style={{ animationDelay: '300ms', animationFillMode: 'forwards' }}>
                 <span className="text-text/70">Sábado</span>
                 <span className="text-text font-medium">8h às 17h</span>
               </div>
