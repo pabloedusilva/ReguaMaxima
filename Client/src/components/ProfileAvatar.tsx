@@ -17,12 +17,13 @@ export default function ProfileAvatar({ size = 112, className = '', src }: Props
   }, [src, selected?.url])
 
   const fallback = (
-    <div
-      className={`grid place-items-center rounded-full bg-surface border-2 border-white text-muted ${className}`}
+    <img
+      src="/assets/images/exemplo/profile13.jpg"
+      alt="Imagem de perfil padrão"
+      className={`rounded-full object-cover border-2 border-white ${className}`}
       style={{ width: size, height: size }}
-    >
-      Foto
-    </div>
+      onError={handleImageError}
+    />
   )
 
   if (!currentSrc) return fallback
