@@ -6,6 +6,7 @@ import AuthLayout from '../layout/AuthLayout'
 // Auth Pages
 import Login from '@barber/pages/auth/Login'
 import Logout from '@barber/pages/auth/Logout'
+import ForgotPassword from '@barber/pages/auth/ForgotPassword'
 
 // Dashboard Pages
 import DashboardHome from '@barber/pages/dashboard/Home'
@@ -33,6 +34,16 @@ export const router = createHashRouter([
           {
             index: true,
             element: <Login />
+          }
+        ]
+      },
+      {
+        path: 'forgot-password',
+        element: <AuthLayout />,
+        children: [
+          {
+            index: true,
+            element: <ForgotPassword />
           }
         ]
       },

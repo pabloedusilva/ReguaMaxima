@@ -44,11 +44,19 @@ export default function UserInfoModal({ isOpen, onClose, onSubmit }: UserInfoMod
   }
 
   return createPortal(
-    <div className="fixed inset-0 z-[2147483647] grid place-items-center backdrop-blur bg-bg/70">
-      <div className="card p-5 w-full max-w-md">
-        <h3 className="font-display text-gold text-2xl mb-3">Antes de começar</h3>
-        <p className="text-text/70 mb-3">Informe seu nome completo e telefone para personalizar sua experiência.</p>
-        <form className="grid gap-3" onSubmit={handleSubmit}>
+    <div className="fixed inset-0 z-[2147483647] grid place-items-center backdrop-blur-sm bg-bg/80 p-4">
+      <div className="card w-full max-w-md">
+        <div className="grid gap-5">
+          <div className="text-center">
+            <div className="mx-auto w-14 h-14 rounded-full bg-gold/15 border border-gold/30 grid place-items-center mb-3">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-gold">
+                <path d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0ZM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <h3 className="font-display text-gold text-2xl md:text-3xl mb-2">Antes de começar</h3>
+            <p className="text-text/70 text-sm">Informe seus dados para personalizar sua experiência</p>
+          </div>
+          <form className="grid gap-4" onSubmit={handleSubmit}>
           <Input
             label="Nome completo"
             name="name"
@@ -92,11 +100,12 @@ export default function UserInfoModal({ isOpen, onClose, onSubmit }: UserInfoMod
             }}
             error={errors.phone}
           />
-          <div className="flex justify-end gap-2 pt-2">
-            <Button type="button" variant="outline" onClick={onClose}>Cancelar</Button>
-            <Button type="submit" variant="primary">Continuar</Button>
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <Button type="button" variant="outline" onClick={onClose} className="w-full">Cancelar</Button>
+            <Button type="submit" variant="primary" className="w-full">Continuar</Button>
           </div>
         </form>
+        </div>
       </div>
     </div>,
     document.body

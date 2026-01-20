@@ -25,15 +25,15 @@ export default function CancelConfirmModal({ onConfirm, onCancel, bookingTime, b
         style={{ WebkitOverflowScrolling: 'touch' }}
       >
         <Card className="w-full max-w-md">
-        <div className="grid gap-5">
+        <div className="grid gap-6">
           <div className="text-center">
-            <div className="mx-auto w-14 h-14 rounded-full bg-red-400/15 border border-red-400/30 grid place-items-center mb-3">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-red-400">
+            <div className="mx-auto w-16 h-16 rounded-full bg-red-500/15 border-2 border-red-500/30 grid place-items-center mb-4">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-red-500">
                 <path d="M12 9v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <h2 className="font-display text-gold text-2xl md:text-3xl">Cancelar agendamento?</h2>
-            <p className="text-text/70 text-sm mt-2">Esta ação não poderá ser desfeita</p>
+            <h2 className="font-display text-gold text-2xl md:text-3xl mb-2">Cancelar agendamento?</h2>
+            <p className="text-text/70 text-sm">Esta ação não poderá ser desfeita</p>
           </div>
 
           <div className="bg-surface border border-border rounded-xl p-4 text-center">

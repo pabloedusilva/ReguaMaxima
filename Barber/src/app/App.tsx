@@ -5,6 +5,7 @@ import AuthLayout from './layout/AuthLayout'
 // Auth Pages
 import Login from '@barber/pages/auth/Login'
 import Logout from '@barber/pages/auth/Logout'
+import ForgotPassword from '@barber/pages/auth/ForgotPassword'
 
 // Dashboard Pages
 import DashboardHome from '@barber/pages/dashboard/Home'
@@ -24,6 +25,9 @@ export default function App() {
       {/* Auth Routes */}
       <Route path="login" element={<AuthLayout />}>
         <Route index element={<Login />} />
+      </Route>
+      <Route path="forgot-password" element={<AuthLayout />}>
+        <Route index element={<ForgotPassword />} />
       </Route>
       <Route path="logout" element={<Logout />} />
 

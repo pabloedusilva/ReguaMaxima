@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import Input from '@barber/components/ui/Input'
 import Button from '@barber/components/ui/Button'
 
@@ -71,9 +71,9 @@ export default function LoginForm() {
           />
           <span className="text-text-dim">Lembrar de mim</span>
         </label>
-        <a href="#" className="text-gold hover:text-gold-600 transition-colors">
+        <Link to="/forgot-password" className="text-gold hover:text-gold-600 transition-colors">
           Esqueceu a senha?
-        </a>
+        </Link>
       </div>
 
       <Button type="submit" className="w-full mt-2">
