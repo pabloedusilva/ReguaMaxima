@@ -72,7 +72,7 @@ export default function ForgotPassword() {
           setTimeout(() => {
             setStep('phone')
             setPhone('')
-            setCode('')
+            setCode(Array(CODE_LENGTH).fill(''))
             setPasswordFormStartTime(null)
             setError('')
           }, 3000)
