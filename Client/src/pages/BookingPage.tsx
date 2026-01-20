@@ -505,29 +505,29 @@ export default function BookingPage() {
               <h2 className="text-gold font-display text-2xl">Revisar e confirmar</h2>
               <Card className="p-4">
                 <div className="grid gap-3">
-                  <div className="grid grid-cols-2 items-center gap-3 py-2 border-b border-border">
-                    <div className="text-text/70 text-sm">Profissional</div>
-                    <div className="text-text font-medium text-right">{state.professional?.name ?? '—'}</div>
+                  <div className="grid grid-cols-[auto_1fr] items-center gap-3 py-2 border-b border-border">
+                    <div className="text-text/70 text-sm whitespace-nowrap">Profissional</div>
+                    <div className="text-text font-medium text-right truncate">{state.professional?.name ?? '—'}</div>
                   </div>
 
-                  <div className="grid grid-cols-2 items-center gap-3 py-2 border-b border-border">
-                    <div className="text-text/70 text-sm">Serviço</div>
-                    <div className="text-text font-medium text-right">{services.find(s => s.id === state.serviceId)?.name ?? '—'}</div>
+                  <div className="grid grid-cols-[auto_1fr] items-center gap-3 py-2 border-b border-border">
+                    <div className="text-text/70 text-sm whitespace-nowrap">Serviço</div>
+                    <div className="text-text font-medium text-right truncate">{services.find(s => s.id === state.serviceId)?.name ?? '—'}</div>
                   </div>
 
-                  <div className="grid grid-cols-2 items-center gap-3 py-2 border-b border-border">
-                    <div className="text-text/70 text-sm">Data</div>
-                    <div className="text-text font-medium text-right">{state.date}</div>
+                  <div className="grid grid-cols-[auto_1fr] items-center gap-3 py-2 border-b border-border">
+                    <div className="text-text/70 text-sm whitespace-nowrap">Data</div>
+                    <div className="text-text font-medium text-right truncate">{state.date}</div>
                   </div>
 
-                  <div className="grid grid-cols-2 items-center gap-3 py-2 border-b border-border">
-                    <div className="text-text/70 text-sm">Horário</div>
-                    <div className="text-text font-medium text-right">{state.time}</div>
+                  <div className="grid grid-cols-[auto_1fr] items-center gap-3 py-2 border-b border-border">
+                    <div className="text-text/70 text-sm whitespace-nowrap">Horário</div>
+                    <div className="text-text font-medium text-right truncate">{state.time}</div>
                   </div>
 
-                  <div className="grid grid-cols-2 items-center gap-3 py-2">
-                    <div className="text-text/70 text-sm">Nome</div>
-                    <div className="text-text font-medium text-right">{state.fullName}</div>
+                  <div className="grid grid-cols-[auto_1fr] items-center gap-3 py-2">
+                    <div className="text-text/70 text-sm whitespace-nowrap">Nome</div>
+                    <div className="text-text font-medium text-right truncate">{state.fullName}</div>
                   </div>
                 </div>
               </Card>

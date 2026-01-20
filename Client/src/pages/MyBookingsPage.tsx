@@ -85,13 +85,13 @@ export default function MyBookingsPage() {
   }
 
   return (
-    <div className="grid gap-8 md:gap-10">
+    <div className="grid gap-8 md:gap-10 w-full min-w-0">
       <div className="text-center">
         <h1 className="font-display text-gold text-4xl md:text-5xl">Meus Agendamentos</h1>
         <p className="text-text/70 mt-2">Visualize e gerencie todos os seus agendamentos</p>
       </div>
 
-      <div className="grid gap-6 md:gap-7">
+      <div className="grid gap-6 md:gap-7 w-full min-w-0">
         {nextBooking && (
           <div className="grid gap-2">
             <h2 className="text-text/90 font-semibold text-lg">Em destaque</h2>
@@ -100,9 +100,11 @@ export default function MyBookingsPage() {
         )}
 
         <div className="grid gap-4">
-          <div className="flex items-center justify-between gap-4 flex-wrap">
-            <h2 className="text-text/90 font-semibold text-lg">Histórico</h2>
-            <FilterTabs currentFilter={filter} onFilterChange={setFilter} />
+          <div className="flex items-center justify-between gap-4 flex-wrap min-w-0">
+            <h2 className="text-text/90 font-semibold text-lg flex-shrink-0">Histórico</h2>
+            <div className="flex-1 min-w-0 max-w-full">
+              <FilterTabs currentFilter={filter} onFilterChange={setFilter} />
+            </div>
           </div>
 
           {filteredBookings.length === 0 ? (
@@ -118,7 +120,7 @@ export default function MyBookingsPage() {
               </Button>
             </div>
           ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
               {filteredBookings.map((booking) => (
                 <BookingCard key={booking.id} booking={booking} onCancel={handleCancelBooking} />
               ))}

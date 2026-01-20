@@ -46,8 +46,10 @@ export default function MyBookingsModal() {
             </svg>
           </button>
         </div>
-          <div className="w-full max-w-6xl mx-auto px-4 py-6 md:py-8 pt-16">
-            <MyBookingsPage />
+          <div className="w-full max-w-6xl mx-auto px-4 py-6 md:py-8 pt-16 box-border">
+            <div className="w-full overflow-x-hidden">
+              <MyBookingsPage />
+            </div>
           </div>
         </div>
       </div>,

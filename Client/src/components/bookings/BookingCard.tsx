@@ -25,29 +25,29 @@ export default function BookingCard({ booking, onCancel }: BookingCardProps) {
 
   return (
     <Card className="hover:border-gold/30 transition">
-      <div className="grid gap-3">
-        <div className="flex items-start justify-between gap-3">
-          <div>
+      <div className="grid gap-3 min-w-0">
+        <div className="flex items-start justify-between gap-3 min-w-0">
+          <div className="min-w-0">
             <div className="text-lg font-semibold text-text">{booking.time}</div>
-            <div className="text-sm text-text/70 capitalize">{formattedDate}</div>
+            <div className="text-sm text-text/70 capitalize truncate">{formattedDate}</div>
           </div>
-          <span className={`px-2.5 py-1 rounded-lg text-xs font-medium border ${status.bg} ${status.color}`}>
+          <span className={`px-2.5 py-1 rounded-lg text-xs font-medium border whitespace-nowrap flex-shrink-0 ${status.bg} ${status.color}`}>
             {status.label}
           </span>
         </div>
 
-        <div className="grid gap-1.5 text-sm">
-          <div className="flex justify-between">
-            <span className="text-text/70">Profissional:</span>
-            <span className="text-text font-medium">{booking.professionalName}</span>
+        <div className="grid gap-1.5 text-sm min-w-0">
+          <div className="flex justify-between gap-2 min-w-0">
+            <span className="text-text/70 flex-shrink-0">Profissional:</span>
+            <span className="text-text font-medium text-right truncate">{booking.professionalName}</span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-text/70">Serviço:</span>
-            <span className="text-text font-medium">{booking.serviceName}</span>
+          <div className="flex justify-between gap-2 min-w-0">
+            <span className="text-text/70 flex-shrink-0">Serviço:</span>
+            <span className="text-text font-medium text-right truncate">{booking.serviceName}</span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-text/70">Valor:</span>
-            <span className="text-gold font-semibold">R$ {booking.price.toFixed(2)}</span>
+          <div className="flex justify-between gap-2 min-w-0">
+            <span className="text-text/70 flex-shrink-0">Valor:</span>
+            <span className="text-gold font-semibold text-right">R$ {booking.price.toFixed(2)}</span>
           </div>
         </div>
 
