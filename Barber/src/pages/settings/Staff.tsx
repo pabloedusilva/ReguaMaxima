@@ -3,10 +3,20 @@ import { createPortal } from 'react-dom'
 import { handleImageError } from '../../utils/imageHelpers'
 
 // TODO: Backend Integration
-// GET /api/professionals - List all professionals
-// POST /api/professionals - Create new professional
-// PATCH /api/professionals/:id - Update professional
-// DELETE /api/professionals/:id - Delete professional
+// GET /api/staff - List all staff members
+// POST /api/staff - Create new staff member
+// PATCH /api/staff/:id - Update staff member
+// DELETE /api/staff/:id - Delete staff member
+
+// Available avatar options from public/assets/images/professionalsAvatar/
+const PROFESSIONAL_AVATAR_OPTIONS = [
+  '/assets/images/professionalsAvatar/avatar1.jpg',
+  '/assets/images/professionalsAvatar/avatar2.jpg',
+  '/assets/images/professionalsAvatar/avatar3.jpg',
+  '/assets/images/professionalsAvatar/avatar4.jpg',
+  '/assets/images/professionalsAvatar/avatar5.jpg',
+  '/assets/images/professionalsAvatar/avatar6.jpg',
+]
 
 interface Professional {
   id: string
@@ -21,13 +31,15 @@ export default function Staff() {
   const [modalOpen, setModalOpen] = useState(false)
   const [editingProfessional, setEditingProfessional] = useState<Professional | null>(null)
   const [deleteProfessionalId, setDeleteProfessionalId] = useState<string | null>(null)
+  const [showAvatarGallery, setShowAvatarGallery] = useState(false)
+  const [avatarPreview, setAvatarPreview] = useState('')
   
   // Form state
   const [formData, setFormData] = useState({
     name: '',
     specialty: 'Barbeiro',
     imageFile: null as File | null,
-    imagePreview: '/assets/images/professionals/pablo.jpg'
+    imagePreview: PROFESSIONAL_AVATAR_OPTIONS[0]
   })
 
   useEffect(() => {
@@ -38,14 +50,14 @@ export default function Staff() {
   const loadProfessionals = () => {
     setIsLoading(true)
     try {
-      const professionalsRaw = localStorage.getItem('barbershop_professionals')
+      const professionalsRaw = localStorage.getItem('barbershop_staff')
       const loadedProfessionals: Professional[] = professionalsRaw ? JSON.parse(professionalsRaw) : [
-        { id: '1', name: 'Pablo Silva', specialty: 'Barbeiro', image: '/assets/images/professionals/pablo.jpg' }
+        { id: '1', name: 'Pablo Silva', specialty: 'Barbeiro', image: PROFESSIONAL_AVATAR_OPTIONS[0] }
       ]
       setProfessionals(loadedProfessionals)
-      localStorage.setItem('barbershop_professionals', JSON.stringify(loadedProfessionals))
+      localStorage.setItem('barbershop_staff', JSON.stringify(loadedProfessionals))
     } catch (error) {
-      console.error('Error loading professionals:', error)
+      console.error('Error loading staff:', error)
     } finally {
       setIsLoading(false)
     }
@@ -53,17 +65,21 @@ export default function Staff() {
 
   const openAddModal = () => {
     setEditingProfessional(null)
+    setAvatarPreview('')
+    setShowAvatarGallery(false)
     setFormData({
       name: '',
       specialty: 'Barbeiro',
       imageFile: null,
-      imagePreview: '/assets/images/professionals/pablo.jpg'
+      imagePreview: PROFESSIONAL_AVATAR_OPTIONS[0]
     })
     setModalOpen(true)
   }
 
   const openEditModal = (professional: Professional) => {
     setEditingProfessional(professional)
+    setAvatarPreview('')
+    setShowAvatarGallery(false)
     setFormData({
       name: professional.name,
       specialty: professional.specialty,
@@ -77,6 +93,7 @@ export default function Staff() {
     const file = e.target.files?.[0]
     if (file) {
       const blobUrl = URL.createObjectURL(file)
+      setAvatarPreview(blobUrl)
       setFormData({
         ...formData,
         imageFile: file,
@@ -85,25 +102,35 @@ export default function Staff() {
     }
   }
 
+  const handleAvatarSelect = (avatarUrl: string) => {
+    setAvatarPreview(avatarUrl)
+    setFormData({
+      ...formData,
+      imageFile: null,
+      imagePreview: avatarUrl
+    })
+  }
+
   // Cleanup blob URL to avoid stale previews and errors
   useEffect(() => {
     return () => {
       try {
-        if (formData.imagePreview && formData.imagePreview.startsWith('blob:')) {
-          URL.revokeObjectURL(formData.imagePreview)
+        if (avatarPreview && avatarPreview.startsWith('blob:')) {
+          URL.revokeObjectURL(avatarPreview)
         }
       } catch {}
     }
-  }, [formData.imagePreview])
+  }, [avatarPreview])
 
   useEffect(() => {
     if (!modalOpen) {
       try {
-        if (formData.imagePreview && formData.imagePreview.startsWith('blob:')) {
-          URL.revokeObjectURL(formData.imagePreview)
+        if (avatarPreview && avatarPreview.startsWith('blob:')) {
+          URL.revokeObjectURL(avatarPreview)
         }
       } catch {}
-      // do not persist blob URL when modal closes
+      setAvatarPreview('')
+      setShowAvatarGallery(false)
       setFormData((prev) => ({ ...prev, imageFile: null }))
     }
   }, [modalOpen])
@@ -142,14 +169,14 @@ export default function Staff() {
     }
 
     setProfessionals(updated)
-    localStorage.setItem('barbershop_professionals', JSON.stringify(updated))
+    localStorage.setItem('barbershop_staff', JSON.stringify(updated))
     setModalOpen(false)
   }
 
   const handleDelete = (id: string) => {
     const updated = professionals.filter(p => p.id !== id)
     setProfessionals(updated)
-    localStorage.setItem('barbershop_professionals', JSON.stringify(updated))
+    localStorage.setItem('barbershop_staff', JSON.stringify(updated))
     setDeleteProfessionalId(null)
   }
 
@@ -254,29 +281,81 @@ export default function Staff() {
             {/* Form */}
             <form onSubmit={handleSubmit} className="grid gap-6">
               <div className="card">
-                {/* Image Upload */}
+                {/* Image Upload Section */}
                 <div className="flex flex-col items-center mb-6">
                   <div className="w-40 h-40 mb-4 rounded-full overflow-hidden bg-surface border-4 border-gold/20">
                     <img
-                      src={formData.imagePreview}
+                      src={avatarPreview || formData.imagePreview}
                       alt="Preview"
                       className="w-full h-full object-cover"
+                      onError={handleImageError}
                     />
                   </div>
-                  <label className="btn btn-outline cursor-pointer">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    Escolher Foto
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="hidden"
-                    />
-                  </label>
-                  <p className="text-xs text-text-dim mt-2">Formatos aceitos: JPG, PNG (máx. 2MB)</p>
+                  
+                  {/* Upload/Avatar Selection Buttons */}
+                  <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
+                    <label className="btn btn-outline cursor-pointer flex-1">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      Upload
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="hidden"
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setShowAvatarGallery(!showAvatarGallery)}
+                      className="btn btn-outline flex-1"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                      </svg>
+                      {showAvatarGallery ? 'Fechar Galeria' : 'Escolher Avatar'}
+                    </button>
+                  </div>
+                  <p className="text-xs text-text-dim mt-2 text-center">
+                    Faça upload de uma imagem ou escolha um avatar da galeria
+                  </p>
                 </div>
+
+                {/* Avatar Gallery */}
+                {showAvatarGallery && (
+                  <div className="mb-6 p-4 bg-background rounded-xl border border-border">
+                    <h4 className="text-sm font-medium text-text mb-4 text-center">Escolha um Avatar</h4>
+                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                      {PROFESSIONAL_AVATAR_OPTIONS.map((avatar, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={() => handleAvatarSelect(avatar)}
+                          className={`relative group rounded-full overflow-hidden border-4 transition-all hover:scale-105 ${
+                            (avatarPreview || formData.imagePreview) === avatar
+                              ? 'border-gold shadow-lg shadow-gold/20'
+                              : 'border-border hover:border-gold/50'
+                          }`}
+                        >
+                          <img
+                            src={avatar}
+                            alt={`Avatar ${index + 1}`}
+                            className="w-full h-full object-cover aspect-square"
+                            onError={handleImageError}
+                          />
+                          {(avatarPreview || formData.imagePreview) === avatar && (
+                            <div className="absolute inset-0 bg-gold/20 flex items-center justify-center">
+                              <svg className="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                              </svg>
+                            </div>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Form Fields */}
                 <div className="grid gap-6">
