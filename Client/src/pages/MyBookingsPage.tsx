@@ -100,11 +100,9 @@ export default function MyBookingsPage() {
         )}
 
         <div className="grid gap-4">
-          <div className="flex items-center justify-between gap-4 flex-wrap min-w-0">
-            <h2 className="text-text/90 font-semibold text-lg flex-shrink-0">Histórico</h2>
-            <div className="flex-1 min-w-0 max-w-full">
-              <FilterTabs currentFilter={filter} onFilterChange={setFilter} />
-            </div>
+          <div className="grid gap-3">
+            <h2 className="text-text/90 font-semibold text-lg">Histórico</h2>
+            <FilterTabs currentFilter={filter} onFilterChange={setFilter} />
           </div>
 
           {filteredBookings.length === 0 ? (
