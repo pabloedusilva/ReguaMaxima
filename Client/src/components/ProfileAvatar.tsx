@@ -18,7 +18,7 @@ export default function ProfileAvatar({ size = 112, className = '', src }: Props
 
   const fallback = (
     <img
-      src="/assets/images/exemplo/profile13.jpg"
+      src="/assets/images/ui/default.webp"
       alt="Imagem de perfil padrão"
       className={`rounded-full object-cover border-2 border-white ${className}`}
       style={{ width: size, height: size }}

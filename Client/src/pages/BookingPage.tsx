@@ -7,6 +7,7 @@ import Button from '@components/ui/Button'
 import Input from '@components/ui/Input'
 import { professionals, services, generateTimeSlots } from '@data/availability'
 import ProfessionalsCarousel from '@components/ProfessionalsCarousel'
+import { handleImageError } from '../utils/imageHelpers'
 
 const steps = [
   { id: 'pro', label: 'Profissional' },
@@ -276,6 +277,7 @@ export default function BookingPage() {
                           alt={svc.name}
                           className="w-full h-full object-cover"
                           loading="lazy"
+                          onError={handleImageError}
                         />
                       ) : (
                         <div className="w-full h-full grid place-items-center text-muted">Imagem</div>

@@ -107,7 +107,7 @@ export default function HomePage() {
         <ProfileAvatar
           size={112}
           className="mx-auto animate-pulse-border"
-          src="/assets/images/profile/profile4.jpg"
+          src="/assets/images/exemplo/profile11.jpg"
         />
         <h1 className="font-display text-3xl md:text-4xl text-text">PABLO DO CORTE</h1>
         
