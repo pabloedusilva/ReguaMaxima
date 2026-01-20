@@ -265,8 +265,9 @@ export default function ForgotPassword() {
   }
 
   return (
-    <div className="min-h-full flex flex-col items-center justify-center p-4 sm:p-6">
-      <div className="w-full max-w-md">
+    <div className="min-h-full flex flex-col items-center justify-between p-4 sm:p-6">
+      <div className="flex-1 flex items-center justify-center w-full">
+        <div className="w-full max-w-md">
         
         {/* Card do Formulário */}
         <div className="card hover-lift animate-fade-in">
@@ -489,5 +490,11 @@ export default function ForgotPassword() {
           )}
         </div>
       </div>
+
+      {/* Footer */}
+      <div className="mt-6 text-center text-sm text-muted animate-fade-in-delayed">
+        <p>© Régua Máxima {new Date().getFullYear() + 1}</p>
+      </div>
+    </div>
   )
 }
