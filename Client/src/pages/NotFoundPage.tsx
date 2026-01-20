@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import Button from '@components/ui/Button'
+import { handleImageError } from '../utils/imageHelpers'
 
 export default function NotFoundPage() {
   const navigate = useNavigate()
@@ -21,6 +22,7 @@ export default function NotFoundPage() {
             alt="Página não encontrada"
             className="mx-auto w-full max-w-md h-auto object-contain"
             loading="lazy"
+            onError={handleImageError}
           />
 
           <div className="grid gap-2">

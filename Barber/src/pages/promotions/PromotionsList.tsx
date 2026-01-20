@@ -6,6 +6,7 @@ import ImageWithFallback from '../../components/ui/ImageWithFallback';
 import Badge from '../../components/ui/Badge';
 import Input from '../../components/ui/Input';
 import Select from '../../components/ui/Select';
+import { handleImageError } from '../../utils/imageHelpers';
 
 interface Promotion {
   id: string;
@@ -568,7 +569,7 @@ export default function PromotionsList() {
                               className={`relative aspect-square rounded-lg overflow-hidden border transition-all group ${isSelected(imageUrl) ? 'border-gold ring-2 ring-gold/30' : 'border-border hover:border-gold/50'}`}
                               title={`Selecionar imagem ${index + 1}`}
                             >
-                              <img src={imageUrl} alt={`Promoção ${index + 1}`} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                              <img src={imageUrl} alt={`Promoção ${index + 1}`} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" onError={handleImageError} />
                               <div className={`absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent transition-opacity duration-300 ${isSelected(imageUrl) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}></div>
                               {isSelected(imageUrl) && (
                                 <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-gold text-black flex items-center justify-center shadow-lg">

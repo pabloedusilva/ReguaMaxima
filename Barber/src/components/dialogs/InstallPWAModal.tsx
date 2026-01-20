@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Download, Smartphone, X } from 'lucide-react';
 import { isIOS } from '@barber/utils/pwa';
+import { handleImageError } from '../../utils/imageHelpers';
 
 interface InstallPWAModalProps {
   isOpen: boolean;
@@ -119,6 +120,7 @@ export default function InstallPWAModal({ isOpen, onClose, onInstall, canInstall
                     src={selectedAppIcon || '/assets/images/logos/logo.png'} 
                     alt="Régua Máxima" 
                     className="w-full h-full object-cover"
+                    onError={handleImageError}
                   />
                 </div>
                 <div className="absolute -bottom-1 -right-1 w-10 h-10 bg-gold rounded-full flex items-center justify-center shadow-lg">

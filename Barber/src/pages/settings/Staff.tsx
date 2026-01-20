@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { handleImageError } from '../../utils/imageHelpers'
 
 // TODO: Backend Integration
 // GET /api/professionals - List all professionals
@@ -198,10 +199,7 @@ export default function Staff() {
                   src={professional.image}
                   alt={professional.name}
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement
-                    target.src = '/assets/images/ui/default.jpg'
-                  }}
+                  onError={handleImageError}
                 />
               </div>
               <h3 className="text-xl font-semibold text-text mb-1">{professional.name}</h3>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useProfile } from '@/context/ProfileContext'
+import { handleImageError } from '../utils/imageHelpers'
 
 type Props = {
   size?: number // px
@@ -32,7 +33,10 @@ export default function ProfileAvatar({ size = 112, className = '', src }: Props
       alt={selected?.label ?? 'Imagem de perfil da barbearia'}
       className={`rounded-full object-cover border-2 border-white ${className}`}
       style={{ width: size, height: size }}
-      onError={() => setCurrentSrc(undefined)}
+      onError={(e) => {
+        handleImageError(e)
+        setCurrentSrc(undefined)
+      }}
     />
   )
 }

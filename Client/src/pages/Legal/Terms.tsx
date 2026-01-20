@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { handleImageError } from '../../utils/imageHelpers'
 
 export default function Terms() {
   return (
@@ -12,7 +13,7 @@ export default function Terms() {
 
       <main className="legal-page">
         <div className="legal-header">
-          <img src="/assets/images/logos/logo.png" alt="Régua Máxima" />
+          <img src="/assets/images/logos/logo.png" alt="Régua Máxima" onError={handleImageError} />
           <h1 className="legal-title">Termos de Uso</h1>
           <p className="legal-sub">Aplicativo Régua Máxima — agendamentos para barbearias</p>
         </div>

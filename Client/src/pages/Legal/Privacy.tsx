@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { handleImageError } from '../../utils/imageHelpers'
 
 export default function Privacy() {
   return (
@@ -12,7 +13,7 @@ export default function Privacy() {
 
       <main className="legal-page">
         <div className="legal-header">
-          <img src="/assets/images/logos/logo.png" alt="Régua Máxima" />
+          <img src="/assets/images/logos/logo.png" alt="Régua Máxima" onError={handleImageError} />
           <h1 className="legal-title">Política de Privacidade</h1>
           <p className="legal-sub">Aplicativo Régua Máxima — proteção e transparência</p>
         </div>

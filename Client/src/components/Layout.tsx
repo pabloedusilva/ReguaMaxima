@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import { handleImageError } from '../utils/imageHelpers'
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
@@ -11,7 +12,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <footer id="contato" className="site-footer mt-auto">
         <div className="footer-inner">
           <div className="footer-top">
-            <img src="/assets/images/logos/logo.png" alt="Régua Máxima" className="brand-logo" />
+            <img src="/assets/images/logos/logo.png" alt="Régua Máxima" className="brand-logo" onError={handleImageError} />
           </div>
           <div className="footer-bottom">
             <div className="footer-legal">

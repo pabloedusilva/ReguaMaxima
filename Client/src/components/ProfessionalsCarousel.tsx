@@ -1,4 +1,5 @@
 import { Professional } from '@context/BookingContext'
+import { handleImageError } from '../utils/imageHelpers'
 
 export default function ProfessionalsCarousel({ items, activeId, onSelect }: { items: Professional[]; activeId?: string; onSelect: (p: Professional) => void }) {
   return (
@@ -18,7 +19,7 @@ export default function ProfessionalsCarousel({ items, activeId, onSelect }: { i
                 alt={pro.name}
                 className="w-full h-full object-cover"
                 loading="lazy"
-                onError={(e) => { e.currentTarget.style.display = 'none' }}
+                onError={handleImageError}
               />
             </div>
             <div className="font-semibold">{pro.name}</div>

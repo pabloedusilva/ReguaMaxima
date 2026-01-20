@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Trash2, Download, Bell, BellOff } from 'lucide-react'
-// image fallback handled via ImageWithFallback
+import { handleImageError } from '../../utils/imageHelpers'
 import { formatPhone } from '../../utils/format'
 import { applyAndPersistAppIcon, getSelectedAppIcon } from '@barber/lib/appIcon'
 import { usePWAInstall } from '../../hooks/usePWAInstall'
@@ -371,10 +371,7 @@ export default function Profile() {
                   src={profile.logo}
                   alt={profile.name}
                   className="w-full h-full object-cover"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement
-                    target.src = '/assets/images/ui/default.jpg'
-                  }}
+                  onError={handleImageError}
                 />
               </div>
               <div className="text-center">

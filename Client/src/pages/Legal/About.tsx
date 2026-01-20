@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { handleImageError } from '../../utils/imageHelpers'
 
 export default function About() {
   return (
@@ -12,7 +13,7 @@ export default function About() {
 
       <main className="legal-page">
         <div className="legal-header">
-          <img src="/assets/images/logos/logo.png" alt="Régua Máxima" />
+          <img src="/assets/images/logos/logo.png" alt="Régua Máxima" onError={handleImageError} />
           <h1 className="legal-title">Sobre o Régua Máxima</h1>
           <p className="legal-sub">Agendamentos simples, clientes fidelizados e barbearias organizadas.</p>
         </div>
@@ -51,7 +52,7 @@ export default function About() {
                   <p>Com experiência em desenvolvimento e liderança de produto, Pablo prioriza interfaces objetivas, fluxos intuitivos e decisões técnicas que suportam crescimento com qualidade. O Régua Máxima reflete esses princípios: fácil de usar, confiável e pensado para aumentar a eficiência das barbearias sem burocracia.</p>
                 </div>
                 <figure className="creator-card">
-                  <img src="/assets/images/professionals/Pablo.jpg" alt="Pablo Eduardo Silva" className="creator-photo" />
+                  <img src="/assets/images/professionals/Pablo.jpg" alt="Pablo Eduardo Silva" className="creator-photo" onError={handleImageError} />
                   <figcaption className="creator-caption"><strong>Pablo Eduardo Silva</strong></figcaption>
                 </figure>
               </div>

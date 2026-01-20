@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { handleImageError } from '../../utils/imageHelpers'
 
 // Helper function to generate file paths based on known file names
 const getStickerFiles = (folderName: string): string[] => {
@@ -329,10 +330,7 @@ export default function StickersGallery() {
                   alt={`Figurinha ${index + 1}`}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   loading="lazy"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement
-                    target.src = '/assets/images/ui/default.jpg'
-                  }}
+                  onError={handleImageError}
                 />
 
                 {/* Favorite Button - Top Right */}
