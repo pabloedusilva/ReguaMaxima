@@ -1,10 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import Card from '@components/ui/Card'
 import Button from '@components/ui/Button'
-import Input from '@components/ui/Input'
 import { useEffect, useState } from 'react'
 import ProfileAvatar from '@components/ProfileAvatar'
-import { createPortal } from 'react-dom'
+import UserInfoModal from '@components/UserInfoModal'
 
 function isOpenNow(hours: { weekdays: [number, number]; saturday: [number, number] }) {
   const now = new Date()
@@ -23,11 +22,9 @@ export default function HomePage() {
   const navigate = useNavigate()
   const [clientName, setClientName] = useState<string | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
-  const [nameInput, setNameInput] = useState('')
-  const [phoneInput, setPhoneInput] = useState('')
-  const [errors, setErrors] = useState<{ name?: string; phone?: string }>({})
   const [bookingsCount, setBookingsCount] = useState<number>(0)
   const [shake, setShake] = useState<boolean>(false)
+  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null)
 
   useEffect(() => {
     const name = localStorage.getItem('clientName')
@@ -37,8 +34,6 @@ export default function HomePage() {
     if (!name) {
       setModalOpen(true)
     }
-    if (name) setNameInput(name)
-    if (phone) setPhoneInput(phone)
 
     // Contagem de agendamentos do cliente (localStorage, status scheduled)
     try {
@@ -81,7 +76,14 @@ export default function HomePage() {
     <div className="grid gap-8 md:gap-10 relative">
       {/* Ícone de prancheta no canto superior direito */}
       <button
-        onClick={() => navigate('/agendamentos')}
+        onClick={() => {
+          if (clientName) {
+            navigate('/agendamentos')
+          } else {
+            setPendingNavigation('/agendamentos')
+            setModalOpen(true)
+          }
+        }}
         className={`fixed top-4 right-4 z-10 w-12 h-12 rounded-xl bg-surface border border-border flex items-center justify-center text-gold hover:-translate-y-0.5 transition-all shadow-lg ${shake ? 'shake-once' : ''}`}
         aria-label="Ver meus agendamentos"
       >
@@ -204,14 +206,28 @@ export default function HomePage() {
             <Button
               variant="primary"
               className="py-3 text-base md:text-lg w-full btn-schedule"
-              onClick={() => (clientName ? navigate('/agendar') : setModalOpen(true))}
+              onClick={() => {
+                if (clientName) {
+                  navigate('/agendar')
+                } else {
+                  setPendingNavigation('/agendar')
+                  setModalOpen(true)
+                }
+              }}
             >
               Agendar Horário
             </Button>
             <Button 
               variant="outline" 
               className={`w-full relative ${shake ? 'shake-once' : ''}`}
-              onClick={() => navigate('/agendamentos')}
+              onClick={() => {
+                if (clientName) {
+                  navigate('/agendamentos')
+                } else {
+                  setPendingNavigation('/agendamentos')
+                  setModalOpen(true)
+                }
+              }}
             >
               Ver agendamentos
               {bookingsCount > 0 && (
@@ -224,91 +240,21 @@ export default function HomePage() {
         </div>
       </Card>
 
-      {modalOpen && (
-        createPortal(
-          <div className="fixed inset-0 z-[2147483647] grid place-items-center backdrop-blur bg-bg/70">
-            <div className="card p-5 w-full max-w-md">
-            <h3 className="font-display text-gold text-2xl mb-3">Antes de começar</h3>
-            <p className="text-text/70 mb-3">Informe seu nome completo e telefone para personalizar sua experiência.</p>
-            <form
-              className="grid gap-3"
-              onSubmit={(e) => {
-                e.preventDefault()
-                const form = e.target as HTMLFormElement
-                const name = (form.elements.namedItem('name') as HTMLInputElement).value.trim()
-                const phone = (form.elements.namedItem('phone') as HTMLInputElement).value.trim()
-                const newErrors: { name?: string; phone?: string } = {}
-                if (!/^[A-Za-zÀ-ÿ]+\s+[A-Za-zÀ-ÿ].+/.test(name)) {
-                  newErrors.name = 'Informe nome e sobrenome.'
-                }
-                const digits = phone.replace(/\D/g, '')
-                if (!(digits.length === 10 || digits.length === 11)) {
-                  newErrors.phone = 'Formato inválido'
-                }
-                if (Object.keys(newErrors).length) {
-                  setErrors(newErrors)
-                  return
-                }
-                localStorage.setItem('clientName', name)
-                localStorage.setItem('clientPhone', phone)
-                setClientName(name)
-                setModalOpen(false)
-                // Removed automatic navigation; user stays on home and can choose Agendar depois
-              }}
-            >
-              <Input
-                label="Nome completo"
-                name="name"
-                type="text"
-                autoComplete="name"
-                autoFocus
-                required
-                placeholder="Ex: João Silva"
-                value={nameInput}
-                onChange={(e) => {
-                  setNameInput(e.target.value)
-                  if (errors.name) setErrors((prev) => ({ ...prev, name: undefined }))
-                }}
-                error={errors.name}
-              />
-              <Input
-                label="Telefone"
-                name="phone"
-                type="tel"
-                autoComplete="tel"
-                inputMode="tel"
-                required
-                placeholder="Ex: (31) 99999-9999"
-                value={phoneInput}
-                onChange={(e) => {
-                  const digits = e.target.value.replace(/\D/g, '').slice(0, 11)
-                  const dd = digits.slice(0, 2)
-                  const rest = digits.slice(2)
-                  let left = ''
-                  let right = ''
-                  if (rest.length >= 9) {
-                    left = rest.slice(0, 5)
-                    right = rest.slice(5, 9)
-                  } else {
-                    left = rest.slice(0, 4)
-                    right = rest.slice(4, 8)
-                  }
-                  const formatted = dd ? `(${dd}) ${left}${right ? '-' + right : ''}` : ''
-                  setPhoneInput(formatted)
-                  if (errors.phone) setErrors((prev) => ({ ...prev, phone: undefined }))
-                }}
-                error={errors.phone}
-              />
-              <div className="flex justify-end gap-2 pt-2">
-                <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>Cancelar</Button>
-                <Button type="submit" variant="primary">Continuar</Button>
-              </div>
-            </form>
-            </div>
-          </div>,
-          document.body
-        )
-      )}
+      <UserInfoModal
+        isOpen={modalOpen}
+        onClose={() => {
+          setModalOpen(false)
+          setPendingNavigation(null)
+        }}
+        onSubmit={(name) => {
+          setClientName(name)
+          setModalOpen(false)
+          if (pendingNavigation) {
+            navigate(pendingNavigation)
+            setPendingNavigation(null)
+          }
+        }}
+      />
     </div>
   )
 }

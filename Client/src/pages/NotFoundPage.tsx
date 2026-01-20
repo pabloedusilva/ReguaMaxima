@@ -1,6 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
 import Button from '@components/ui/Button'
-import { handleImageError } from '../utils/imageHelpers'
 
 export default function NotFoundPage() {
   const navigate = useNavigate()
@@ -14,33 +13,33 @@ export default function NotFoundPage() {
         <div style={{ height: 56 }}></div>
       </header>
 
-      <main className="min-h-[60vh] grid place-items-center">
-        <div className="grid gap-6 md:gap-8 text-center w-full max-w-2xl">
-          {/* Espaço para imagem 404 personalizada (sem borda, sem fundo) */}
-          <img
-            src="/assets/images/errors/404.png"
-            alt="Página não encontrada"
-            className="mx-auto w-full max-w-md h-auto object-contain"
-            loading="lazy"
-            onError={handleImageError}
-          />
+      <main className="min-h-[70vh] flex items-center justify-center px-4">
+        <div className="max-w-md w-full text-center">
+          {/* Número 404 grande e clean */}
+          <div className="mb-8">
+            <h1 className="text-[120px] md:text-[140px] font-bold leading-none tracking-tighter text-gold/20 select-none">
+              404
+            </h1>
+          </div>
 
-          <div className="grid gap-2">
-            <h2 className="font-semibold text-text text-xl md:text-2xl">Página não encontrada</h2>
-            <p className="text-text/70 max-w-prose mx-auto">
-              A página que você procura não existe ou mudou de endereço.
+          {/* Conteúdo */}
+          <div className="space-y-4 mb-10">
+            <h2 className="text-2xl md:text-3xl font-semibold text-text">
+              Página não encontrada
+            </h2>
+            <p className="text-text/50 text-base leading-relaxed">
+              A página que você procura não existe ou foi movida.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-stretch justify-center gap-3 md:gap-4">
-            <Button
-              variant="primary"
-              className="py-3 w-full sm:w-auto"
-              onClick={() => navigate('/')}
-            >
-              Voltar para o início
-            </Button>
-          </div>
+          {/* Botão */}
+          <Button
+            variant="primary"
+            className="py-3 px-6 text-base"
+            onClick={() => navigate('/')}
+          >
+            Voltar ao início
+          </Button>
         </div>
       </main>
     </div>

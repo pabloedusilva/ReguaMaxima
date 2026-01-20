@@ -1,48 +1,39 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMyBookings } from '@context/MyBookingsContext'
-import PhoneVerificationModal from '@components/PhoneVerificationModal'
 import MyBookingsPage from './MyBookingsPage'
 import { createPortal } from 'react-dom'
 
 /**
  * Wrapper component for My Bookings feature
- * Handles phone verification before allowing access
- * Similar pattern to BookingModal/BookingPage
+ * Redirects to home if user info is not available
  */
 export default function MyBookingsModal() {
   const navigate = useNavigate()
   const { setUserPhone } = useMyBookings()
-  const [showVerification, setShowVerification] = useState(true)
 
-  // Check if user already has phone stored
+  // Check if user already has info stored, otherwise redirect to home
   useEffect(() => {
+    const storedName = localStorage.getItem('clientName')
     const storedPhone = localStorage.getItem('clientPhone')
-    if (storedPhone) {
-      const digits = storedPhone.replace(/\D/g, '')
-      if (digits.length === 10 || digits.length === 11) {
-        setUserPhone(digits)
-        setShowVerification(false)
-      }
+    
+    if (!storedName || !storedPhone) {
+      // Redirect to home where the modal will be shown
+      navigate('/')
+      return
     }
-  }, [setUserPhone])
+    
+    const digits = storedPhone.replace(/\D/g, '')
+    if (digits.length === 10 || digits.length === 11) {
+      setUserPhone(digits)
+    } else {
+      // Invalid phone, redirect to home
+      navigate('/')
+    }
+  }, [setUserPhone, navigate])
 
-  const handleVerified = (phone: string) => {
-    setUserPhone(phone)
-    setShowVerification(false)
-  }
-
-  const handleClose = () => {
-    navigate('/')
-  }
-
-  if (showVerification) {
-    return <PhoneVerificationModal onVerified={handleVerified} onClose={handleClose} />
-  }
-
-  return (
-    createPortal(
-      <div className="fixed inset-0 z-[2147483647] bg-bg overflow-hidden">
+  return createPortal(
+    <div className="fixed inset-0 z-[2147483647] bg-bg overflow-hidden">
         <div className="relative w-full h-dvh overflow-y-auto overflow-x-hidden">
           <div className="absolute top-3 left-3 z-10">
           <button
@@ -61,6 +52,5 @@ export default function MyBookingsModal() {
         </div>
       </div>,
       document.body
-    )
   )
 }

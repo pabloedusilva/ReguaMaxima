@@ -16,6 +16,7 @@ import WorkingHoursSettings from '@barber/pages/settings/WorkingHours'
 import BarbershopSettings from '@barber/pages/settings/Profile'
 import StickersGallery from '@barber/pages/settings/StickersGallery'
 import PromotionsList from '@barber/pages/promotions/PromotionsList'
+import NotFoundPage from '@barber/pages/NotFoundPage'
 
 export default function App() {
   return (
@@ -62,6 +63,9 @@ export default function App() {
 
       {/* Redirect empty path to dashboard */}
       <Route index element={<Navigate to="/dashboard" replace />} />
+      
+      {/* 404 - Not Found */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )
 }
