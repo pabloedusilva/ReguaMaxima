@@ -30,7 +30,17 @@ export default defineConfig({
   },
   server: {
     port: 5175,
-    open: true
+    open: true,
+    fs: {
+      allow: [
+        // Permite servir arquivos da pasta barber
+        path.resolve(__dirname),
+        // Permite servir arquivos da pasta auth (um nível acima)
+        path.resolve(__dirname, '../auth'),
+        // Permite servir arquivos da raiz do frontend
+        path.resolve(__dirname, '..')
+      ]
+    }
   },
   build: {
     outDir: 'dist',

@@ -18,6 +18,7 @@ import BarbershopSettings from '@barber/pages/settings/Profile'
 import StickersGallery from '@barber/pages/settings/StickersGallery'
 import PromotionsList from '@barber/pages/promotions/PromotionsList'
 import NotFoundPage from '@barber/pages/NotFoundPage'
+import SubscriptionPage from '@barber/pages/subscriptions/SubscriptionPage'
 
 export default function App() {
   return (
@@ -63,6 +64,10 @@ export default function App() {
 
       <Route path="promocoes" element={<DashboardLayout />}>
         <Route index element={<PromotionsList />} />
+      </Route>
+
+      <Route path="assinaturas" element={<DashboardLayout />}>
+        <Route index element={<SubscriptionPage />} />
       </Route>
 
       {/* Redirect empty path to dashboard */}

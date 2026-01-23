@@ -50,3 +50,39 @@ export function formatPhone(input: string): string {
 		return `(${ddd}) ${part1}-${part2}`
 	}
 }
+
+/**
+ * Format a number as Brazilian currency (R$ 0,00)
+ */
+export function formatCurrency(value: number): string {
+	return new Intl.NumberFormat('pt-BR', {
+		style: 'currency',
+		currency: 'BRL'
+	}).format(value)
+}
+
+/**
+ * Format a date string to Brazilian format (DD/MM/YYYY)
+ */
+export function formatDate(dateString: string): string {
+	const date = new Date(dateString)
+	return new Intl.DateTimeFormat('pt-BR', {
+		day: '2-digit',
+		month: '2-digit',
+		year: 'numeric'
+	}).format(date)
+}
+
+/**
+ * Format a date and time to Brazilian format (DD/MM/YYYY às HH:mm)
+ */
+export function formatDateTime(dateString: string): string {
+	const date = new Date(dateString)
+	return new Intl.DateTimeFormat('pt-BR', {
+		day: '2-digit',
+		month: '2-digit',
+		year: 'numeric',
+		hour: '2-digit',
+		minute: '2-digit'
+	}).format(date)
+}

@@ -17,6 +17,7 @@ import ProfessionalsList from '@barber/pages/settings/Staff'
 import WorkingHoursSettings from '@barber/pages/settings/WorkingHours'
 import BarbershopSettings from '@barber/pages/settings/Profile'
 import StickersGallery from '@barber/pages/settings/StickersGallery'
+import SubscriptionPage from '@barber/pages/subscriptions/SubscriptionPage'
 
 // Other Pages
 import OfflinePage from '@barber/pages/offline/OfflinePage'
@@ -124,6 +125,16 @@ export const router = createHashRouter([
           {
             index: true,
             element: <StickersGallery />
+          }
+        ]
+      },
+      {
+        path: 'assinaturas',
+        element: <DashboardLayout />,
+        children: [
+          {
+            index: true,
+            element: <SubscriptionPage />
           }
         ]
       },
