@@ -18,11 +18,13 @@ export default function SubscriptionCard({ subscription }: Props) {
         return <span className="badge badge-cancelled">Expirada</span>
       case 'cancelled':
         return <span className="badge badge-cancelled">Cancelada</span>
+      case 'trial':
+        return <span className="badge badge-trial">Teste grátis</span>
     }
   }
 
   const getProgressPercentage = () => {
-    const totalDays = plan.durationMonths * 30
+    const totalDays = status === 'trial' ? 7 : plan.durationMonths * 30
     return ((totalDays - daysRemaining) / totalDays) * 100
   }
 
@@ -41,14 +43,27 @@ export default function SubscriptionCard({ subscription }: Props) {
 
         <div className="text-left sm:text-right">
           <div className="flex items-baseline gap-2 mb-1">
-            <span className="text-3xl font-bold text-gold">
-              {formatCurrency(plan.price)}
-            </span>
-            <span className="text-text-dim text-sm">
-              /{plan.type === 'monthly' ? 'mês' : '3 meses'}
-            </span>
+            {status === 'trial' ? (
+              <div className="flex flex-col items-start sm:items-end gap-0.5">
+                <span className="text-xs font-semibold tracking-wide text-gold uppercase">
+                  Teste grátis de 7 dias
+                </span>
+                <span className="text-xs text-text-dim">
+                  Depois, {formatCurrency(plan.price)}/{plan.type === 'monthly' ? 'mês' : '3 meses'}
+                </span>
+              </div>
+            ) : (
+              <>
+                <span className="text-3xl font-bold text-gold">
+                  {formatCurrency(plan.price)}
+                </span>
+                <span className="text-text-dim text-sm">
+                  /{plan.type === 'monthly' ? 'mês' : '3 meses'}
+                </span>
+              </>
+            )}
           </div>
-          {plan.originalPrice && (
+          {plan.originalPrice && status !== 'trial' && (
             <p className="text-xs text-muted line-through">
               De {formatCurrency(plan.originalPrice)}
             </p>

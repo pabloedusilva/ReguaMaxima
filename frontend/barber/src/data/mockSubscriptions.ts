@@ -44,6 +44,19 @@ export const availablePlans: Plan[] = [
 // na seção "ASSINATURA ATIVA" no final deste arquivo
 // ============================================================
 
+// Cenário 0: Free trial de 7 dias (teste grátis)
+export const mockSubscriptionFreeTrial7Days: Subscription = {
+  id: 'sub_trial_7d',
+  planId: 'plan_monthly',
+  plan: availablePlans[0],
+  status: 'trial',
+  startDate: '2026-01-01',
+  endDate: '2026-01-08',
+  daysRemaining: 6,
+  autoRenew: false,
+  totalPaid: 0
+}
+
 // Cenário 1: Assinatura trimestral ativa com 90 dias restantes
 export const mockSubscriptionTrimestral90Days: Subscription = {
   id: 'sub_001',
@@ -171,7 +184,8 @@ export const mockSubscriptionTrimestral90Days: Subscription = {
 // ============================================================
 // ASSINATURA ATIVA - Descomente apenas 1 opção abaixo
 // ============================================================
-export const currentSubscription = mockSubscriptionTrimestral90Days
+// export const currentSubscription = mockSubscriptionTrimestral90Days
+export const currentSubscription = mockSubscriptionFreeTrial7Days
 // export const currentSubscription = mockSubscriptionMensal30Days
 // export const currentSubscription = mockSubscriptionExpiring7Days
 // export const currentSubscription = mockSubscriptionExpiring1Day

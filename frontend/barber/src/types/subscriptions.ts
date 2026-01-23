@@ -1,5 +1,5 @@
 export type PlanType = 'monthly' | 'quarterly'
-export type SubscriptionStatus = 'active' | 'expiring_soon' | 'expired' | 'cancelled'
+export type SubscriptionStatus = 'active' | 'expiring_soon' | 'expired' | 'cancelled' | 'trial'
 
 export interface Plan {
   id: string

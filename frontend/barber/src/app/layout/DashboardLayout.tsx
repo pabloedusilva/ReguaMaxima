@@ -7,6 +7,7 @@ import { useOfflineDetection } from '@barber/hooks/useOfflineDetection'
 import NotificationsBell from '@barber/components/notifications/NotificationsBell'
 import NotificationsPanel from '@barber/components/notifications/NotificationsPanel'
 import { useNotifications } from '@barber/features/notifications/hooks/useNotifications'
+import { currentSubscription } from '@barber/data/mockSubscriptions'
 
 export default function DashboardLayout() {
   const navigate = useNavigate()
@@ -15,6 +16,8 @@ export default function DashboardLayout() {
   const [showNotifications, setShowNotifications] = useState(false)
 
   const { count: notificationsCount } = useNotifications()
+  const subscription = currentSubscription
+  const isTrial = subscription.status === 'trial'
   
   const { canInstall, promptInstall } = usePWAInstall()
   
@@ -292,6 +295,36 @@ export default function DashboardLayout() {
               )}
             </div>
           </div>
+
+          {isTrial && (
+            <div className="border-t border-gold/25 bg-gradient-to-r from-gold/15 via-gold/5 to-transparent px-4 md:px-6 py-2">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 text-[11px] sm:text-xs md:text-sm max-w-6xl mx-auto">
+                <div className="flex items-start sm:items-center gap-2 text-text">
+                  <svg className="w-4 h-4 mt-0.5 sm:mt-0 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <p className="leading-snug">
+                    Você está em um <span className="font-semibold text-gold">teste grátis de 7 dias</span>.{' '}
+                    Faltam{' '}
+                    <span className="font-semibold text-gold">
+                      {subscription.daysRemaining} {subscription.daysRemaining === 1 ? 'dia' : 'dias'}
+                    </span>{' '}
+                    para expirar.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => navigate('/assinaturas')}
+                  className="inline-flex items-center justify-center self-start sm:self-auto px-3 py-1.5 rounded-full text-[11px] font-semibold text-gold hover:text-gold-300 hover:bg-gold/10 transition-colors whitespace-nowrap"
+                >
+                  Ver planos
+                  <svg className="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          )}
         </header>
 
         {/* Page Content (única área rolável) */}

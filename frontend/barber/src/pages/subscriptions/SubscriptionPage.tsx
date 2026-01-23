@@ -10,7 +10,8 @@ export default function SubscriptionPage() {
   }, [])
 
   const subscription = currentSubscription
-  const needsWarning = subscription.status === 'expiring_soon' || subscription.daysRemaining <= 7
+  const needsWarning =
+    subscription.status !== 'trial' && (subscription.status === 'expiring_soon' || subscription.daysRemaining <= 7)
 
   return (
     <div className="scroll-container h-full">
