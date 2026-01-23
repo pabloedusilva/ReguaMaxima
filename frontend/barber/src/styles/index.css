@@ -4,7 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Brand base styles aligned with landing page */
 :root {
   --gold: #c9953b;
   --gold-600: #b3812f;
@@ -25,7 +24,6 @@
     height: 100%; 
     width: 100%;
     overflow-x: hidden;
-    /* iOS PWA: evita que o BODY role (somente um container interno deve rolar). */
     overflow-y: hidden;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
@@ -33,13 +31,11 @@
   
   body { 
     @apply bg-gradient-to-b from-bg to-bg-soft text-text font-sans antialiased;
-    /* iOS PWA: não usar position:fixed no body (piora touch/scroll com elementos fixos). */
     position: relative;
     overscroll-behavior-y: contain;
   }
   
   #root {
-    /* iOS PWA: o #root NÃO deve scrollar; o scroll fica no container principal (ex.: <main data-app-scroll>). */
     height: 100%;
     min-height: 100dvh;
     width: 100%;
@@ -48,7 +44,6 @@
   
   a { @apply text-text no-underline; }
   
-  /* iOS Safe Area: expõe insets via variáveis para usar onde faz sentido (header/nav), sem deslocar o layout inteiro. */
   @supports (padding: env(safe-area-inset-top)) {
     :root {
       --safe-top: env(safe-area-inset-top);
@@ -58,14 +53,12 @@
     }
   }
   
-  /* PWA Fullscreen: Prevenir comportamentos de navegador */
   @media (display-mode: fullscreen), (display-mode: standalone) {
     body {
       user-select: none;
       -webkit-user-select: none;
     }
     
-    /* Permitir seleção de texto em inputs e áreas editáveis */
     input, textarea, [contenteditable] {
       user-select: text;
       -webkit-user-select: text;
@@ -74,31 +67,25 @@
 }
 
 @layer utilities {
-  /* iOS: toque mais responsivo em elementos clicáveis (sem bloquear pan-y). */
   a, button, [role='button'] {
     touch-action: manipulation;
   }
 
-  /* Utilities de safe-area para usar com Tailwind (classes simples). */
   .pt-safe { padding-top: max(var(--safe-top, 0px), 0px); }
-  /* iOS: mantém uma folga mínima + safe-area para a navbar inferior. */
   .pb-safe { padding-bottom: max(0.5rem, var(--safe-bottom, 0px)); }
   .pl-safe { padding-left: max(var(--safe-left, 0px), 0px); }
   .pr-safe { padding-right: max(var(--safe-right, 0px), 0px); }
 
-  /* Container único de scroll (iOS-friendly). */
   .scroll-container {
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
-    /* Permite scroll vertical nativo; evita conflito com gestos. */
     touch-action: pan-y;
   }
 }
 
 @layer components {
-  /* Button Styles */
   .btn { 
     @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full font-semibold border border-border transition-all duration-200; 
     position: relative;
@@ -111,18 +98,15 @@
   .btn-text { @apply inline-flex items-center justify-center gap-2; }
   .btn-spinner { @apply absolute inset-0 flex items-center justify-center; }
   
-  /* Card Styles */
   .card { 
     @apply bg-[#141414] border border-border rounded-2xl shadow-[var(--shadow)] p-5 transition-all duration-200; 
   }
   .card-hover:hover { @apply border-gold/30 shadow-2xl; }
   
-  /* Stat Card */
   .stat-card {
     @apply card p-6 flex flex-col gap-3;
   }
   
-  /* Modal Styles */
   .modal-overlay {
     position: fixed;
     inset: 0;
@@ -139,7 +123,6 @@
     -webkit-overflow-scrolling: touch;
   }
   
-  /* Table Styles */
   .table-container {
     @apply overflow-x-auto rounded-xl border border-border;
   }
@@ -159,7 +142,6 @@
     @apply bg-surface/50;
   }
   
-  /* Badge Styles */
   .badge {
     @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold;
   }
@@ -169,7 +151,6 @@
   .badge-pending { @apply bg-yellow-500/20 text-yellow-400 border border-yellow-500/30; }
 }
 
-/* Native date/time inputs - ensure they respect container width (iOS/mobile) */
 input[type="date"],
 input[type="time"] {
   width: 100%;
@@ -177,21 +158,17 @@ input[type="time"] {
   box-sizing: border-box;
 }
 
-/* Brand logo sizing */
 .brand-logo { width: 110px; height: auto; object-fit: contain; }
 @media (min-width: 1100px) { .brand-logo { width: 125px; } }
 @media (max-width: 480px) { .brand-logo { width: 85px; } }
 
-/* Mobile Bottom Navigation - Modern & Minimalist */
 @media (max-width: 1023px) {
-  /* Smooth tap feedback */
   nav a {
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
     user-select: none;
   }
   
-  /* Hide scrollbar but keep functionality */
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -201,7 +178,8 @@ input[type="time"] {
     display: none;
   }
 }
-/* PWA Install Modal - Drawer Styles (inspirado na Landing Page) */
+
+
 .drawer-overlay {
   position: fixed;
   inset: 0;
@@ -331,78 +309,60 @@ input[type="time"] {
   }
 }
 
-/* ============================================
-   PWA Specific Styles - Mobile Native Experience
-   ============================================ */
 
-/* Usa --vh apenas onde ainda faz diferença (Android). No iOS isso pode criar “gap” no fundo. */
 .android-standalone #root {
   height: calc(var(--vh, 1vh) * 100);
 }
 
-/* iOS Standalone: não aplicar scroll no #root (o scroll é do .scroll-container). */
 .ios-standalone body {
   overflow: hidden;
 }
 
-/* Android Standalone - Melhorias específicas */
 .android-standalone {
-  /* Esconde endereço de URL caso apareça */
   overflow: hidden;
 }
 
-/* Prevenir pull-to-refresh visualmente */
 .pwa-standalone body {
   overscroll-behavior-y: contain;
 }
 
-/* Status bar spacer para iOS */
 .ios-standalone .app-header,
 .ios-standalone .dashboard-header {
   padding-top: max(env(safe-area-inset-top), 0.5rem);
 }
 
-/* Botão de voltar do iOS */
 .ios-standalone .back-button {
   padding-left: max(env(safe-area-inset-left), 1rem);
 }
 
-/* Tab bar inferior - considera safe area */
 .pwa-standalone .bottom-nav,
 .pwa-standalone .tab-bar {
-  /* iOS: não aplicar padding no container externo (pode gerar "gap" visível). Safe-area já é aplicada via .pb-safe no conteúdo. */
   padding-bottom: 0;
 }
 
-/* Esconde elementos que não fazem sentido em PWA */
 .pwa-standalone .install-prompt,
 .pwa-standalone .browser-notice {
   display: none !important;
 }
 
-/* Otimizações de performance para animações em PWA */
 @media (display-mode: standalone) {
   * {
     -webkit-tap-highlight-color: transparent;
   }
   
-  /* Melhora performance de scroll */
   .scroll-container,
   .list-container {
     will-change: scroll-position;
     transform: translateZ(0);
   }
   
-  /* Animações mais suaves */
   .animated,
   .transition {
     will-change: transform, opacity;
   }
 }
 
-/* ============================================
-   Scrollbar - Modern & Minimal
-   ============================================ */
+
 .scrollbar-modern {
   scrollbar-width: thin;
   scrollbar-color: color-mix(in oklab, var(--gold) 35%, transparent) color-mix(in oklab, var(--surface) 60%, transparent);

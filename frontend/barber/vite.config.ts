@@ -25,6 +25,7 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
       '@barber': path.resolve(__dirname, './src'),
+      '@auth': path.resolve(__dirname, '../auth'),
     },
   },
   server: {

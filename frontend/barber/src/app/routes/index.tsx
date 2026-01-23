@@ -1,12 +1,12 @@
 import { createHashRouter, Navigate } from 'react-router-dom'
 import RootLayout from '../layout/RootLayout'
 import DashboardLayout from '../layout/DashboardLayout'
-import AuthLayout from '../layout/AuthLayout'
+import AuthLayout from '@auth/layout/AuthLayout'
 
 // Auth Pages
-import Login from '@barber/pages/auth/Login'
-import Logout from '@barber/pages/auth/Logout'
-import ForgotPassword from '@barber/pages/auth/ForgotPassword'
+import Login from '@auth/pages/Login'
+import Logout from '@auth/pages/Logout'
+import ForgotPassword from '@auth/pages/ForgotPassword'
 
 // Dashboard Pages
 import DashboardHome from '@barber/pages/dashboard/Home'
