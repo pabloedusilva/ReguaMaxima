@@ -6,7 +6,7 @@ import BillingHistory from '../../features/subscriptions/components/BillingHisto
 
 export default function SubscriptionPage() {
   useEffect(() => {
-    document.title = 'Minha Assinatura | Régua Máxima'
+    document.title = 'Régua Máxima | Dashboard Barbeiro'
   }, [])
 
   const subscription = currentSubscription
