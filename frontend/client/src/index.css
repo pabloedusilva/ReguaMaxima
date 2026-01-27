@@ -236,3 +236,25 @@
 .animate-fade-in-up {
   animation: fadeInUp 400ms cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+/* Instagram icon fill effect - from bottom to top */
+@keyframes fillFromBottom {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.group:hover .instagram-gradient-fill,
+.group:active .instagram-gradient-fill {
+  animation: fillFromBottom 0.7s ease-out forwards;
+}
+
+/* Touch devices support */
+@media (hover: none) and (pointer: coarse) {
+  .group:active .instagram-gradient-fill {
+    animation: fillFromBottom 0.5s ease-out forwards;
+  }
+}
