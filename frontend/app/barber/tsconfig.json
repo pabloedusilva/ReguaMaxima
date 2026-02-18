@@ -18,7 +18,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@barber/*": ["./src/*"]
+      "@barber/*": ["./src/*"],
+      "@auth/*": ["../auth/*"]
     }
   },
   "include": ["src"],
