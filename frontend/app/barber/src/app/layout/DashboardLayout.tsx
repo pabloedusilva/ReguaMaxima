@@ -8,8 +8,11 @@ import NotificationsBell from '@barber/components/notifications/NotificationsBel
 import NotificationsPanel from '@barber/components/notifications/NotificationsPanel'
 import { useNotifications } from '@barber/features/notifications/hooks/useNotifications'
 import { currentSubscription } from '@barber/data/mockSubscriptions'
+import { useNavbarPreference } from '@barber/hooks/useNavbarPreference'
+import NavbarV2 from '@barber/components/layout/NavbarV2'
 
 export default function DashboardLayout() {
+  const { navbarStyle } = useNavbarPreference()
   const navigate = useNavigate()
   const [showLogoutMenu, setShowLogoutMenu] = useState(false)
   const [showPWAModal, setShowPWAModal] = useState(false)
@@ -129,6 +132,11 @@ export default function DashboardLayout() {
   ]
 
   // iOS PWA: BODY/#root não rolam; apenas o <main data-app-scroll> é o container de scroll.
+  // Delegate rendering to NavbarV2 when Option 2 is selected
+  if (navbarStyle === 'option2') {
+    return <NavbarV2 />
+  }
+
   return (
     <div className="h-[100dvh] bg-gradient-to-b from-bg to-bg-soft overflow-hidden">
       {/* Desktop Sidebar */}
