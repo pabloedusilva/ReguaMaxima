@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { fileURLToPath } from 'url'
 import path from 'path'
-import { copyFileSync } from 'fs'
+import { copyFileSync, existsSync } from 'fs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -12,11 +12,11 @@ export default defineConfig({
     {
       name: 'copy-sw',
       closeBundle() {
-        // Copia o service worker para o dist após o build
-        copyFileSync(
-          path.resolve(__dirname, 'sw.js'),
-          path.resolve(__dirname, 'dist/sw.js')
-        )
+        // Copia o service worker para o dist após o build (se existir)
+        const swSrc = path.resolve(__dirname, 'sw.js')
+        if (existsSync(swSrc)) {
+          copyFileSync(swSrc, path.resolve(__dirname, 'dist/sw.js'))
+        }
       }
     }
   ],
