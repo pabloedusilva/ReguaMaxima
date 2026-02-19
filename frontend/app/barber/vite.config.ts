@@ -15,6 +15,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
       '@barber': path.resolve(__dirname, './src'),
       '@auth': path.resolve(__dirname, '../auth'),
+      'react': path.resolve(__dirname, 'node_modules/react'),
+      'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
+      'react-router-dom': path.resolve(__dirname, 'node_modules/react-router-dom'),
     },
   },
   server: {
