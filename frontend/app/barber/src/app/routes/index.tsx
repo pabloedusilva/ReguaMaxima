@@ -16,6 +16,7 @@ import ServicesList from '@barber/pages/services/ListServices'
 import ProfessionalsList from '@barber/pages/settings/Staff'
 import WorkingHoursSettings from '@barber/pages/settings/WorkingHours'
 import BarbershopSettings from '@barber/pages/settings/Profile'
+import PersonalizePage from '@barber/pages/settings/Personalize'
 import StickersGallery from '@barber/pages/settings/StickersGallery'
 import SubscriptionPage from '@barber/pages/subscriptions/SubscriptionPage'
 
@@ -115,6 +116,16 @@ export const router = createHashRouter([
           {
             index: true,
             element: <BarbershopSettings />
+          }
+        ]
+      },
+      {
+        path: 'personalizar',
+        element: <DashboardLayout />,
+        children: [
+          {
+            index: true,
+            element: <PersonalizePage />
           }
         ]
       },
