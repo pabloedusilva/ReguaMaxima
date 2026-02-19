@@ -81,6 +81,8 @@ export default function StickersGallery() {
   const [selectedSticker, setSelectedSticker] = useState<string | null>(null)
   const [favorites, setFavorites] = useState<string[]>([])
   const [isLoadingImages, setIsLoadingImages] = useState(false)
+  // Pre-fetched blob cache: { path, blob } – ready before user taps the action button
+  const [cachedBlob, setCachedBlob] = useState<{ path: string; blob: Blob } | null>(null)
 
   // Load favorites from localStorage
   useEffect(() => {
@@ -128,138 +130,111 @@ export default function StickersGallery() {
   const handleStickerClick = (sticker: string, e: React.MouseEvent) => {
     e.stopPropagation()
     if (selectedSticker === sticker) {
-      // Se já está selecionado, fecha
       setSelectedSticker(null)
-    } else {
-      // Seleciona o sticker
-      setSelectedSticker(sticker)
+      setCachedBlob(null)
+      return
     }
+    setSelectedSticker(sticker)
+    const isGif = sticker.toLowerCase().endsWith('.gif')
+
+    if (!isGif) {
+      // Use the already-decoded <img> on screen to generate a byte-valid PNG
+      // via canvas. This avoids server Content-Type issues on all platforms
+      // and produces a blob that clipboard.write() / Share Sheet will accept.
+      const imgEl = document.querySelector<HTMLImageElement>(`img[src="${sticker}"]`)
+      if (imgEl && imgEl.complete && imgEl.naturalWidth > 0) {
+        const canvas = document.createElement('canvas')
+        canvas.width  = imgEl.naturalWidth
+        canvas.height = imgEl.naturalHeight
+        const ctx = canvas.getContext('2d')!
+
+        ctx.drawImage(imgEl, 0, 0)
+        canvas.toBlob(blob => {
+          if (blob) setCachedBlob({ path: sticker, blob })
+        }, 'image/png')
+        return
+      }
+    }
+
+    // GIF or img not in DOM yet → raw fetch
+    fetch(sticker)
+      .then(r => r.blob())
+      .then(blob => setCachedBlob({ path: sticker, blob }))
+      .catch(() => {})
   }
 
   const handleCopySticker = async (stickerPath: string, e: React.MouseEvent) => {
     e.stopPropagation()
-    
-    // Detecta iOS
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-    
-    // No iOS, usa o método de compartilhamento nativo
-    if (isIOS && navigator.share) {
+    const isGif = stickerPath.toLowerCase().endsWith('.gif')
+    const fileName = stickerPath.split('/').pop() ?? 'figurinha.png'
+
+    const markSuccess = () => {
+      setCopiedSticker(stickerPath)
+      setTimeout(() => { setCopiedSticker(null); setSelectedSticker(null); setCachedBlob(null) }, 2000)
+    }
+
+    const triggerDownload = (blob: Blob, name: string) => {
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url; a.download = name
+      document.body.appendChild(a); a.click(); document.body.removeChild(a)
+      setTimeout(() => URL.revokeObjectURL(url), 1000)
+    }
+
+    // Pre-cached canvas-PNG blob (synchronous – no await gap before clipboard call)
+    const cached = cachedBlob?.path === stickerPath ? cachedBlob.blob : null
+
+    // ── Strategy 1: Clipboard API ───────────────────────────────────────────────
+    // Supported: iOS 16.4+, Chrome 76+, Edge 79+, Firefox 127+.
+    // Using the pre-cached blob means no await before write() → gesture preserved.
+    if (typeof navigator.clipboard?.write === 'function' && typeof ClipboardItem !== 'undefined') {
       try {
-        const response = await fetch(stickerPath)
-        const blob = await response.blob()
-        
-        // Cria um File object a partir do blob
-        const fileName = stickerPath.split('/').pop() || 'figurinha.png'
-        const file = new File([blob], fileName, { type: blob.type })
-        
-        // Usa a Web Share API nativa do iOS
-        await navigator.share({
-          files: [file],
-          title: 'Figurinha - Régua Máxima'
-        })
-        
-        setCopiedSticker(stickerPath)
-        setTimeout(() => {
-          setCopiedSticker(null)
-          setSelectedSticker(null)
-        }, 2000)
+        const mime = isGif ? 'image/gif' : 'image/png'
+        // Pass a Promise so Chrome/Edge accept it even if the blob isn't cached yet
+        const blobPromise: Promise<Blob> = cached
+          ? Promise.resolve(cached)
+          : fetch(stickerPath).then(r => r.blob())
+        await navigator.clipboard.write([new ClipboardItem({ [mime]: blobPromise })])
+        markSuccess()
         return
-      } catch (error: any) {
-        // Se o usuário cancelar o compartilhamento, não mostra erro
-        if (error.name === 'AbortError') {
+      } catch { /* fall through */ }
+    }
+
+    // ── Strategy 2: Share Sheet (iOS < 16.4, older Android) ────────────────────
+    // The blob is a canvas-generated PNG so iOS renders the image preview.
+    // User taps "Copiar" inside the Share Sheet to copy to clipboard.
+    if (typeof navigator.share === 'function') {
+      try {
+        const blob: Blob = cached ?? await fetch(stickerPath).then(r => r.blob())
+        const ext  = isGif ? 'gif' : 'png'
+        const mime = isGif ? 'image/gif' : 'image/png'
+        const file = new File([blob], `figurinha.${ext}`, { type: mime })
+        if (navigator.canShare?.({ files: [file] })) {
+          await navigator.share({ files: [file], title: 'Figurinha - Régua Máxima' })
+          markSuccess()
           return
         }
-        console.error('Erro ao compartilhar no iOS:', error)
+      } catch (err: any) {
+        if (err?.name === 'AbortError') return
       }
     }
-    
-    // Para outros dispositivos, usa Clipboard API
+
+    // ── Strategy 3: Download fallback ────────────────────────────────────────────
     try {
-      // Fetch the image as blob
-      const response = await fetch(stickerPath)
-      if (!response.ok) {
-        throw new Error('Falha ao carregar imagem')
-      }
-      
-      const blob = await response.blob()
-      
-      // Verify clipboard API is available
-      if (!navigator.clipboard || !navigator.clipboard.write) {
-        throw new Error('Clipboard API não disponível')
-      }
-      
-      // Copy to clipboard with proper MIME type
-      const clipboardItem = new ClipboardItem({
-        [blob.type]: blob
-      })
-      
-      await navigator.clipboard.write([clipboardItem])
-      
-      setCopiedSticker(stickerPath)
-      setTimeout(() => {
-        setCopiedSticker(null)
-        setSelectedSticker(null)
-      }, 2000)
-    } catch (error) {
-      console.error('Erro ao copiar figurinha:', error)
-      
-      // Fallback: try to copy as canvas/image data
-      try {
-        const response = await fetch(stickerPath)
-        const blob = await response.blob()
-        
-        // Create an image element
-        const img = new Image()
-        img.crossOrigin = 'anonymous'
-        
-        await new Promise((resolve, reject) => {
-          img.onload = resolve
-          img.onerror = reject
-          img.src = URL.createObjectURL(blob)
-        })
-        
-        // Create canvas and draw image
-        const canvas = document.createElement('canvas')
-        canvas.width = img.width
-        canvas.height = img.height
-        const ctx = canvas.getContext('2d')
-        
-        if (!ctx) {
-          throw new Error('Não foi possível criar contexto canvas')
-        }
-        
-        ctx.drawImage(img, 0, 0)
-        
-        // Convert canvas to blob
-        const canvasBlob = await new Promise<Blob>((resolve) => {
-          canvas.toBlob((blob) => {
-            if (blob) resolve(blob)
-          }, 'image/png')
-        })
-        
-        // Try to copy canvas blob
-        await navigator.clipboard.write([
-          new ClipboardItem({
-            'image/png': canvasBlob
-          })
-        ])
-        
-        setCopiedSticker(stickerPath)
-        setTimeout(() => {
-          setCopiedSticker(null)
-          setSelectedSticker(null)
-        }, 2000)
-      } catch (fallbackError) {
-        console.error('Erro no fallback:', fallbackError)
-        alert('Não foi possível copiar a figurinha. Por favor, tente salvar a imagem manualmente.')
-      }
+      const blob: Blob = cached ?? await fetch(stickerPath).then(r => r.blob())
+      triggerDownload(blob, fileName)
+      markSuccess()
+    } catch {
+      const a = document.createElement('a')
+      a.href = stickerPath; a.download = fileName; a.target = '_blank'
+      document.body.appendChild(a); a.click(); document.body.removeChild(a)
+      markSuccess()
     }
   }
 
   const currentCategory = STICKER_CATEGORIES[selectedCategory]
   const displayStickers = selectedCategory === 'favoritos' ? favorites : currentCategory.files
   const hasStickers = displayStickers.length > 0
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
 
   return (
     <div className="grid gap-8">
@@ -267,9 +242,7 @@ export default function StickersGallery() {
       <div className="animate-fade-in">
         <h1 className="font-display text-4xl md:text-5xl text-gold mb-2">Galeria de Figurinhas</h1>
         <p className="text-text-dim">
-          {isIOS 
-            ? 'Clique na estrela para favoritar, clique na figurinha para compartilhar'
-            : 'Clique na estrela para favoritar, clique na figurinha para copiar'}
+        {'Toque na figurinha para copiar • Toque na estrela para favoritar'}
         </p>
       </div>
 
@@ -361,7 +334,7 @@ export default function StickersGallery() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                           </svg>
                         </div>
-                        <span className="text-sm font-medium text-green-500">{isIOS ? 'Compartilhado!' : 'Copiado!'}</span>
+                        <span className="text-sm font-medium text-green-500">Copiado!</span>
                       </div>
                     ) : selectedSticker === sticker ? (
                       <button
@@ -369,17 +342,11 @@ export default function StickersGallery() {
                         className="flex flex-col items-center gap-2 hover:scale-110 transition-transform"
                       >
                         <div className="w-12 h-12 rounded-full bg-gold/20 border-2 border-gold flex items-center justify-center">
-                          {isIOS ? (
-                            <svg className="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                            </svg>
-                          ) : (
                             <svg className="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                             </svg>
-                          )}
-                        </div>
-                        <span className="text-sm font-medium text-gold">{isIOS ? 'Compartilhar' : 'Copiar'}</span>
+                          </div>
+                        <span className="text-sm font-medium text-gold">Copiar</span>
                       </button>
                     ) : null}
                   </div>
