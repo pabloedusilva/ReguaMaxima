@@ -121,6 +121,10 @@
   .modal-fullscreen {
     @apply fixed inset-0 bg-bg z-[2147483647] overflow-y-auto;
     -webkit-overflow-scrolling: touch;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
   }
   
   .table-container {

@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { applyAndPersistAppIcon, getSelectedAppIcon } from '@barber/lib/appIcon'
 import { useNavbarPreference, type NavbarStyle } from '../../hooks/useNavbarPreference'
+import { usePWAInstall } from '@barber/hooks/usePWAInstall'
+import { isIOS } from '@barber/utils/pwa'
+import InstallPWAModal from '@barber/components/dialogs/InstallPWAModal'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -218,6 +221,13 @@ export default function Personalize() {
     return stored || APP_ICON_OPTIONS[0]
   })
   const [isApplyingAppIcon, setIsApplyingAppIcon] = useState(false)
+  const [showPWAModal, setShowPWAModal] = useState(false)
+  const { canInstall, promptInstall } = usePWAInstall()
+
+  const handleInstallPWA = async () => {
+    const installed = await promptInstall()
+    if (installed) setShowPWAModal(false)
+  }
 
   return (
     <div className="grid gap-10">
@@ -230,12 +240,42 @@ export default function Personalize() {
 
       {/* ── Ícone do App (PWA) ── */}
       <section className="animate-fade-in-delayed">
-        <div className="mb-5">
-          <h2 className="text-2xl font-bold text-text mb-1">Ícone do App</h2>
-          <p className="text-sm text-text-dim">
-            Escolha qual logo será usada como ícone do app instalado (PWA). A seleção fica salva neste dispositivo.
-          </p>
+        <div className="flex items-start justify-between gap-4 mb-5">
+          <div className="flex-1 min-w-0">
+            <h2 className="text-2xl font-bold text-text mb-1">Ícone do App</h2>
+            <p className="text-sm text-text-dim">
+              Escolha qual logo será usada como ícone do app instalado (PWA). A seleção fica salva neste dispositivo.
+            </p>
+          </div>
+
+          {/* PWA Install button */}
+          <button
+            type="button"
+            onClick={() => setShowPWAModal(true)}
+            className="relative flex-shrink-0 flex items-center gap-2 pl-3 pr-4 py-2.5 rounded-xl border border-gold/30 bg-gradient-to-br from-gold/10 to-gold/5 hover:from-gold/15 hover:to-gold/8 hover:border-gold/50 text-gold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-gold/15"
+          >
+            {isIOS() && !canInstall ? (
+              <span className="material-symbols-outlined text-[20px] leading-none">ios_share</span>
+            ) : (
+              <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}>
+                <path d="M12 16l-4-4m4 4l4-4m-4 4V4M4 20h16" />
+              </svg>
+            )}
+            <span className="text-sm font-semibold">Instalar App</span>
+            {canInstall && (
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-gold border-2 border-bg animate-pulse" />
+            )}
+          </button>
         </div>
+
+        <InstallPWAModal
+          isOpen={showPWAModal}
+          onClose={() => setShowPWAModal(false)}
+          onInstall={handleInstallPWA}
+          canInstall={canInstall}
+          selectedAppIcon={selectedAppIcon}
+        />
 
         <div className="card">
           {/* Icon grid */}

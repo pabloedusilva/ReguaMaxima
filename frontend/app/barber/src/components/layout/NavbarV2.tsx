@@ -322,6 +322,7 @@ export default function NavbarV2() {
           onClose={() => setShowPWAModal(false)}
           onInstall={handleInstallPWA}
           canInstall={canInstall}
+          selectedAppIcon={logoSrc}
         />
 
         <NotificationsPanel
