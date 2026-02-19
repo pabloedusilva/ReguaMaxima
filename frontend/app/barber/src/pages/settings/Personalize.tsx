@@ -1,8 +1,5 @@
 import { useState } from 'react'
-import { Download } from 'lucide-react'
 import { applyAndPersistAppIcon, getSelectedAppIcon } from '@barber/lib/appIcon'
-import { usePWAInstall } from '../../hooks/usePWAInstall'
-import InstallPWAModal from '../../components/dialogs/InstallPWAModal'
 import { useNavbarPreference, type NavbarStyle } from '../../hooks/useNavbarPreference'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -26,17 +23,46 @@ function NavbarStyleSection() {
       label: 'Barra inferior',
       description: 'Navegação compacta na parte inferior da tela, estilo app mobile clássico.',
       preview: (
-        <div className="w-full h-full flex flex-col justify-end overflow-hidden rounded-lg bg-[#0f0f10]">
-          <div className="flex-1 p-2 flex flex-col gap-1.5">
-            <div className="h-2 w-3/4 rounded bg-gold/20" />
-            <div className="h-1.5 w-1/2 rounded bg-white/10" />
-            <div className="h-1.5 w-2/3 rounded bg-white/10" />
+        <div className="w-full h-full flex flex-col overflow-hidden rounded-lg bg-[#0f0f10]">
+          {/* Top bar */}
+          <div className="bg-[#0a0a0a] border-b border-[#1e1e1e] px-3 py-2 flex items-center justify-between">
+            <div className="h-2 w-16 rounded bg-gold/50" />
+            <div className="w-3 h-3 rounded-full bg-gold/30 border border-gold/40" />
           </div>
-          <div className="bg-black/95 border-t border-gold/20 px-2 py-2 flex items-center justify-around gap-1">
-            {[0, 1, 2, 3, 4].map(i => (
-              <div key={i} className="flex flex-col items-center gap-0.5">
-                <div className={`w-3.5 h-3.5 rounded ${i === 0 ? 'bg-gold' : 'bg-white/20'}`} />
-                <div className={`h-0.5 w-4 rounded ${i === 0 ? 'bg-gold' : 'bg-white/10'}`} />
+          {/* Content */}
+          <div className="flex-1 px-3 py-2 flex flex-col gap-2 overflow-hidden">
+            <div className="grid grid-cols-3 gap-1.5">
+              {[true, false, false].map((accent, i) => (
+                <div key={i} className={`rounded-md p-1.5 flex flex-col gap-1 ${accent ? 'bg-gold/10 border border-gold/20' : 'bg-white/5 border border-white/[0.08]'}`}>
+                  <div className={`h-1.5 w-5 rounded ${accent ? 'bg-gold/70' : 'bg-white/20'}`} />
+                  <div className={`h-1 w-3 rounded ${accent ? 'bg-gold/40' : 'bg-white/10'}`} />
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-col gap-1">
+              {[1, 0.6, 0.4].map((op, i) => (
+                <div key={i} className="flex items-center gap-1.5 py-0.5 border-b border-white/5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-gold/20 flex-shrink-0" />
+                  <div className="h-1 flex-1 rounded bg-white/15" style={{ opacity: op }} />
+                  <div className="h-1 w-4 rounded bg-white/10" style={{ opacity: op }} />
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Bottom nav – ícones reais */}
+          <div className="bg-[#080808] border-t border-[#2a2a2a] px-1 py-1.5 flex items-center justify-around">
+            {[
+              { active: true,  d: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+              { active: false, d: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
+              { active: false, d: 'M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z' },
+              { active: false, d: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z' },
+              { active: false, d: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+            ].map((item, i) => (
+              <div key={i} className="flex flex-col items-center gap-0.5 px-1.5 py-0.5">
+                <svg className={`w-3.5 h-3.5 ${item.active ? 'text-gold' : 'text-white/25'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+                  <path d={item.d} />
+                </svg>
+                <div className={`h-0.5 w-3 rounded-full ${item.active ? 'bg-gold' : 'bg-transparent'}`} />
               </div>
             ))}
           </div>
@@ -49,33 +75,62 @@ function NavbarStyleSection() {
       description: 'Sidebar deslizante com animação de inclinação, estilo app premium.',
       preview: (
         <div className="w-full h-full flex overflow-hidden rounded-lg bg-[#0f0f10]">
-          <div className="w-[38%] bg-[#0a0a0a] border-r border-[#2a2a2a] flex flex-col p-1.5 gap-1">
-            <div className="flex items-center gap-1 mb-1">
-              <div className="w-4 h-4 rounded-full bg-gradient-to-br from-gold/80 to-gold/30 flex-shrink-0" />
+          {/* Sidebar – ícones reais */}
+          <div className="w-[36%] bg-[#090909] border-r border-[#1e1e1e] flex flex-col">
+            <div className="px-2 pt-2 pb-1.5 flex items-center gap-1.5 border-b border-[#1e1e1e]">
+              <div className="w-4 h-4 rounded-full bg-gradient-to-br from-gold to-yellow-700 flex-shrink-0 shadow-sm shadow-gold/30" />
               <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                <div className="h-1 w-full rounded bg-white/30" />
+                <div className="h-1 w-full rounded bg-white/35" />
                 <div className="h-0.5 w-2/3 rounded bg-white/15" />
               </div>
             </div>
-            <div className="h-px bg-[#2a2a2a] mb-0.5" />
-            {[true, false, false, false, false].map((active, i) => (
-              <div key={i} className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full ${active ? 'bg-gold/15' : ''}`}>
-                <div className={`w-2 h-2 rounded-sm flex-shrink-0 ${active ? 'bg-gold' : 'bg-white/20'}`} />
-                <div className={`h-0.5 flex-1 rounded ${active ? 'bg-gold/70' : 'bg-white/15'}`} />
-              </div>
-            ))}
-          </div>
-          <div className="flex-1 flex flex-col">
-            <div className="bg-[#0a0a0a]/80 border-b border-[#2a2a2a] px-2 py-1.5 flex items-center gap-1.5">
-              <div className="w-2.5 h-2 flex flex-col gap-0.5 justify-center">
-                <div className="h-0.5 w-full rounded bg-white/40" />
-                <div className="h-0.5 w-3/4 rounded bg-white/30" />
-              </div>
-              <div className="h-1.5 w-8 rounded bg-gold/40" />
+            <div className="flex flex-col gap-0.5 p-1.5 flex-1">
+              {[
+                { active: true,  d: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
+                { active: false, d: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z' },
+                { active: false, d: 'M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z' },
+                { active: false, d: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z' },
+                { active: false, d: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+              ].map((item, i) => (
+                <div key={i} className={`flex items-center gap-1 px-1.5 py-1 rounded-lg ${item.active ? 'bg-gold/15' : ''}`}>
+                  <svg className={`w-2.5 h-2.5 flex-shrink-0 ${item.active ? 'text-gold' : 'text-white/25'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+                    <path d={item.d} />
+                  </svg>
+                  <div className={`h-0.5 flex-1 rounded ${item.active ? 'bg-gold/60' : 'bg-white/12'}`} />
+                </div>
+              ))}
             </div>
-            <div className="flex-1 p-2 flex flex-col gap-1.5">
-              <div className="h-2 w-3/4 rounded bg-white/15" />
-              <div className="h-1.5 w-1/2 rounded bg-white/10" />
+          </div>
+          {/* Main content */}
+          <div className="flex-1 flex flex-col min-w-0">
+            <div className="bg-[#0a0a0a]/90 border-b border-[#1e1e1e] px-2 py-1.5 flex items-center gap-1.5">
+              <div className="flex flex-col gap-0.5 w-3">
+                <div className="h-0.5 w-full rounded bg-white/40" />
+                <div className="h-0.5 w-3/4 rounded bg-white/25" />
+                <div className="h-0.5 w-1/2 rounded bg-white/15" />
+              </div>
+              <div className="h-2 w-10 rounded bg-gold/45 ml-0.5" />
+              <div className="ml-auto w-3 h-3 rounded-full bg-white/10 border border-white/15" />
+            </div>
+            <div className="flex-1 p-2 flex flex-col gap-2">
+              <div className="grid grid-cols-2 gap-1">
+                <div className="rounded-md bg-gold/10 border border-gold/20 p-1.5 flex flex-col gap-1">
+                  <div className="h-1.5 w-5 rounded bg-gold/60" />
+                  <div className="h-1 w-3 rounded bg-gold/30" />
+                </div>
+                <div className="rounded-md bg-white/5 border border-white/[0.08] p-1.5 flex flex-col gap-1">
+                  <div className="h-1.5 w-4 rounded bg-white/25" />
+                  <div className="h-1 w-3 rounded bg-white/12" />
+                </div>
+              </div>
+              <div className="flex flex-col gap-1">
+                {[1, 0.7, 0.4].map((op, i) => (
+                  <div key={i} className="flex items-center gap-1">
+                    <div className="w-2 h-2 rounded-full bg-gold/20 flex-shrink-0" style={{ opacity: op }} />
+                    <div className="h-0.5 flex-1 rounded bg-white/15" style={{ opacity: op }} />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -108,7 +163,7 @@ function NavbarStyleSection() {
                 }`}
             >
               {/* Preview area */}
-              <div className="w-full h-[120px] p-2 bg-[#0c0c0c]">
+              <div className="w-full h-[160px] p-2 bg-[#0c0c0c]">
                 {opt.preview}
               </div>
 
@@ -163,8 +218,6 @@ export default function Personalize() {
     return stored || APP_ICON_OPTIONS[0]
   })
   const [isApplyingAppIcon, setIsApplyingAppIcon] = useState(false)
-  const [showInstallModal, setShowInstallModal] = useState(false)
-  const { canInstall, promptInstall } = usePWAInstall()
 
   return (
     <div className="grid gap-10">
@@ -185,34 +238,8 @@ export default function Personalize() {
         </div>
 
         <div className="card">
-          {/* Install button */}
-          <div className="flex items-center justify-between gap-4 mb-5">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center shrink-0">
-                <svg className="w-5 h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-text">Instalar App</p>
-                <p className="text-xs text-text-dim">Adicionar à tela inicial do dispositivo</p>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setShowInstallModal(true)}
-              className="group shrink-0"
-              title="Instalar App"
-              aria-label="Instalar App"
-            >
-              <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-2xl border border-gold/30 bg-gradient-to-br from-gold/20 to-gold/5 hover:from-gold/30 hover:to-gold/10 transition-all overflow-hidden flex items-center justify-center shadow-lg shadow-black/30 group-hover:shadow-gold/20">
-                <Download className="w-5 h-5 sm:w-6 sm:h-6 text-gold group-hover:brightness-125 transition-all" />
-              </div>
-            </button>
-          </div>
-
           {/* Icon grid */}
-          <div className="max-w-[280px] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[560px]">
+          <div className="max-w-[280px] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[560px] mx-auto">
             <div className="grid grid-cols-5 gap-2 sm:gap-3 md:gap-3.5 lg:gap-4">
               {APP_ICON_OPTIONS.map((icon) => {
                 const isSelected = icon === selectedAppIcon
@@ -273,17 +300,6 @@ export default function Personalize() {
       {/* ── Estilo da Navegação ── */}
       <NavbarStyleSection />
 
-      {/* Install PWA Modal */}
-      <InstallPWAModal
-        isOpen={showInstallModal}
-        onClose={() => setShowInstallModal(false)}
-        onInstall={async () => {
-          const installed = await promptInstall()
-          if (installed) setShowInstallModal(false)
-        }}
-        canInstall={canInstall}
-        selectedAppIcon={selectedAppIcon}
-      />
     </div>
   )
 }

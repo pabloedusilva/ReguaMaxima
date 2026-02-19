@@ -1,1 +1,0 @@
-// Duração/slots por serviço

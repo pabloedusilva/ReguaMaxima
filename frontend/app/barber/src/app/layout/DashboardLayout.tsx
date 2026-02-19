@@ -112,6 +112,18 @@ export default function DashboardLayout() {
       )
     },
     {
+      label: 'Personalizar',
+      path: '/personalizar',
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3a9 9 0 100 18 3 3 0 003-3 1 1 0 011-1h.5a3.5 3.5 0 000-7H15A9 9 0 0012 3z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6.5 11.5m-1 0a1 1 0 102 0 1 1 0 10-2 0" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9.5 7.5m-1 0a1 1 0 102 0 1 1 0 10-2 0" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14.5 7m-1 0a1 1 0 102 0 1 1 0 10-2 0" />
+        </svg>
+      )
+    },
+    {
       label: 'Figurinhas',
       path: '/figurinhas',
       icon: (
@@ -316,24 +328,22 @@ export default function DashboardLayout() {
 
           {isTrial && (
             <div className="border-t border-gold/25 bg-gradient-to-r from-gold/15 via-gold/5 to-transparent px-4 md:px-6 py-2">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 text-[11px] sm:text-xs md:text-sm max-w-6xl mx-auto">
-                <div className="flex items-start sm:items-center gap-2 text-text">
+              <div className="flex flex-row items-center justify-between gap-2 sm:gap-3 text-[11px] sm:text-xs md:text-sm max-w-6xl mx-auto">
+                <div className="flex items-center gap-2 text-text">
                   <svg className="w-4 h-4 mt-0.5 sm:mt-0 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <p className="leading-snug">
-                    Você está em um <span className="font-semibold text-gold">teste grátis de 7 dias</span>.{' '}
-                    Faltam{' '}
+                    Seu teste grátis termina em{' '}
                     <span className="font-semibold text-gold">
                       {subscription.daysRemaining} {subscription.daysRemaining === 1 ? 'dia' : 'dias'}
-                    </span>{' '}
-                    para expirar.
+                    </span>
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => navigate('/assinaturas')}
-                  className="inline-flex items-center justify-center self-start sm:self-auto px-3 py-1.5 rounded-full text-[11px] font-semibold text-gold hover:text-gold-300 hover:bg-gold/10 transition-colors whitespace-nowrap"
+                  className="inline-flex items-center justify-center px-3 py-1.5 rounded-full text-[11px] font-semibold text-gold hover:text-gold-300 hover:bg-gold/10 transition-colors whitespace-nowrap"
                 >
                   Ver planos
                   <svg className="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
