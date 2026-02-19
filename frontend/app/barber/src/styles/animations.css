@@ -106,17 +106,20 @@
   height: 100dvh;
   overflow: hidden;
   position: relative;
-  background: #0f0f10;
+  background: #0a0a0a;
 }
 
 .navv2-sidebar {
   width: 270px;
   flex-shrink: 0;
-  background: #0f0f10;
+  background: #0a0a0a;
   color: #cfcfcb;
   display: flex;
   flex-direction: column;
-  padding: 18px 14px 24px;
+  padding-left: 14px;
+  padding-right: 14px;
+  padding-bottom: 24px;
+  padding-top: max(18px, calc(env(safe-area-inset-top) + 16px));
   border-right: 1px solid rgba(42, 42, 42, 0.5);
   position: relative;
   z-index: 41;
