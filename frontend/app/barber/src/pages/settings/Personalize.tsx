@@ -263,9 +263,6 @@ export default function Personalize() {
               </svg>
             )}
             <span className="text-sm font-semibold">Instalar App</span>
-            {canInstall && (
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-gold border-2 border-bg animate-pulse" />
-            )}
           </button>
         </div>
 
