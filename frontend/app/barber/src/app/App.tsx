@@ -15,6 +15,7 @@ import ServicesList from '@barber/pages/services/ListServices'
 import ProfessionalsList from '@barber/pages/settings/Staff'
 import WorkingHoursSettings from '@barber/pages/settings/WorkingHours'
 import BarbershopSettings from '@barber/pages/settings/Profile'
+import PersonalizePage from '@barber/pages/settings/Personalize'
 import StickersGallery from '@barber/pages/settings/StickersGallery'
 import PromotionsList from '@barber/pages/promotions/PromotionsList'
 import NotFoundPage from '@barber/pages/NotFoundPage'
@@ -56,6 +57,10 @@ export default function App() {
 
       <Route path="configuracoes" element={<DashboardLayout />}>
         <Route index element={<BarbershopSettings />} />
+      </Route>
+
+      <Route path="personalizar" element={<DashboardLayout />}>
+        <Route index element={<PersonalizePage />} />
       </Route>
 
       <Route path="figurinhas" element={<DashboardLayout />}>

@@ -1,12 +1,8 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Trash2, Download, Bell, BellOff } from 'lucide-react'
+import { Trash2, Bell, BellOff } from 'lucide-react'
 import { handleImageError } from '../../utils/imageHelpers'
 import { formatPhone } from '../../utils/format'
-import { applyAndPersistAppIcon, getSelectedAppIcon } from '@barber/lib/appIcon'
-import { usePWAInstall } from '../../hooks/usePWAInstall'
-import InstallPWAModal from '../../components/dialogs/InstallPWAModal'
-import { useNavbarPreference, type NavbarStyle } from '../../hooks/useNavbarPreference'
 
 // TODO: Backend Integration
 // GET /api/settings/profile - Get barbershop profile
@@ -42,154 +38,7 @@ const AVATAR_OPTIONS = [
   '/assets/images/profile/profile15.jpg',
 ]
 
-const APP_ICON_OPTIONS = [
-  '/assets/images/logoSelect/1.jpg',
-  '/assets/images/logoSelect/2.jpg',
-  '/assets/images/logoSelect/3.jpg',
-  '/assets/images/logoSelect/4.jpg',
-  '/assets/images/logoSelect/5.jpg',
-]
 
-// ─── Navbar Style Selector – standalone sub-component ────────────────────────
-function NavbarStyleSection() {
-  const { navbarStyle, setNavbarStyle } = useNavbarPreference()
-
-  const options: { id: NavbarStyle; label: string; description: string; preview: React.ReactNode }[] = [
-    {
-      id: 'option1',
-      label: 'Barra inferior',
-      description: 'Navegação compacta na parte inferior da tela, estilo app mobile clássico.',
-      preview: (
-        <div className="w-full h-full flex flex-col justify-end overflow-hidden rounded-lg bg-[#0f0f10]">
-          {/* Simulated page content */}
-          <div className="flex-1 p-2 flex flex-col gap-1.5">
-            <div className="h-2 w-3/4 rounded bg-gold/20" />
-            <div className="h-1.5 w-1/2 rounded bg-white/10" />
-            <div className="h-1.5 w-2/3 rounded bg-white/10" />
-          </div>
-          {/* Bottom nav bar */}
-          <div className="bg-black/95 border-t border-gold/20 px-2 py-2 flex items-center justify-around gap-1">
-            {[0, 1, 2, 3, 4].map(i => (
-              <div key={i} className={`flex flex-col items-center gap-0.5 ${i === 0 ? '' : ''}`}>
-                <div className={`w-3.5 h-3.5 rounded ${i === 0 ? 'bg-gold' : 'bg-white/20'}`} />
-                <div className={`h-0.5 w-4 rounded ${i === 0 ? 'bg-gold' : 'bg-white/10'}`} />
-              </div>
-            ))}
-          </div>
-        </div>
-      ),
-    },
-    {
-      id: 'option2',
-      label: 'Menu lateral',
-      description: 'Sidebar deslizante com animação de inclinação, estilo app premium.',
-      preview: (
-        <div className="w-full h-full flex overflow-hidden rounded-lg bg-[#0f0f10]">
-          {/* Sidebar strip */}
-          <div className="w-[38%] bg-[#0a0a0a] border-r border-[#2a2a2a] flex flex-col p-1.5 gap-1">
-            {/* Avatar row */}
-            <div className="flex items-center gap-1 mb-1">
-              <div className="w-4 h-4 rounded-full bg-gradient-to-br from-gold/80 to-gold/30 flex-shrink-0" />
-              <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                <div className="h-1 w-full rounded bg-white/30" />
-                <div className="h-0.5 w-2/3 rounded bg-white/15" />
-              </div>
-            </div>
-            <div className="h-px bg-[#2a2a2a] mb-0.5" />
-            {/* Nav items */}
-            {[true, false, false, false, false].map((active, i) => (
-              <div key={i} className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full ${active ? 'bg-gold/15' : ''}`}>
-                <div className={`w-2 h-2 rounded-sm flex-shrink-0 ${active ? 'bg-gold' : 'bg-white/20'}`} />
-                <div className={`h-0.5 flex-1 rounded ${active ? 'bg-gold/70' : 'bg-white/15'}`} />
-              </div>
-            ))}
-          </div>
-          {/* Main content */}
-          <div className="flex-1 flex flex-col">
-            {/* Topbar */}
-            <div className="bg-[#0a0a0a]/80 border-b border-[#2a2a2a] px-2 py-1.5 flex items-center gap-1.5">
-              <div className="w-2.5 h-2 flex flex-col gap-0.5 justify-center">
-                <div className="h-0.5 w-full rounded bg-white/40" />
-                <div className="h-0.5 w-3/4 rounded bg-white/30" />
-              </div>
-              <div className="h-1.5 w-8 rounded bg-gold/40" />
-            </div>
-            {/* Content */}
-            <div className="flex-1 p-2 flex flex-col gap-1.5">
-              <div className="h-2 w-3/4 rounded bg-white/15" />
-              <div className="h-1.5 w-1/2 rounded bg-white/10" />
-            </div>
-          </div>
-        </div>
-      ),
-    },
-  ]
-
-  return (
-    <div className="animate-fade-in-delayed">
-      <h2 className="text-2xl font-bold text-text mb-1">Estilo da Navegação</h2>
-      <p className="text-sm text-text-dim mb-4">Escolha o estilo de menu que prefere. A preferência é salva neste dispositivo.</p>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {options.map(opt => {
-          const isSelected = navbarStyle === opt.id
-          return (
-            <button
-              key={opt.id}
-              type="button"
-              onClick={() => setNavbarStyle(opt.id)}
-              className={`group relative flex flex-col overflow-hidden rounded-2xl border text-left transition-all duration-200
-                hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/40
-                ${isSelected
-                  ? 'border-gold shadow-lg shadow-gold/20 bg-gradient-to-b from-[#1e1a10] to-[#141414]'
-                  : 'border-border bg-surface hover:border-gold/40'
-                }`}
-            >
-              {/* Preview area */}
-              <div className="w-full h-[120px] p-2 bg-[#0c0c0c]">
-                {opt.preview}
-              </div>
-
-              {/* Info row */}
-              <div className="flex items-start justify-between gap-3 p-4">
-                <div className="flex-1 min-w-0">
-                  <p className={`font-display text-base uppercase tracking-wider leading-tight ${isSelected ? 'text-gold' : 'text-text'}`}>
-                    {opt.label}
-                  </p>
-                  <p className="text-xs text-text-dim mt-1 leading-snug">{opt.description}</p>
-                </div>
-
-                {/* Check indicator */}
-                <div className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200
-                  ${isSelected ? 'border-gold bg-gold' : 'border-border bg-transparent group-hover:border-gold/50'}`}>
-                  {isSelected && (
-                    <svg className="w-3.5 h-3.5 text-[#1b1408]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                    </svg>
-                  )}
-                </div>
-              </div>
-
-              {/* Selected badge */}
-              {isSelected && (
-                <div className="absolute top-2.5 right-2.5 px-2 py-0.5 bg-gold text-[#1b1408] text-[10px] font-bold uppercase tracking-widest rounded-full">
-                  Ativo
-                </div>
-              )}
-            </button>
-          )
-        })}
-      </div>
-
-      <p className="text-xs text-muted mt-3 flex items-center gap-1.5">
-        <svg className="w-3.5 h-3.5 text-gold flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        A mudança é aplicada imediatamente ao navegar para outra página.
-      </p>
-    </div>
-  )
-}
 
 export default function Profile() {
   const [profile, setProfile] = useState<BarbershopProfile>({
@@ -214,13 +63,6 @@ export default function Profile() {
   const [showClearCacheModal, setShowClearCacheModal] = useState(false)
   const [showCacheSuccessModal, setShowCacheSuccessModal] = useState(false)
   const [copied, setCopied] = useState(false)
-  const [selectedAppIcon, setSelectedAppIconState] = useState(() => {
-    const stored = typeof window !== 'undefined' ? getSelectedAppIcon() : null
-    return stored || APP_ICON_OPTIONS[0]
-  })
-  const [isApplyingAppIcon, setIsApplyingAppIcon] = useState(false)
-  const [showInstallModal, setShowInstallModal] = useState(false)
-  const { canInstall, promptInstall } = usePWAInstall()
   const [notificationsEnabled, setNotificationsEnabled] = useState(() => {
     // Verifica tanto localStorage quanto permissão do navegador
     const stored = localStorage.getItem('notifications_enabled') === 'true'
@@ -661,79 +503,9 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* App Icon (PWA) */}
-        <div className="card">
-          <div className="flex items-start justify-between gap-4 mb-4">
-            <div className="min-w-0 flex-1">
-              <h4 className="text-base font-semibold text-text">Ícone do App (PWA)</h4>
-              <p className="text-sm text-text-dim mt-1">
-                Escolha qual logo será usada como ícone do app. A seleção fica salva neste dispositivo.
-              </p>
-            </div>
 
-            <button
-              onClick={() => setShowInstallModal(true)}
-              className="shrink-0 group"
-              title="Instalar App"
-              aria-label="Instalar App"
-            >
-              <div className="relative w-11 h-11 sm:w-12 sm:h-12 lg:w-14 lg:h-14 xl:w-14 xl:h-14 rounded-2xl border border-gold/30 bg-gradient-to-br from-gold/20 to-gold/5 hover:from-gold/30 hover:to-gold/10 transition-all overflow-hidden flex items-center justify-center shadow-lg shadow-black/30 group-hover:shadow-gold/20">
-                <Download className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 xl:w-7 xl:h-7 text-gold group-hover:brightness-125 transition-all" />
-              </div>
-            </button>
-          </div>
-
-          <div className="max-w-[280px] sm:max-w-[360px] md:max-w-[460px] lg:max-w-[560px] xl:max-w-[640px]">
-            <div className="grid grid-cols-5 gap-2 sm:gap-3 md:gap-3.5 lg:gap-4">
-              {APP_ICON_OPTIONS.map((icon) => {
-                const isSelected = icon === selectedAppIcon
-                return (
-                  <button
-                    key={icon}
-                    type="button"
-                    onClick={async () => {
-                      if (isApplyingAppIcon) return
-                      setIsApplyingAppIcon(true)
-                      setSelectedAppIconState(icon)
-                      try {
-                        await applyAndPersistAppIcon(icon)
-                      } finally {
-                        setIsApplyingAppIcon(false)
-                      }
-                    }}
-                    className={`relative aspect-square rounded-xl sm:rounded-2xl border transition-all overflow-hidden bg-surface hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/30 ${
-                      isSelected
-                        ? 'border-gold shadow-lg shadow-gold/20'
-                        : 'border-border hover:border-gold/50'
-                    } ${isApplyingAppIcon ? 'opacity-80 cursor-not-allowed' : ''}`}
-                    aria-label={isSelected ? 'Ícone selecionado' : 'Selecionar ícone'}
-                    title={isSelected ? 'Selecionado' : 'Selecionar'}
-                  >
-                    <img
-                      src={icon}
-                      alt="Opção de ícone"
-                      className="w-full h-full object-cover"
-                    />
-                    {isSelected && (
-                      <div className="absolute inset-0 bg-gold/15 flex items-center justify-center">
-                        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-bg/70 border border-gold/30 flex items-center justify-center">
-                          <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                      </div>
-                    )}
-                  </button>
-                )
-              })}
-              </div>
-            </div>
-
-            <p className="text-xs text-text-dim mt-3">
-              Dica: para refletir no ícone do app instalado, pode ser necessário reinstalar o PWA após escolher.
-            </p>
-          </div>
-        </div>
+      </div>
+      {/* End Additional Settings */}
       </div>
 
       {/* Push Notifications Section */}
@@ -825,9 +597,6 @@ export default function Profile() {
           </div>
         </div>
       </div>
-
-      {/* ─── Estilo da Navegação ─────────────────────────────────────────── */}
-      <NavbarStyleSection />
 
       {/* Edit Modal - Fullscreen */}
       {modalOpen && (
@@ -1053,19 +822,6 @@ export default function Profile() {
         )
       )}
 
-      {/* Install PWA Modal */}
-      <InstallPWAModal
-        isOpen={showInstallModal}
-        onClose={() => setShowInstallModal(false)}
-        onInstall={async () => {
-          const installed = await promptInstall()
-          if (installed) {
-            setShowInstallModal(false)
-          }
-        }}
-        canInstall={canInstall}
-        selectedAppIcon={selectedAppIcon}
-      />
     </div>
   )
 }

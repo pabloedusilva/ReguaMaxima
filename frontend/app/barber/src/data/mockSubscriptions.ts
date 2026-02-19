@@ -52,7 +52,7 @@ export const mockSubscriptionFreeTrial7Days: Subscription = {
   status: 'trial',
   startDate: '2026-01-01',
   endDate: '2026-01-08',
-  daysRemaining: 6,
+  daysRemaining: 5,
   autoRenew: false,
   totalPaid: 0
 }
