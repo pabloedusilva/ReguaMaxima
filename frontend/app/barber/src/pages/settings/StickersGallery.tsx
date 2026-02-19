@@ -147,8 +147,7 @@ export default function StickersGallery() {
         canvas.width  = imgEl.naturalWidth
         canvas.height = imgEl.naturalHeight
         const ctx = canvas.getContext('2d')!
-        ctx.fillStyle = '#ffffff'
-        ctx.fillRect(0, 0, canvas.width, canvas.height)
+
         ctx.drawImage(imgEl, 0, 0)
         canvas.toBlob(blob => {
           if (blob) setCachedBlob({ path: sticker, blob })
