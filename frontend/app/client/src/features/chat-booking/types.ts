@@ -81,6 +81,7 @@ export interface BookingItem {
   time: string
   status: 'scheduled' | 'completed' | 'cancelled'
   price: number
+  clientPhone?: string
 }
 
 // ─── Chat Actions (interactive elements rendered below messages) ───────────────
