@@ -4,6 +4,7 @@ export type Professional = {
   id: string
   name: string
   specialty?: string
+  image?: string
 }
 
 export type BookingState = {
