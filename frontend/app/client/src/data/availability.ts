@@ -1,7 +1,7 @@
 import { Professional } from '@context/BookingContext'
 
 export const professionals: Professional[] = [
-  { id: '1', name: 'Pablo Silva', specialty: 'Barbeiro' }
+  { id: '1', name: 'Pablo Silva', specialty: 'Barbeiro', image: '/assets/images/exemplo/profile11.jpg' }
 ]
 
 export const services = [

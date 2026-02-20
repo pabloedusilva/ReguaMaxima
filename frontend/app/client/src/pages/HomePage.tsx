@@ -4,19 +4,8 @@ import Button from '@components/ui/Button'
 import { useEffect, useState, useRef } from 'react'
 import ProfileAvatar from '@components/ProfileAvatar'
 import UserInfoModal from '@components/UserInfoModal'
+import { mockShop, isShopOpen } from '@data/mockShop'
 
-function isOpenNow(hours: { weekdays: [number, number]; saturday: [number, number] }) {
-  const now = new Date()
-  const day = now.getDay() // 0=Sun ... 6=Sat
-  const hour = now.getHours()
-  if (day >= 1 && day <= 5) {
-    return hour >= hours.weekdays[0] && hour < hours.weekdays[1]
-  }
-  if (day === 6) {
-    return hour >= hours.saturday[0] && hour < hours.saturday[1]
-  }
-  return false
-}
 
 export default function HomePage() {
   const navigate = useNavigate()
@@ -108,8 +97,7 @@ export default function HomePage() {
     }
   }, [isTouchDevice])
 
-  const hours: { weekdays: [number, number]; saturday: [number, number] } = { weekdays: [8, 19], saturday: [8, 17] }
-  const open = isOpenNow(hours)
+  const open = isShopOpen()
   const greetingName = clientName ? clientName.split(' ')[0] : 'Visitante'
   const now = new Date()
   const todayFormatted = now.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })
@@ -281,10 +269,11 @@ export default function HomePage() {
               variant="primary"
               className="py-3 text-base md:text-lg w-full btn-schedule"
               onClick={() => {
+                const dest = mockShop.bookingMode === 'simplified' ? '/chat' : '/agendar'
                 if (clientName) {
-                  navigate('/agendar')
+                  navigate(dest)
                 } else {
-                  setPendingNavigation('/agendar')
+                  setPendingNavigation(dest)
                   setModalOpen(true)
                 }
               }}
