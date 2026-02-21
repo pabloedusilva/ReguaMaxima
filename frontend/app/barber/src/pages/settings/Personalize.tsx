@@ -15,6 +15,160 @@ const APP_ICON_OPTIONS = [
   '/assets/images/logoSelect/5.jpg',
 ]
 
+// ─── Booking Mode Section ─────────────────────────────────────────────────────
+
+type BookingMode = 'simplified' | 'pro'
+const BOOKING_MODE_KEY = 'bookingMode'
+
+function useBookingMode() {
+  const [mode, setModeState] = useState<BookingMode>(() => {
+    return (localStorage.getItem(BOOKING_MODE_KEY) as BookingMode) || 'simplified'
+  })
+  const setMode = (m: BookingMode) => {
+    setModeState(m)
+    localStorage.setItem(BOOKING_MODE_KEY, m)
+  }
+  return { mode, setMode }
+}
+
+const BOOKING_OPTIONS: { id: BookingMode; label: string; description: string; videoSrc: string }[] = [
+  {
+    id: 'simplified',
+    label: 'Simplificado',
+    description: 'Agendamento por chat, guiado e intuitivo.',
+    videoSrc: '/assets/videos/booking-chat.mp4',
+  },
+  {
+    id: 'pro',
+    label: 'Pro',
+    description: 'Formulário completo com todas as opções.',
+    videoSrc: '/assets/videos/booking-pro.mp4',
+  },
+]
+
+function PhoneMockup({
+  videoSrc,
+  isSelected,
+  onClick,
+}: {
+  videoSrc: string
+  isSelected: boolean
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`
+        relative flex flex-col w-full overflow-hidden cursor-pointer
+        transition-all duration-200 shadow-lg
+        rounded-[2rem] border-[3px] bg-[#090909]
+        ${isSelected
+          ? 'border-gold shadow-gold/20 scale-[1.02]'
+          : 'border-border hover:border-gold/40 hover:scale-[1.01]'}
+      `}
+      style={{ aspectRatio: '9/19' }}
+      aria-label={isSelected ? 'Modo selecionado' : 'Selecionar modo'}
+    >
+      {/* Speaker notch */}
+      <div className="flex-shrink-0 flex items-center justify-center py-[6px] bg-[#090909]">
+        <div className="w-[36%] h-[5px] rounded-full bg-[#1e1e1e]" />
+      </div>
+
+      {/* Screen — video fills it entirely */}
+      <div className="flex-1 overflow-hidden bg-[#0f0f10] select-none" style={{ pointerEvents: 'none' }}>
+        <video
+          src={videoSrc}
+          autoPlay
+          loop
+          muted
+          playsInline
+          disablePictureInPicture
+          className="w-full h-full object-cover"
+          style={{ pointerEvents: 'none' }}
+          onContextMenu={(e) => e.preventDefault()}
+        />
+      </div>
+
+      {/* Home indicator */}
+      <div className="flex-shrink-0 flex items-center justify-center py-[6px] bg-[#090909]">
+        <div className="w-[44%] h-[4px] rounded-full bg-[#2a2a2a]" />
+      </div>
+
+      {/* Selected glow ring */}
+      {isSelected && (
+        <div className="absolute inset-0 rounded-[1.85rem] ring-[1.5px] ring-gold/30 pointer-events-none" />
+      )}
+    </button>
+  )
+}
+
+function BookingModeSection() {
+  const { mode, setMode } = useBookingMode()
+
+  return (
+    <section className="animate-fade-in-delayed">
+      <div className="mb-5">
+        <h2 className="text-2xl font-bold text-text mb-1">Modo de Agendamento</h2>
+        <p className="text-sm text-text-dim">
+          Escolha como seus clientes vão realizar o agendamento. A preferência é salva neste dispositivo.
+        </p>
+      </div>
+
+      {/* Phones grid — centered, max width keeps phones compact */}
+      <div className="mx-auto w-full max-w-[300px] sm:max-w-[380px] md:max-w-[440px]">
+        <div className="grid grid-cols-2 gap-4 sm:gap-6">
+          {BOOKING_OPTIONS.map(opt => {
+            const isSelected = mode === opt.id
+            return (
+              <div key={opt.id} className="flex flex-col items-center gap-3">
+                <PhoneMockup
+                  videoSrc={opt.videoSrc}
+                  isSelected={isSelected}
+                  onClick={() => setMode(opt.id)}
+                />
+
+                {/* Label + description */}
+                <div className="text-center">
+                  <p className={`text-sm font-semibold leading-tight ${isSelected ? 'text-gold' : 'text-text'}`}>
+                    {opt.label}
+                  </p>
+                  <p className="text-[11px] text-text-dim mt-0.5 leading-snug">{opt.description}</p>
+                </div>
+
+                {/* Radio dot */}
+                <button
+                  type="button"
+                  onClick={() => setMode(opt.id)}
+                  aria-label={`Selecionar ${opt.label}`}
+                  className={`
+                    w-5 h-5 rounded-full border-2 flex items-center justify-center
+                    transition-all duration-200
+                    ${isSelected
+                      ? 'border-gold bg-gold'
+                      : 'border-border hover:border-gold/50'}
+                  `}
+                >
+                  {isSelected && (
+                    <div className="w-2 h-2 rounded-full bg-[#1b1408]" />
+                  )}
+                </button>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      <p className="text-xs text-muted mt-5 flex items-center gap-1.5">
+        <svg className="w-3.5 h-3.5 text-gold flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        A mudança será aplicada imediatamente para novos clientes.
+      </p>
+    </section>
+  )
+}
+
 // ─── Navbar Style Section ─────────────────────────────────────────────────────
 
 function NavbarStyleSection() {
@@ -237,6 +391,12 @@ export default function Personalize() {
         <h1 className="font-display text-4xl md:text-5xl text-gold mb-2">Personalizar</h1>
         <p className="text-text-dim">Ajuste o visual e a experiência do app do seu jeito</p>
       </div>
+
+      {/* ── Modo de Agendamento ── */}
+      <BookingModeSection />
+
+      {/* ─── Divider ─────────────────────────────────────────────────────────── */}
+      <div className="h-px bg-border/60 -mt-2" />
 
       {/* ── Ícone do App (PWA) ── */}
       <section className="animate-fade-in-delayed">
