@@ -1,0 +1,30 @@
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { HashRouter } from 'react-router-dom'
+import App from './App'
+import { ToastProvider } from './providers/ToastProvider'
+import { NotificationsProvider } from '@barber/features/notifications/providers/NotificationsProvider'
+import { NavbarPreferenceProvider } from './providers/NavbarPreferenceProvider'
+import { initPWA } from '@barber/utils/pwa'
+import { initAppIcon } from '@barber/lib/appIcon'
+import '@barber/styles/index.css'
+
+// Inicializa PWA
+initPWA()
+
+// Inicializa ícone selecionável (PWA / favicon)
+initAppIcon('/assets/images/logoSelect/1.jpg')
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <HashRouter>
+      <NavbarPreferenceProvider>
+        <ToastProvider>
+          <NotificationsProvider>
+            <App />
+          </NotificationsProvider>
+        </ToastProvider>
+      </NavbarPreferenceProvider>
+    </HashRouter>
+  </StrictMode>
+)
