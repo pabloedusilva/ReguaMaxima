@@ -167,20 +167,20 @@ input[type="time"] {
 @media (min-width: 1100px) { .brand-logo { width: 125px; } }
 @media (max-width: 480px) { .brand-logo { width: 85px; } }
 
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 @media (max-width: 1023px) {
   nav a {
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
     user-select: none;
-  }
-  
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
   }
 }
 

@@ -85,19 +85,17 @@ export default function ReviewCard({ booking, onConfirm, onBack }: Props) {
   return (
     <div className="action-block p-0 overflow-hidden">
       {/* ── Header ── */}
-      <div className="relative px-4 pt-4 pb-3 border-b border-border/60">
-        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-gold via-gold/60 to-transparent rounded-t-2xl" />
-        <p className="font-display text-xl tracking-wide text-gold leading-none">Resumo</p>
+      <div className="px-4 pt-4 pb-3 border-b border-border/60">
+        <p className="text-[14px] font-semibold text-gold leading-[1.5]">Resumo</p>
         <p className="text-[11px] text-muted mt-0.5">Confira os dados antes de confirmar</p>
       </div>
 
       {/* ── Rows ── */}
       <div className="px-4 py-2">
         {ROWS.map(r => (
-          <div key={r.label} className="flex items-center gap-3 py-2.5 border-b border-border/30 last:border-0">
-            <span className="text-gold/70 flex-shrink-0">{r.icon}</span>
-            <span className="text-[11px] text-muted w-[74px] flex-shrink-0">{r.label}</span>
-            <span className="text-[13px] font-semibold text-text flex-1 text-right">{values[r.key]}</span>
+          <div key={r.label} className="flex items-center justify-between gap-2 py-2 border-b border-border/30 last:border-0 text-sm min-w-0">
+            <span className="text-text/70 flex-shrink-0">{r.label}</span>
+            <span className="text-text font-medium text-right truncate">{values[r.key]}</span>
           </div>
         ))}
       </div>

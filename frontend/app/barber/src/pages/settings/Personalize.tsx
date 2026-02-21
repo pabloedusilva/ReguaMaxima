@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { applyAndPersistAppIcon, getSelectedAppIcon } from '@barber/lib/appIcon'
 import { useNavbarPreference, type NavbarStyle } from '../../hooks/useNavbarPreference'
 import { usePWAInstall } from '@barber/hooks/usePWAInstall'
@@ -14,6 +14,331 @@ const APP_ICON_OPTIONS = [
   '/assets/images/logoSelect/4.jpg',
   '/assets/images/logoSelect/5.jpg',
 ]
+
+// ─── Booking Mode Section ─────────────────────────────────────────────────────
+
+type BookingMode = 'simplified' | 'pro'
+const BOOKING_MODE_KEY = 'bookingMode'
+const BOOKING_BG_KEY   = 'bookingBackground'
+
+const BOOKING_BG_OPTIONS: { id: string; label: string; src?: string; color?: string }[] = [
+  { id: 'bg1',   src: '/assets/images/chat-bg/1.jpg', label: 'Clássico'    },
+  { id: 'bg2',   src: '/assets/images/chat-bg/2.jpg', label: 'Moderno'     },
+  { id: 'bg3',   src: '/assets/images/chat-bg/3.jpg', label: 'Minimalista' },
+  { id: 'black', color: '#0a0a0a',  label: 'Preto'   },
+  { id: 'gray',  color: '#3a3a3a',  label: 'Cinza'   },
+  { id: 'white', color: '#f5f5f5',  label: 'Branco'  },
+  { id: 'gold',  color: '#c9953b',  label: 'Dourado' },
+  { id: 'red',   color: '#dc2626',  label: 'Vermelho'},
+  { id: 'blue',  color: '#2563eb',  label: 'Azul'    },
+]
+
+function useBookingMode() {
+  const [mode, setModeState] = useState<BookingMode>(() => {
+    return (localStorage.getItem(BOOKING_MODE_KEY) as BookingMode) || 'simplified'
+  })
+  const setMode = (m: BookingMode) => {
+    setModeState(m)
+    localStorage.setItem(BOOKING_MODE_KEY, m)
+  }
+  return { mode, setMode }
+}
+
+function useBookingBackground() {
+  const [bg, setBgState] = useState<string>(() => {
+    return localStorage.getItem(BOOKING_BG_KEY) || BOOKING_BG_OPTIONS[0].id
+  })
+  const setBg = (id: string) => {
+    setBgState(id)
+    localStorage.setItem(BOOKING_BG_KEY, id)
+  }
+  return { bg, setBg }
+}
+
+const BOOKING_OPTIONS: { id: BookingMode; label: string; description: string; videoSrc: string }[] = [
+  {
+    id: 'simplified',
+    label: 'Simplificado',
+    description: 'Agendamento por chat, guiado e intuitivo.',
+    videoSrc: '/assets/videos/booking-chat.mp4',
+  },
+  {
+    id: 'pro',
+    label: 'Pro',
+    description: 'Formulário completo com todas as opções.',
+    videoSrc: '/assets/videos/booking-pro.mp4',
+  },
+]
+
+function PhoneMockup({
+  videoSrc,
+  isSelected,
+  onClick,
+}: {
+  videoSrc: string
+  isSelected: boolean
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`
+        relative flex flex-col w-full overflow-hidden cursor-pointer
+        transition-all duration-200 shadow-lg
+        rounded-[2rem] border-[3px] bg-[#090909]
+        ${isSelected
+          ? 'border-gold shadow-gold/20 scale-[1.02]'
+          : 'border-border hover:border-gold/40 hover:scale-[1.01]'}
+      `}
+      style={{ aspectRatio: '9/19' }}
+      aria-label={isSelected ? 'Modo selecionado' : 'Selecionar modo'}
+    >
+      {/* Speaker notch */}
+      <div className="flex-shrink-0 flex items-center justify-center py-[6px] bg-[#090909]">
+        <div className="w-[36%] h-[5px] rounded-full bg-[#1e1e1e]" />
+      </div>
+
+      {/* Screen — video fills it entirely */}
+      <div className="flex-1 overflow-hidden bg-[#0f0f10] select-none" style={{ pointerEvents: 'none' }}>
+        <video
+          src={videoSrc}
+          autoPlay
+          loop
+          muted
+          playsInline
+          disablePictureInPicture
+          className="w-full h-full object-cover"
+          style={{ pointerEvents: 'none' }}
+          onContextMenu={(e) => e.preventDefault()}
+        />
+      </div>
+
+      {/* Home indicator */}
+      <div className="flex-shrink-0 flex items-center justify-center py-[6px] bg-[#090909]">
+        <div className="w-[44%] h-[4px] rounded-full bg-[#2a2a2a]" />
+      </div>
+
+      {/* Selected glow ring */}
+      {isSelected && (
+        <div className="absolute inset-0 rounded-[1.85rem] ring-[1.5px] ring-gold/30 pointer-events-none" />
+      )}
+    </button>
+  )
+}
+
+function BgScroller({
+  bg,
+  setBg,
+  isLocked,
+}: {
+  bg: string
+  setBg: (id: string) => void
+  isLocked: boolean
+}) {
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const [atStart, setAtStart] = useState(true)
+  const [atEnd,   setAtEnd]   = useState(false)
+
+  const updateEdges = useCallback(() => {
+    const el = scrollRef.current
+    if (!el) return
+    setAtStart(el.scrollLeft <= 8)
+    setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 8)
+  }, [])
+
+  useEffect(() => {
+    const el = scrollRef.current
+    if (!el) return
+    // pequeno delay para medir após render
+    const t = setTimeout(updateEdges, 50)
+    el.addEventListener('scroll', updateEdges, { passive: true })
+    window.addEventListener('resize', updateEdges)
+    return () => {
+      clearTimeout(t)
+      el.removeEventListener('scroll', updateEdges)
+      window.removeEventListener('resize', updateEdges)
+    }
+  }, [updateEdges])
+
+  const scroll = (dir: 'left' | 'right') => {
+    scrollRef.current?.scrollBy({ left: dir === 'right' ? 220 : -220, behavior: 'smooth' })
+  }
+
+  return (
+    <div className="w-full min-w-0 flex items-center gap-1.5">
+      {/* Left arrow */}
+      <button
+        type="button"
+        onClick={() => scroll('left')}
+        aria-label="Rolar para esquerda"
+        className={`flex-shrink-0 w-8 h-8 rounded-xl border flex items-center justify-center transition-all active:scale-90
+          border-border bg-surface text-muted hover:border-gold/50 hover:text-gold
+          ${atStart ? 'invisible pointer-events-none' : 'visible'}`}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M15 18l-6-6 6-6" />
+        </svg>
+      </button>
+
+      {/* Scroll container — min-w-0 + overflow-x-auto prevents page stretch */}
+      <div className="min-w-0 flex-1 overflow-hidden">
+        <div
+          ref={scrollRef}
+          className="flex gap-2.5 overflow-x-auto overflow-y-hidden snap-x snap-mandatory scrollbar-hide pb-1"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
+          {BOOKING_BG_OPTIONS.map(opt => {
+            const isSelected = bg === opt.id
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => !isLocked && setBg(opt.id)}
+                aria-label={`Plano de fundo ${opt.label}`}
+                className={`snap-start flex-shrink-0 relative flex flex-col overflow-hidden rounded-2xl border transition-all duration-200 active:scale-95
+                  w-[72px] md:w-[100px] lg:w-[120px]
+                  ${isSelected && !isLocked
+                    ? 'border-gold shadow-lg shadow-gold/20 scale-[1.03]'
+                    : 'border-border hover:border-gold/40 hover:scale-[1.01]'}
+                `}
+              >
+                {/* Preview square */}
+                <div className="relative overflow-hidden w-full aspect-square">
+                  {opt.src ? (
+                    <>
+                      <img
+                        src={opt.src}
+                        alt={opt.label}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none'
+                          ;(e.currentTarget.nextElementSibling as HTMLElement | null)?.classList.remove('hidden')
+                        }}
+                      />
+                      <div className="hidden absolute inset-0 bg-[#1a1a1a] flex items-center justify-center">
+                        <svg className="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                          <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
+                        </svg>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="w-full h-full" style={{ backgroundColor: opt.color }} />
+                  )}
+                </div>
+
+                {/* Label */}
+                <div className="px-1 py-1.5 md:py-2 bg-[#111111] w-full">
+                  <p className={`text-[10px] md:text-xs font-medium text-center leading-tight truncate
+                    ${isSelected && !isLocked ? 'text-gold' : 'text-text-dim'}`}>
+                    {opt.label}
+                  </p>
+                </div>
+
+                {/* Selected check */}
+                {isSelected && !isLocked && (
+                  <div className="absolute top-1 right-1 w-4 h-4 rounded-full bg-gold flex items-center justify-center shadow">
+                    <svg className="w-2.5 h-2.5 text-[#1b1408]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Right arrow */}
+      <button
+        type="button"
+        onClick={() => scroll('right')}
+        aria-label="Rolar para direita"
+        className={`flex-shrink-0 w-8 h-8 rounded-xl border flex items-center justify-center transition-all active:scale-90
+          border-border bg-surface text-muted hover:border-gold/50 hover:text-gold
+          ${atEnd ? 'invisible pointer-events-none' : 'visible'}`}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M9 18l6-6-6-6" />
+        </svg>
+      </button>
+    </div>
+  )
+}
+
+function BookingModeSection() {
+  const { mode, setMode } = useBookingMode()
+  const { bg, setBg }     = useBookingBackground()
+  const isLocked = mode === 'pro'
+
+  return (
+    <section className="animate-fade-in-delayed min-w-0 overflow-hidden">
+      <div className="mb-5">
+        <h2 className="text-2xl font-bold text-text mb-1">Modo de Agendamento</h2>
+        <p className="text-sm text-text-dim">
+          Escolha como seus clientes vão realizar o agendamento. A preferência é salva neste dispositivo.
+        </p>
+      </div>
+
+      {/* Phones grid — centered, max width keeps phones compact */}
+      <div className="mx-auto w-full max-w-[300px] sm:max-w-[380px] md:max-w-[440px]">
+        <div className="grid grid-cols-2 gap-4 sm:gap-6">
+          {BOOKING_OPTIONS.map(opt => {
+            const isSelected = mode === opt.id
+            return (
+              <div key={opt.id} className="flex flex-col items-center gap-3">
+                <PhoneMockup
+                  videoSrc={opt.videoSrc}
+                  isSelected={isSelected}
+                  onClick={() => setMode(opt.id)}
+                />
+
+                {/* Label + description */}
+                <div className="text-center">
+                  <p className={`text-sm font-semibold leading-tight ${isSelected ? 'text-gold' : 'text-text'}`}>
+                    {opt.label}
+                  </p>
+                  <p className="text-[11px] text-text-dim mt-0.5 leading-snug">{opt.description}</p>
+                </div>
+
+                {/* Radio dot */}
+                <button
+                  type="button"
+                  onClick={() => setMode(opt.id)}
+                  aria-label={`Selecionar ${opt.label}`}
+                  className={`
+                    w-5 h-5 rounded-full border-2 flex items-center justify-center
+                    transition-all duration-200
+                    ${isSelected
+                      ? 'border-gold bg-gold'
+                      : 'border-border hover:border-gold/50'}
+                  `}
+                >
+                  {isSelected && (
+                    <div className="w-2 h-2 rounded-full bg-[#1b1408]" />
+                  )}
+                </button>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* ── Plano de Fundo do Chat ── */}
+      <div className={`mt-6 min-w-0 overflow-hidden transition-opacity duration-300 ${isLocked ? 'opacity-40 pointer-events-none select-none' : 'opacity-100'}`}>
+        <p className="text-sm font-semibold text-text mb-3">Plano de Fundo</p>
+        <BgScroller bg={bg} setBg={setBg} isLocked={isLocked} />
+      </div>
+
+      <p className="text-xs text-muted mt-5 flex items-center gap-1.5">
+        <svg className="w-3.5 h-3.5 text-gold flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        A mudança será aplicada imediatamente para novos clientes.
+      </p>
+    </section>
+  )
+}
 
 // ─── Navbar Style Section ─────────────────────────────────────────────────────
 
@@ -237,6 +562,12 @@ export default function Personalize() {
         <h1 className="font-display text-4xl md:text-5xl text-gold mb-2">Personalizar</h1>
         <p className="text-text-dim">Ajuste o visual e a experiência do app do seu jeito</p>
       </div>
+
+      {/* ── Modo de Agendamento ── */}
+      <BookingModeSection />
+
+      {/* ─── Divider ─────────────────────────────────────────────────────────── */}
+      <div className="h-px bg-border/60 -mt-2" />
 
       {/* ── Ícone do App (PWA) ── */}
       <section className="animate-fade-in-delayed">

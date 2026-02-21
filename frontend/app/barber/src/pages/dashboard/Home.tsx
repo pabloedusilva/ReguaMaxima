@@ -99,10 +99,9 @@ export default function DashboardHome() {
         }))
         .filter(b => {
           const bookingDate = new Date(b.date)
-          return bookingDate.toDateString() === today.toDateString() && b.dateTime >= now
+          return bookingDate.toDateString() === today.toDateString()
         })
         .sort((a, b) => a.dateTime.getTime() - b.dateTime.getTime())
-        .slice(0, 4)
 
       setUpcomingBookings(todayBookings)
     } catch (error) {
