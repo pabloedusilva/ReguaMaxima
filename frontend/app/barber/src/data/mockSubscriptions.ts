@@ -219,9 +219,9 @@ export const mockSubscriptionExpiredHardBlock: Subscription = {
 // ============================================================
 // export const currentSubscription = mockSubscriptionTrimestral90Days
 // export const currentSubscription = mockSubscriptionFreeTrial7Days
-// export const currentSubscription = mockSubscriptionExpired
-export const currentSubscription = mockSubscriptionExpiredHardBlock  // ← bloqueio total
-// export const currentSubscription = mockSubscriptionMensal30Days
+export const currentSubscription = mockSubscriptionExpired
+// export const currentSubscription = mockSubscriptionExpiredHardBlock  // ← bloqueio total
+// export const currentSubscription = mockSubscriptionTrimestral90Days
 // export const currentSubscription = mockSubscriptionExpiring7Days
 // export const currentSubscription = mockSubscriptionExpiring1Day
 // export const currentSubscription = mockSubscriptionMensal15Days

@@ -21,6 +21,7 @@ export default function DashboardLayout() {
   const { count: notificationsCount } = useNotifications()
   const subscription = currentSubscription
   const isTrial = subscription.status === 'trial'
+  const isExpired = subscription.status === 'expired'
   
   const { canInstall, promptInstall } = usePWAInstall()
   
@@ -326,26 +327,49 @@ export default function DashboardLayout() {
             </div>
           </div>
 
-          {isTrial && (
-            <div className="border-t border-gold/25 bg-gradient-to-r from-gold/15 via-gold/5 to-transparent px-4 md:px-6 py-2">
+          {(isTrial || isExpired) && (
+            <div className={`border-t px-4 md:px-6 py-2 ${
+              isExpired
+                ? 'border-red-500/25 bg-gradient-to-r from-red-500/15 via-red-500/5 to-transparent'
+                : 'border-gold/25 bg-gradient-to-r from-gold/15 via-gold/5 to-transparent'
+            }`}>
               <div className="flex flex-row items-center justify-between gap-2 sm:gap-3 text-[11px] sm:text-xs md:text-sm max-w-6xl mx-auto">
                 <div className="flex items-center gap-2 text-text">
-                  <svg className="w-4 h-4 mt-0.5 sm:mt-0 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                  {isExpired ? (
+                    <svg className="w-4 h-4 mt-0.5 sm:mt-0 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4 mt-0.5 sm:mt-0 text-gold shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  )}
                   <p className="leading-snug">
-                    Seu teste grátis termina em{' '}
-                    <span className="font-semibold text-gold">
-                      {subscription.daysRemaining} {subscription.daysRemaining === 1 ? 'dia' : 'dias'}
-                    </span>
+                    {isExpired ? (
+                      <>Assinatura expirada há{' '}
+                        <span className="font-semibold text-red-400">
+                          {subscription.daysExpired ?? 0} {(subscription.daysExpired ?? 0) === 1 ? 'dia' : 'dias'}
+                        </span>
+                      </>
+                    ) : (
+                      <>Seu teste grátis termina em{' '}
+                        <span className="font-semibold text-gold">
+                          {subscription.daysRemaining} {subscription.daysRemaining === 1 ? 'dia' : 'dias'}
+                        </span>
+                      </>
+                    )}
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => navigate('/assinaturas')}
-                  className="inline-flex items-center justify-center px-3 py-1.5 rounded-full text-[11px] font-semibold text-gold hover:text-gold-300 hover:bg-gold/10 transition-colors whitespace-nowrap"
+                  className={`inline-flex items-center justify-center px-3 py-1.5 rounded-full text-[11px] font-semibold transition-colors whitespace-nowrap ${
+                    isExpired
+                      ? 'text-red-400 hover:bg-red-500/10'
+                      : 'text-gold hover:bg-gold/10'
+                  }`}
                 >
-                  Ver planos
+                  {isExpired ? 'Renovar' : 'Ver planos'}
                   <svg className="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>

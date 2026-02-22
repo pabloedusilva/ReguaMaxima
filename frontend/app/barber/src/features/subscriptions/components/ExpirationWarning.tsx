@@ -6,9 +6,12 @@ interface Props {
 }
 
 export default function ExpirationWarning({ subscription }: Props) {
-  const { daysRemaining, endDate, autoRenew } = subscription
+  const { daysRemaining, endDate, autoRenew, status } = subscription
+  const isExpired = status === 'expired'
+  const daysExpired = subscription.daysExpired ?? 0
 
   const getWarningLevel = () => {
+    if (isExpired) return 'critical'
     if (daysRemaining <= 1) return 'critical'
     if (daysRemaining <= 3) return 'high'
     if (daysRemaining <= 7) return 'medium'
@@ -18,12 +21,13 @@ export default function ExpirationWarning({ subscription }: Props) {
   const warningLevel = getWarningLevel()
 
   const getMessage = () => {
-    if (daysRemaining === 0) {
-      return 'Sua assinatura expira hoje!'
+    if (isExpired) {
+      return daysExpired === 0
+        ? 'Assinatura expirada hoje!'
+        : `Assinatura expirada há ${daysExpired} ${daysExpired === 1 ? 'dia' : 'dias'}`
     }
-    if (daysRemaining === 1) {
-      return 'Sua assinatura expira amanhã!'
-    }
+    if (daysRemaining === 0) return 'Sua assinatura expira hoje!'
+    if (daysRemaining === 1) return 'Sua assinatura expira amanhã!'
     return `Sua assinatura expira em ${daysRemaining} dias`
   }
 
@@ -80,7 +84,13 @@ export default function ExpirationWarning({ subscription }: Props) {
             {getMessage()}
           </h3>
           <p className="text-sm text-text-dim mb-3">
-            {autoRenew ? (
+            {isExpired ? (
+              <>
+                Sua assinatura expirou em{' '}
+                <span className="font-semibold text-text">{formatDate(endDate)}</span>.
+                Renove para não perder o acesso ao app.
+              </>
+            ) : autoRenew ? (
               <>
                 Sua assinatura será renovada automaticamente em{' '}
                 <span className="font-semibold text-text">{formatDate(endDate)}</span>
@@ -94,7 +104,7 @@ export default function ExpirationWarning({ subscription }: Props) {
             )}
           </p>
           
-          {!autoRenew && (
+          {(isExpired || !autoRenew) && (
             <button className="btn btn-primary text-sm">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
