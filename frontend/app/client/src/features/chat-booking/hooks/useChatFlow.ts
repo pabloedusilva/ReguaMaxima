@@ -128,10 +128,10 @@ export function useChatFlow(shopName: string) {
     } else {
       botSay([
         { text: `👋 Olá! Bem-vindo à *${shopName}*! 💈` },
-        { text: 'Sou o assistente de agendamentos. Para começar, qual é o seu *nome*?' },
+        { text: 'Sou o assistente de agendamentos. Para começar, qual é o seu *nome e sobrenome*?' },
       ])
       setStep('ASK_NAME')
-      setTimeout(() => { setShowInput(true); setInputPlaceholder('Digite seu nome...') }, 3200)
+      setTimeout(() => { setShowInput(true); setInputPlaceholder('Digite seu nome e sobrenome...') }, 3200)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -199,8 +199,17 @@ export function useChatFlow(shopName: string) {
     const val = text.trim()
 
     if (step === 'ASK_NAME') {
+      const parts = val.trim().split(/\s+/).filter(Boolean)
+      if (parts.length < 2) {
+        userSay(val)
+        botSay([
+          { text: `Preciso do seu *nome e sobrenome* para continuar. 😊 Por favor, informe os dois.` },
+        ])
+        setTimeout(() => { setShowInput(true); setInputPlaceholder('Digite seu nome e sobrenome...') }, 1200)
+        return
+      }
       userSay(val)
-      const firstName = val.split(' ')[0]
+      const firstName = parts[0]
       localStorage.setItem('clientName', val)
       setBooking(b => ({ ...b, name: val }))
       botSay([
