@@ -53,7 +53,7 @@ export const LoginPage = () => {
       const success = await login(formData.email, formData.password);
       
       if (success) {
-        navigate('/');
+        navigate('/gerenciar');
       } else {
         setLoginError('E-mail ou senha incorretos');
       }

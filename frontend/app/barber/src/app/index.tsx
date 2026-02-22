@@ -5,6 +5,7 @@ import App from './App'
 import { ToastProvider } from './providers/ToastProvider'
 import { NotificationsProvider } from '@barber/features/notifications/providers/NotificationsProvider'
 import { NavbarPreferenceProvider } from './providers/NavbarPreferenceProvider'
+import { SubscriptionProvider } from '@barber/features/subscriptions'
 import { initPWA } from '@barber/utils/pwa'
 import { initAppIcon } from '@barber/lib/appIcon'
 import '@barber/styles/index.css'
@@ -21,7 +22,9 @@ createRoot(document.getElementById('root')!).render(
       <NavbarPreferenceProvider>
         <ToastProvider>
           <NotificationsProvider>
-            <App />
+            <SubscriptionProvider>
+              <App />
+            </SubscriptionProvider>
           </NotificationsProvider>
         </ToastProvider>
       </NavbarPreferenceProvider>

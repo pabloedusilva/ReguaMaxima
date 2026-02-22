@@ -23,6 +23,10 @@ import NotFoundPage from '@barber/pages/NotFoundPage'
 import OfflinePage from '@barber/pages/offline/OfflinePage'
 import SubscriptionPage from '@barber/pages/subscriptions/SubscriptionPage'
 
+// Subscription modals
+import ExpiredSubscriptionModal from '@barber/components/dialogs/ExpiredSubscriptionModal'
+import HardBlockModal from '@barber/components/dialogs/HardBlockModal'
+
 export default function App() {
   const navigate = useNavigate()
 
@@ -41,66 +45,79 @@ export default function App() {
   }, [navigate])
 
   return (
-    <Routes>
-      {/* Auth Routes */}
-      <Route path="login" element={<AuthLayout />}>
-        <Route index element={<Login />} />
-      </Route>
-      <Route path="forgot-password" element={<AuthLayout />}>
-        <Route index element={<ForgotPassword />} />
-      </Route>
-      <Route path="logout" element={<Logout />} />
+    <>
+      <Routes>
+        {/* Auth Routes */}
+        <Route path="login" element={<AuthLayout />}>
+          <Route index element={<Login />} />
+        </Route>
+        <Route path="forgot-password" element={<AuthLayout />}>
+          <Route index element={<ForgotPassword />} />
+        </Route>
+        <Route path="logout" element={<Logout />} />
 
-      {/* Dashboard Routes (Protected) */}
-      <Route path="dashboard" element={<DashboardLayout />}>
-        <Route index element={<DashboardHome />} />
-      </Route>
+        {/* Dashboard Routes (Protected) */}
+        <Route path="dashboard" element={<DashboardLayout />}>
+          <Route index element={<DashboardHome />} />
+        </Route>
 
-      <Route path="agendamentos" element={<DashboardLayout />}>
-        <Route index element={<BookingsList />} />
-        <Route path=":id" element={<BookingDetails />} />
-      </Route>
+        <Route path="agendamentos" element={<DashboardLayout />}>
+          <Route index element={<BookingsList />} />
+          <Route path=":id" element={<BookingDetails />} />
+        </Route>
 
-      <Route path="servicos" element={<DashboardLayout />}>
-        <Route index element={<ServicesList />} />
-      </Route>
+        <Route path="servicos" element={<DashboardLayout />}>
+          <Route index element={<ServicesList />} />
+        </Route>
 
-      <Route path="profissionais" element={<DashboardLayout />}>
-        <Route index element={<ProfessionalsList />} />
-      </Route>
+        <Route path="profissionais" element={<DashboardLayout />}>
+          <Route index element={<ProfessionalsList />} />
+        </Route>
 
-      <Route path="horarios" element={<DashboardLayout />}>
-        <Route index element={<WorkingHoursSettings />} />
-      </Route>
+        <Route path="horarios" element={<DashboardLayout />}>
+          <Route index element={<WorkingHoursSettings />} />
+        </Route>
 
-      <Route path="configuracoes" element={<DashboardLayout />}>
-        <Route index element={<BarbershopSettings />} />
-      </Route>
+        <Route path="configuracoes" element={<DashboardLayout />}>
+          <Route index element={<BarbershopSettings />} />
+        </Route>
 
-      <Route path="personalizar" element={<DashboardLayout />}>
-        <Route index element={<PersonalizePage />} />
-      </Route>
+        <Route path="personalizar" element={<DashboardLayout />}>
+          <Route index element={<PersonalizePage />} />
+        </Route>
 
-      <Route path="figurinhas" element={<DashboardLayout />}>
-        <Route index element={<StickersGallery />} />
-      </Route>
+        <Route path="figurinhas" element={<DashboardLayout />}>
+          <Route index element={<StickersGallery />} />
+        </Route>
 
-      <Route path="promocoes" element={<DashboardLayout />}>
-        <Route index element={<PromotionsList />} />
-      </Route>
+        <Route path="promocoes" element={<DashboardLayout />}>
+          <Route index element={<PromotionsList />} />
+        </Route>
 
-      <Route path="assinaturas" element={<DashboardLayout />}>
-        <Route index element={<SubscriptionPage />} />
-      </Route>
+        <Route path="assinaturas" element={<DashboardLayout />}>
+          <Route index element={<SubscriptionPage />} />
+        </Route>
 
-      {/* Offline page */}
-      <Route path="offline" element={<OfflinePage />} />
+        {/* Offline page */}
+        <Route path="offline" element={<OfflinePage />} />
 
-      {/* Redirect empty path to dashboard */}
-      <Route index element={<Navigate to="/dashboard" replace />} />
-      
-      {/* 404 - Not Found */}
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
-  )
-}
+        {/* Redirect empty path to dashboard */}
+        <Route index element={<Navigate to="/dashboard" replace />} />
+
+        {/* 404 - Not Found */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+
+      {/*
+       * ── Modais globais de assinatura (renderizados via portal em document.body) ──
+       * ExpiredSubscriptionModal : modal suave, pode ser fechado pelo usuário.
+       *                            Reapresenta-se a cada interação (cooldown 5 s).
+       * HardBlockModal           : bloqueio total, sem botão de fechar.
+       *                            Ativo somente quando daysExpired >= 3.
+       * Para alternar o cenário, edite currentSubscription em:
+       *   src/data/mockSubscriptions.ts
+       */}
+      <ExpiredSubscriptionModal />
+      <HardBlockModal />
+    </>
+  )}
