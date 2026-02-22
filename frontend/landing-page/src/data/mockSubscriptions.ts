@@ -159,10 +159,10 @@ export const mockSubscriptionAnnual: Subscription = {
 // ============================================================
 // ASSINATURA ATIVA – Descomente apenas 1 opção abaixo
 // ============================================================
-export const currentSubscription = mockSubscriptionExpired
+// export const currentSubscription = mockSubscriptionExpired
 // export const currentSubscription = mockSubscriptionTrial
 // export const currentSubscription = mockSubscriptionNone
-// export const currentSubscription = mockSubscriptionMonthly
+export const currentSubscription = mockSubscriptionMonthly
 // export const currentSubscription = mockSubscriptionQuarterly
 // export const currentSubscription = mockSubscriptionAnnual
 
