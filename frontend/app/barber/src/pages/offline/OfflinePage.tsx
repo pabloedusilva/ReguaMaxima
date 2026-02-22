@@ -1,54 +1,36 @@
-import { useEffect } from 'react';
-import { WifiOff } from 'lucide-react';
+import { WifiOff } from 'lucide-react'
 
 export default function OfflinePage() {
-  useEffect(() => {
-    document.title = 'Régua Máxima | Dashboard Barbeiro';
-  }, []);
-
-  const handleRetry = () => {
-    window.location.reload();
-  };
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-bg to-bg-soft px-4">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-bg to-bg-soft px-4">
       <div className="max-w-md w-full text-center">
-        {/* Ícone */}
-        <div className="flex justify-center mb-8">
-          <div className="relative">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-gold/20 to-gold/5 border-2 border-gold/30 flex items-center justify-center">
-              <WifiOff className="w-12 h-12 text-gold" strokeWidth={1.5} />
-            </div>
-            <div className="absolute inset-0 rounded-full bg-gold/10 animate-ping"></div>
-          </div>
+        {/* Ícone grande no lugar dos números */}
+        <div className="mb-8 flex items-center justify-center">
+          <WifiOff
+            className="text-gold/20 select-none"
+            style={{ width: 140, height: 140 }}
+            strokeWidth={1.5}
+          />
         </div>
 
-        {/* Título */}
-        <h1 className="text-3xl md:text-4xl font-display text-gold mb-4">
-          Você está offline
-        </h1>
-
-        {/* Descrição */}
-        <p className="text-text-dim text-base md:text-lg mb-8 leading-relaxed">
-          Não foi possível conectar à internet. Verifique sua conexão e tente novamente.
-        </p>
+        {/* Conteúdo */}
+        <div className="space-y-4 mb-10">
+          <h2 className="text-2xl md:text-3xl font-semibold text-text">
+            Sem conexão
+          </h2>
+          <p className="text-text/50 text-base leading-relaxed">
+            Você está offline. Verifique sua conexão e tente novamente.
+          </p>
+        </div>
 
         {/* Botão */}
         <button
-          onClick={handleRetry}
-          className="btn btn-primary px-8 py-4 text-base font-semibold hover:scale-105 transition-transform"
+          onClick={() => window.location.reload()}
+          className="px-6 py-3 bg-gold hover:bg-gold-600 text-bg font-medium rounded-full transition-colors text-base inline-block"
         >
-          Tentar Novamente
+          Tentar novamente
         </button>
-
-        {/* Info adicional */}
-        <div className="mt-12 p-4 rounded-xl bg-surface/50 border border-border">
-          <p className="text-sm text-text-dim">
-            <span className="font-semibold text-text">Dica:</span> Algumas funcionalidades podem estar 
-            disponíveis offline se você já acessou antes.
-          </p>
-        </div>
       </div>
     </div>
-  );
+  )
 }
