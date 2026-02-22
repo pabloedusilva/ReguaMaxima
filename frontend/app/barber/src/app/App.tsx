@@ -1,4 +1,5 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import DashboardLayout from './layout/DashboardLayout'
 import AuthLayout from '@auth/layout/AuthLayout'
 
@@ -19,9 +20,26 @@ import PersonalizePage from '@barber/pages/settings/Personalize'
 import StickersGallery from '@barber/pages/settings/StickersGallery'
 import PromotionsList from '@barber/pages/promotions/PromotionsList'
 import NotFoundPage from '@barber/pages/NotFoundPage'
+import OfflinePage from '@barber/pages/offline/OfflinePage'
 import SubscriptionPage from '@barber/pages/subscriptions/SubscriptionPage'
 
 export default function App() {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const goOffline = () => navigate('/offline', { replace: true })
+    const goOnline  = () => navigate('/dashboard', { replace: true })
+
+    if (!navigator.onLine) goOffline()
+
+    window.addEventListener('offline', goOffline)
+    window.addEventListener('online',  goOnline)
+    return () => {
+      window.removeEventListener('offline', goOffline)
+      window.removeEventListener('online',  goOnline)
+    }
+  }, [navigate])
+
   return (
     <Routes>
       {/* Auth Routes */}
@@ -74,6 +92,9 @@ export default function App() {
       <Route path="assinaturas" element={<DashboardLayout />}>
         <Route index element={<SubscriptionPage />} />
       </Route>
+
+      {/* Offline page */}
+      <Route path="offline" element={<OfflinePage />} />
 
       {/* Redirect empty path to dashboard */}
       <Route index element={<Navigate to="/dashboard" replace />} />
