@@ -11,6 +11,7 @@ import { PrivacidadePage } from './components/pages/PrivacidadePage';
 import { SobrePage } from './components/pages/SobrePage';
 import { Footer } from './components/layout/Footer';
 import { LoginPage, RegisterPage } from './auth';
+import { ManagePage } from './pages/ManagePage';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/sobre" element={<><SobrePage /><Footer /></>} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/gerenciar" element={<ManagePage />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

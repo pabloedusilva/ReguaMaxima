@@ -102,24 +102,34 @@ export const MobileMenu = ({
             <ChevronRightIcon className={`w-4 h-4 ${isActive('/contato') ? 'text-gold' : 'text-text-dim'}`} />
           </Link>
 
-          {/* Botão CTA / Botão de Sair */}
-          <div className="px-5 mt-4 mb-6">
+          {/* Gerenciar (apenas autenticado) */}
+          {isAuthenticated && (
+            <Link
+              to="/gerenciar"
+              onClick={closeMenu}
+              className={`flex items-center justify-between px-5 py-3.5 hover:bg-[#1a1a1a] transition-all duration-200 ${
+                isActive('/gerenciar') ? 'text-gold bg-[#1a1a1a]' : 'text-text'
+              }`}
+            >
+              <span>Gerenciar</span>
+              <ChevronRightIcon className={`w-4 h-4 ${isActive('/gerenciar') ? 'text-gold' : 'text-text-dim'}`} />
+            </Link>
+          )}
+
+          {/* Botões CTA / ações */}
+          <div className="px-5 mt-4 mb-6 flex flex-col gap-3">
             {!isAuthenticated ? (
               <Link
                 to="/register"
                 onClick={closeMenu}
-                className="flex items-center justify-center w-full px-6 py-3.5 bg-gold text-background font-semibold rounded-lg hover:bg-gold/90 transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="flex items-center justify-center w-full px-6 py-3.5 bg-gold text-bg font-semibold rounded-lg hover:bg-gold/90 transition-all duration-200 shadow-lg"
               >
                 Criar uma conta
               </Link>
             ) : (
               <button
-                onClick={() => {
-                  logout();
-                  closeMenu();
-                  navigate('/');
-                }}
-                className="flex items-center justify-center w-full px-6 py-3.5 border border-red-500/60 bg-transparent text-red-500 font-semibold rounded-lg hover:bg-red-500/10 hover:border-red-500 transition-all duration-200 shadow-md hover:shadow-lg"
+                onClick={() => { logout(); closeMenu(); navigate('/'); }}
+                className="flex items-center justify-center w-full px-6 py-3.5 border border-red-500/60 bg-transparent text-red-500 font-semibold rounded-lg hover:bg-red-500/10 hover:border-red-500 transition-all duration-200"
               >
                 Sair
               </button>

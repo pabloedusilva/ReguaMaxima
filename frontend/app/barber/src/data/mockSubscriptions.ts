@@ -181,11 +181,46 @@ export const mockSubscriptionTrimestral90Days: Subscription = {
 //   totalPaid: 69.90
 // }
 
+// ─── Cenário 8: Assinatura expirada – soft alert (daysExpired: 0 a 2) ─────────
+// Exibe o modal suave a cada interação, porém não bloqueia a UI.
+export const mockSubscriptionExpired: Subscription = {
+  id: 'sub_expired',
+  planId: 'plan_monthly',
+  plan: availablePlans[0],
+  status: 'expired',
+  startDate: '2026-01-01',
+  endDate: '2026-02-01',
+  daysRemaining: 0,
+  daysExpired: 1,        // <1... 2 = soft modal
+  autoRenew: false,
+  paymentMethod: { type: 'pix' },
+  totalPaid: 69.90,
+}
+
+// ─── Cenário 9: Assinatura expirada – bloqueio total (daysExpired >= 3) ────────
+// Ativa o HardBlockModal (blur full-screen) que não pode ser fechado.
+// TODO: Ativar quando o backend confirmar >= 3 dias expirado.
+export const mockSubscriptionExpiredHardBlock: Subscription = {
+  id: 'sub_expired_block',
+  planId: 'plan_monthly',
+  plan: availablePlans[0],
+  status: 'expired',
+  startDate: '2026-01-01',
+  endDate: '2026-02-01',
+  daysRemaining: 0,
+  daysExpired: 4,        // >= 3 = bloqueio total
+  autoRenew: false,
+  paymentMethod: { type: 'pix' },
+  totalPaid: 69.90,
+}
+
 // ============================================================
 // ASSINATURA ATIVA - Descomente apenas 1 opção abaixo
 // ============================================================
 // export const currentSubscription = mockSubscriptionTrimestral90Days
-export const currentSubscription = mockSubscriptionFreeTrial7Days
+// export const currentSubscription = mockSubscriptionFreeTrial7Days
+// export const currentSubscription = mockSubscriptionExpired
+export const currentSubscription = mockSubscriptionExpiredHardBlock  // ← bloqueio total
 // export const currentSubscription = mockSubscriptionMensal30Days
 // export const currentSubscription = mockSubscriptionExpiring7Days
 // export const currentSubscription = mockSubscriptionExpiring1Day

@@ -21,6 +21,12 @@ export interface Subscription {
   startDate: string
   endDate: string
   daysRemaining: number
+  /**
+   * Quantos dias a assinatura está expirada.
+   * 0 = expirou hoje, 3+ = ativa o bloqueio total (HardBlockModal).
+   * Populado pelo backend futuramente; por ora definido nos mocks.
+   */
+  daysExpired?: number
   autoRenew: boolean
   paymentMethod?: {
     type: 'credit_card' | 'pix' | 'boleto'
