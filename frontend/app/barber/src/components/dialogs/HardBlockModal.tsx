@@ -19,8 +19,11 @@
 
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
-import { Lock, RefreshCw, AlertTriangle } from 'lucide-react'
+import { Lock, RefreshCw } from 'lucide-react'
 import { useSubscription } from '@barber/features/subscriptions/context/SubscriptionContext'
+
+// TODO: Substituir pelo número real quando o CRM/backend estiver configurado
+const WHATSAPP_SUPPORT_URL = 'https://wa.me/5500000000000'
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -42,76 +45,76 @@ export default function HardBlockModal() {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[2147483647] flex flex-col items-center justify-center px-6 py-10"
+      className="fixed inset-0 z-[2147483647] flex items-center justify-center p-6"
       style={{
-        background: 'rgba(10, 10, 10, 0.93)',
-        backdropFilter: 'blur(28px)',
-        WebkitBackdropFilter: 'blur(28px)',
+        background: 'rgba(8, 8, 9, 0.92)',
+        backdropFilter: 'blur(32px)',
+        WebkitBackdropFilter: 'blur(32px)',
       }}
       role="dialog"
       aria-modal="true"
       aria-labelledby="hardBlockTitle"
     >
-      {/* ── Ícone ─────────────────────────────────────────────────────────── */}
-      <div
-        className="w-24 h-24 rounded-full flex items-center justify-center mb-7 flex-shrink-0"
-        style={{
-          background:
-            'radial-gradient(circle at 50% 50%, rgba(201,149,59,0.12) 0%, rgba(201,149,59,0.04) 100%)',
-          boxShadow: '0 0 48px rgba(201,149,59,0.14)',
-          border: '2px solid rgba(201,149,59,0.22)',
-        }}
-      >
-        <Lock
-          className="w-10 h-10 text-gold"
-          strokeWidth={1.7}
-          aria-hidden="true"
-        />
+      <div className="w-full max-w-sm flex flex-col items-center text-center gap-5">
+
+        {/* Ícone */}
+        <Lock className="w-20 h-20 text-gold" strokeWidth={1.4} aria-hidden="true" />
+
+        {/* Título + descrição */}
+        <div className="space-y-2">
+          <h2
+            id="hardBlockTitle"
+            className="font-display text-3xl sm:text-4xl text-gold tracking-wide leading-tight"
+          >
+            Acesso Bloqueado
+          </h2>
+          <p className="text-text-dim text-sm leading-relaxed max-w-[260px] mx-auto">
+            Sua assinatura expirou há{' '}
+            <span className="text-text font-semibold">
+              {days} {days === 1 ? 'dia' : 'dias'}
+            </span>
+            . Renove para recuperar o acesso completo ao painel.
+          </p>
+        </div>
+
+        {/* Info boxes */}
+        <div className="w-full grid grid-cols-2 gap-2.5">
+          <div className="bg-surface/50 rounded-xl border border-border/50 px-4 py-3 text-left">
+            <p className="text-[11px] text-muted mb-0.5 uppercase tracking-wide">Plano</p>
+            <p className="text-sm font-semibold text-text truncate">
+              {subscription.plan.name}
+            </p>
+          </div>
+          <div className="bg-surface/50 rounded-xl border border-border/50 px-4 py-3 text-left">
+            <p className="text-[11px] text-muted mb-0.5 uppercase tracking-wide">Expirou em</p>
+            <p className="text-sm font-semibold text-red-400">
+              {formatDate(subscription.endDate)}
+            </p>
+          </div>
+        </div>
+
+        {/* CTA */}
+        <button
+          onClick={() => navigate('/assinaturas')}
+          className="btn btn-primary w-full py-3.5 text-sm font-semibold gap-2 shadow-[0_0_20px_rgba(201,149,59,0.2)]"
+        >
+          <RefreshCw className="w-4 h-4" />
+          Renovar Assinatura
+        </button>
+
+        {/* Suporte */}
+        <p className="text-xs text-muted leading-relaxed">
+          Precisa de ajuda?{' '}
+          <a
+            href={WHATSAPP_SUPPORT_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-bold text-text-dim underline decoration-border underline-offset-2 hover:text-text hover:decoration-gold/50 transition-colors duration-200"
+          >
+            Fale com o suporte
+          </a>
+        </p>
       </div>
-
-      {/* ── Título ────────────────────────────────────────────────────────── */}
-      <h2
-        id="hardBlockTitle"
-        className="font-display text-3xl sm:text-4xl text-gold text-center mb-3 tracking-wide"
-      >
-        Acesso Bloqueado
-      </h2>
-
-      {/* ── Subtítulo ─────────────────────────────────────────────────────── */}
-      <p className="text-text-dim text-center text-sm sm:text-base max-w-xs leading-relaxed mb-2">
-        Sua assinatura{' '}
-        <strong className="text-text">{subscription.plan.name}</strong> expirou
-        em{' '}
-        <strong className="text-red-400">
-          {formatDate(subscription.endDate)}
-        </strong>
-        .
-      </p>
-      <p className="text-text-dim text-center text-sm max-w-[300px] leading-relaxed mb-7">
-        O acesso ao painel foi suspenso. Renove sua assinatura para recuperar
-        todos os recursos.
-      </p>
-
-      {/* ── Badge de urgência ─────────────────────────────────────────────── */}
-      <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-8 rounded-full bg-red-500/10 border border-red-500/25 text-red-400 text-xs font-semibold">
-        <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
-        Expirada há {days} {days === 1 ? 'dia' : 'dias'}
-        <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse ml-0.5" />
-      </div>
-
-      {/* ── CTA principal ─────────────────────────────────────────────────── */}
-      <button
-        onClick={() => navigate('/assinaturas')}
-        className="btn btn-primary py-4 px-10 text-base font-semibold gap-2 shadow-[0_0_24px_rgba(201,149,59,0.25)]"
-      >
-        <RefreshCw className="w-5 h-5" />
-        Renovar Assinatura
-      </button>
-
-      {/* ── Nota de rodapé ────────────────────────────────────────────────── */}
-      <p className="text-xs text-muted text-center mt-8 max-w-[260px] leading-relaxed">
-        Em caso de dúvidas, entre em contato com o suporte via WhatsApp.
-      </p>
     </div>,
     document.body
   )
