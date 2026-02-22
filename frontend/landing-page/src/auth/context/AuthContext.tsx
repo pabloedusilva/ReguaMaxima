@@ -1,17 +1,22 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 // Dados mockados - REMOVER quando integrar com backend
+// TODO: Substituir por chamada à API: POST /api/auth/login
 const MOCK_USER = {
   email: 'pablo@gmail.com',
   password: '@Pablosilva621',
   name: 'Pablo Silva',
   id: '1',
+  phone: '(31) 99999-0001',
+  barbershopName: 'Barbearia Silva',
 };
 
 interface User {
   id: string;
   name: string;
   email: string;
+  phone: string;
+  barbershopName: string;
 }
 
 interface AuthContextType {
@@ -48,6 +53,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         id: MOCK_USER.id,
         name: MOCK_USER.name,
         email: MOCK_USER.email,
+        phone: MOCK_USER.phone,
+        barbershopName: MOCK_USER.barbershopName,
       };
       setUser(userData);
       localStorage.setItem('mock_auth_user', JSON.stringify(userData));
