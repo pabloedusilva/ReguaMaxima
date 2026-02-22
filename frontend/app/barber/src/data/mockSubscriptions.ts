@@ -93,6 +93,21 @@ export const mockSubscriptionTrimestral90Days: Subscription = {
 //   totalPaid: 69.90
 // }
 
+// Cenário 2.5: Assinatura mensal expirando em 5 dias (banner laranja no header)
+export const mockSubscriptionExpiring5Days: Subscription = {
+  id: 'sub_exp5',
+  planId: 'plan_monthly',
+  plan: availablePlans[0],
+  status: 'expiring_soon',
+  startDate: '2026-01-27',
+  endDate: '2026-02-27',
+  daysRemaining: 5,
+  autoRenew: false,
+  paymentMethod: { type: 'credit_card', lastDigits: '1234', brand: 'Mastercard' },
+  nextBillingDate: '2026-02-27',
+  totalPaid: 69.90,
+}
+
 // Cenário 3: Assinatura mensal expirando em breve (7 dias)
 // export const mockSubscriptionExpiring7Days: Subscription = {
 //   id: 'sub_003',
@@ -219,8 +234,9 @@ export const mockSubscriptionExpiredHardBlock: Subscription = {
 // ============================================================
 // export const currentSubscription = mockSubscriptionTrimestral90Days
 // export const currentSubscription = mockSubscriptionFreeTrial7Days
-export const currentSubscription = mockSubscriptionExpired
+// export const currentSubscription = mockSubscriptionExpired
 // export const currentSubscription = mockSubscriptionExpiredHardBlock  // ← bloqueio total
+export const currentSubscription = mockSubscriptionExpiring5Days   // ← banner laranja
 // export const currentSubscription = mockSubscriptionTrimestral90Days
 // export const currentSubscription = mockSubscriptionExpiring7Days
 // export const currentSubscription = mockSubscriptionExpiring1Day

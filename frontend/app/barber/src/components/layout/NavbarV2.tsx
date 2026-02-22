@@ -137,6 +137,7 @@ export default function NavbarV2() {
   const subscription = currentSubscription
   const isTrial = subscription.status === 'trial'
   const isExpired = subscription.status === 'expired'
+  const isExpiringSoon = subscription.status === 'expiring_soon'
   const { canInstall, promptInstall } = usePWAInstall()
 
   useOfflineDetection()
@@ -277,17 +278,23 @@ export default function NavbarV2() {
             </div>
           </div>
 
-          {/* Trial / Expired banner */}
-          {(isTrial || isExpired) && (
+          {/* Trial / Expiring / Expired banner */}
+          {(isTrial || isExpired || isExpiringSoon) && (
             <div className={`border-t px-4 md:px-6 py-2 ${
               isExpired
                 ? 'border-red-500/25 bg-gradient-to-r from-red-500/15 via-red-500/5 to-transparent'
+                : isExpiringSoon
+                ? 'border-orange-500/25 bg-gradient-to-r from-orange-500/15 via-orange-500/5 to-transparent'
                 : 'border-gold/25 bg-gradient-to-r from-gold/15 via-gold/5 to-transparent'
             }`}>
               <div className="flex flex-row items-center justify-between gap-2 text-[11px] sm:text-xs md:text-sm">
                 <div className="flex items-center gap-2 text-text">
                   {isExpired ? (
                     <svg className="w-4 h-4 mt-0.5 sm:mt-0 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                  ) : isExpiringSoon ? (
+                    <svg className="w-4 h-4 mt-0.5 sm:mt-0 text-orange-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                   ) : (
@@ -300,6 +307,12 @@ export default function NavbarV2() {
                       <>Assinatura expirada há{' '}
                         <span className="font-semibold text-red-400">
                           {subscription.daysExpired ?? 0} {(subscription.daysExpired ?? 0) === 1 ? 'dia' : 'dias'}
+                        </span>
+                      </>
+                    ) : isExpiringSoon ? (
+                      <>Assinatura expira em{' '}
+                        <span className="font-semibold text-orange-400">
+                          {subscription.daysRemaining} {subscription.daysRemaining === 1 ? 'dia' : 'dias'}
                         </span>
                       </>
                     ) : (
@@ -317,10 +330,12 @@ export default function NavbarV2() {
                   className={`inline-flex items-center justify-center px-3 py-1.5 rounded-full text-[11px] font-semibold transition-colors whitespace-nowrap ${
                     isExpired
                       ? 'text-red-400 hover:bg-red-500/10'
+                      : isExpiringSoon
+                      ? 'text-orange-400 hover:bg-orange-500/10'
                       : 'text-gold hover:bg-gold/10'
                   }`}
                 >
-                  {isExpired ? 'Renovar' : 'Ver planos'}
+                  {isExpired ? 'Renovar' : isExpiringSoon ? 'Renovar' : 'Ver planos'}
                   <svg className="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
