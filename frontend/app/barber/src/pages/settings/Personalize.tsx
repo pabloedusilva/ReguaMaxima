@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { applyAndPersistAppIcon, getSelectedAppIcon } from '@barber/lib/appIcon'
 import { useNavbarPreference, type NavbarStyle } from '../../hooks/useNavbarPreference'
 import { usePWAInstall } from '@barber/hooks/usePWAInstall'
@@ -266,10 +267,92 @@ function BgScroller({
   )
 }
 
+// ─── Booking Preview Modal ─────────────────────────────────────────────────────────────────────────────
+
+function BookingPreviewModal({ onClose }: { onClose: () => void }) {
+  const url = 'https://app.reguamaxima.com.br/#/chat'
+
+  // Close on Escape
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [onClose])
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[2147483646] flex items-center justify-center p-4 sm:p-6"
+      style={{
+        background: 'rgba(6, 6, 7, 0.88)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+      }}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Pré-visualização – Modo Simplificado"
+      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+    >
+      {/* Card container */}
+      <div className="relative flex flex-col w-full max-w-sm bg-[#111112] border border-border rounded-3xl overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.7)]" style={{ height: 'min(85dvh, 720px)' }}>
+
+        {/* Header */}
+        <div className="flex-none flex items-center justify-between px-5 pt-5 pb-4 border-b border-border/60">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-muted mb-0.5">Pré-visualização</p>
+            <h3 className="text-base font-bold text-text leading-tight">Modo Simplificado</h3>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {/* Close */}
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Fechar pré-visualização"
+              className="w-9 h-9 rounded-full flex items-center justify-center text-muted hover:text-text hover:bg-surface transition-colors duration-200"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {/* iframe + protection overlay */}
+        <div className="relative flex-1 overflow-hidden bg-[#0a0a0a]">
+          <iframe
+            src={url}
+            title="Pré-visualização Modo Simplificado"
+            className="absolute inset-0 w-full h-full border-0"
+            allow=""
+            sandbox="allow-scripts allow-same-origin allow-forms"
+          />
+          {/* Protective film — blocks all pointer events on the iframe */}
+          <div
+            className="absolute inset-0 z-10"
+            aria-hidden="true"
+            style={{ cursor: 'default' }}
+          />
+        </div>
+
+        {/* Footer hint */}
+        <div className="flex-none px-5 py-3 border-t border-border/60 bg-[#0d0d0e]">
+          <p className="text-[11px] text-muted text-center leading-snug">
+            Apenas leitura
+          </p>
+        </div>
+      </div>
+    </div>,
+    document.body
+  )
+}
+
+// ─── Booking Mode Section ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
 function BookingModeSection() {
   const { mode, setMode } = useBookingMode()
   const { bg, setBg }     = useBookingBackground()
   const isLocked = mode === 'pro'
+  const [showPreview, setShowPreview] = useState(false)
 
   return (
     <section className="animate-fade-in-delayed min-w-0 overflow-hidden">
@@ -330,12 +413,32 @@ function BookingModeSection() {
         <BgScroller bg={bg} setBg={setBg} isLocked={isLocked} />
       </div>
 
+      {/* Visualizar button — active only in simplified mode */}
+      <div className={`mt-4 flex justify-center transition-opacity duration-300 ${isLocked ? 'opacity-40 pointer-events-none select-none' : 'opacity-100'}`}>
+        <button
+          type="button"
+          onClick={() => setShowPreview(true)}
+          disabled={isLocked}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold border border-border bg-surface/60 text-text-dim hover:text-text hover:border-gold/40 hover:bg-gold/5 transition-all duration-200 disabled:cursor-not-allowed"
+        >
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+          Visualizar
+        </button>
+      </div>
+
       <p className="text-xs text-muted mt-5 flex items-center gap-1.5">
         <svg className="w-3.5 h-3.5 text-gold flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         A mudança será aplicada imediatamente para novos clientes.
       </p>
+
+      {showPreview && (
+        <BookingPreviewModal onClose={() => setShowPreview(false)} />
+      )}
     </section>
   )
 }
