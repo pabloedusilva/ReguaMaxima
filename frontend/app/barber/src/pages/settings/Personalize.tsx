@@ -30,8 +30,6 @@ const BOOKING_BG_OPTIONS: { id: string; label: string; src?: string; color?: str
   { id: 'gray',  color: '#3a3a3a',  label: 'Cinza'   },
   { id: 'white', color: '#f5f5f5',  label: 'Branco'  },
   { id: 'gold',  color: '#c9953b',  label: 'Dourado' },
-  { id: 'red',   color: '#dc2626',  label: 'Vermelho'},
-  { id: 'blue',  color: '#2563eb',  label: 'Azul'    },
 ]
 
 function useBookingMode() {
@@ -672,6 +670,12 @@ export default function Personalize() {
       {/* ─── Divider ─────────────────────────────────────────────────────────── */}
       <div className="h-px bg-border/60 -mt-2" />
 
+      {/* ── Estilo da Navegação ── */}
+      <NavbarStyleSection />
+
+      {/* ─── Divider ─────────────────────────────────────────────────────────── */}
+      <div className="h-px bg-border/60 -mt-2" />
+
       {/* ── Ícone do App (PWA) ── */}
       <section className="animate-fade-in-delayed">
         <div className="flex items-start justify-between gap-4 mb-5">
@@ -764,12 +768,6 @@ export default function Personalize() {
           </p>
         </div>
       </section>
-
-      {/* ─── Divider ─────────────────────────────────────────────────────────── */}
-      <div className="h-px bg-border/60 -mt-2" />
-
-      {/* ── Estilo da Navegação ── */}
-      <NavbarStyleSection />
 
     </div>
   )
