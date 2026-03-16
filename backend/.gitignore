@@ -1,0 +1,76 @@
+# ─── Variáveis de ambiente ────────────────────────────────────────────────────
+.env
+.env.local
+.env.development
+.env.production
+# .env.example e .env.test SÃO versionados (sem valores reais)
+
+# ─── Dependências ─────────────────────────────────────────────────────────────
+node_modules/
+
+# ─── Build / Compilação ───────────────────────────────────────────────────────
+dist/
+build/
+out/
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ─── Storage local (apenas dev) ───────────────────────────────────────────────
+storage/uploads/logos/*
+storage/uploads/avatars/*
+storage/temp/invoices/*
+storage/temp/exports/*
+# Preserva a estrutura de pastas
+!storage/uploads/logos/.gitkeep
+!storage/uploads/avatars/.gitkeep
+!storage/temp/invoices/.gitkeep
+!storage/temp/exports/.gitkeep
+
+# ─── Prisma ───────────────────────────────────────────────────────────────────
+# Migrations são versionadas — não ignorar prisma/migrations/
+
+# ─── Testes ───────────────────────────────────────────────────────────────────
+coverage/
+.nyc_output/
+
+# ─── Cache e ferramentas ──────────────────────────────────────────────────────
+.cache/
+.turbo/
+.eslintcache
+.parcel-cache/
+*.tsbuildinfo
+
+# ─── IDEs e editores ──────────────────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ─── Sistema operacional ──────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Chaves e certificados ────────────────────────────────────────────────────
+*.pem
+*.key
+*.cert
+*.p12
+*.pfx
+
+# ─── Arquivos temporários ─────────────────────────────────────────────────────
+*.tmp
+*.temp
+tmp/
+temp/
