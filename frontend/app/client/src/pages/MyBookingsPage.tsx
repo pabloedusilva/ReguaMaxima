@@ -7,6 +7,7 @@ import FilterTabs from '@components/bookings/FilterTabs'
 import BookingCard from '@components/bookings/BookingCard'
 import CancelConfirmModal from '@components/bookings/CancelConfirmModal'
 import Button from '@components/ui/Button'
+import MyBookingsPageSkeleton from '@components/skeletons/MyBookingsPageSkeleton'
 import type { Booking } from '@/types/bookings'
 
 export default function MyBookingsPage() {
@@ -74,18 +75,11 @@ export default function MyBookingsPage() {
   }, [bookings])
 
   if (isLoading) {
-    return (
-      <div className="grid gap-8 md:gap-10">
-        <div className="text-center">
-          <h1 className="font-display text-gold text-4xl md:text-5xl">Meus Agendamentos</h1>
-          <p className="text-text/70 mt-2">Carregando...</p>
-        </div>
-      </div>
-    )
+    return <MyBookingsPageSkeleton />
   }
 
   return (
-    <div className="grid gap-8 md:gap-10 w-full min-w-0">
+    <div className="grid gap-8 md:gap-10 w-full min-w-0 skeleton-enter">
       <div className="text-center">
         <h1 className="font-display text-gold text-4xl md:text-5xl">Meus Agendamentos</h1>
         <p className="text-text/70 mt-2">Visualize e gerencie todos os seus agendamentos</p>
